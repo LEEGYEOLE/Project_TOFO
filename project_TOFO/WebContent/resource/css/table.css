@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+.tableList {
+	
+    width: 100%;
+    border: 1px solid #ccc;
+    border-top: 1px solid #444444;
+    border-collapse: collapse;
+    margin-bottom:20px;
+  }
+.tableList th, .tableList td, .tableList tr {
+  	font-size: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-bottom: 1px solid #444444;
+    padding: 10px;
+  }
+  
+.tableList th {
+  background-color: #dcdcdc;
+  }
+  
+ #viewNum {
+	font-size: 20px;
+	width:200px; 
+	height:50px;
+		
+  }
+  
+  #selectbox {
+  float: right;
+  margin-top: 3%;
+  }
+  
+  #reviewTitle {
+  font-size: 40px;
+  float: left;
+  font-weight: bold;
+  }
+  
+  #button5 {
+	font-size: 20px;
+	border: none;
+	color: #ffffff;
+	width: 250px;
+	height: 50px;
+	line-height: 50px;
+	border-radius: 4px;
+	margin-left: 37%;
+	
+	font-weight: bold;
+	background-color: #666666;
+  }
