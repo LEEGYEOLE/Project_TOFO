@@ -315,7 +315,7 @@ font-weight: 900;}
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 	<!-- 참여인원목록 --> 
-    <div class="modal show-modal" id="peapleList">
+    <div class="my-modal show-modal" id="peapleList">
 
         <div class="modal-content">
         

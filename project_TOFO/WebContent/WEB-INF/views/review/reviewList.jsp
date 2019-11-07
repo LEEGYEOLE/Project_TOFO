@@ -97,9 +97,6 @@ margin-top: 3px;
 	<div class="container">
 		<div class="body-container">
 			<div class="container-block">
-				<div style="">
-							<button class="btnConfirm trigger" style="float: right;"  onclick="scheduleModal('ReviewAdd', 'show');">등록하기</button>
-						</div>
 					<div style="clear: both;
     padding-bottom: 10px;">
 						<p id="reviewTitle">일정 후기 게시판</p>
@@ -195,79 +192,6 @@ margin-top: 3px;
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
-	<!-- 팝업 될 레이어 --> 
-    <div class="modal show-modal" id="ReviewAdd">
-
-        <div class="modal-content">
-        
-        <div>
-        	    <table id="moo">
-            	<tr>
-            	<th>일정후기등록
-            	<span class="close-button"  onclick="scheduleModal('ReviewAdd', 'none');">×</span>
-            	</th>
-            	
-            	</tr>
-            </table>
-        </div>
-         
-            
-           
-           
-            <form class="modalForm" action="#post.php" method="POST">
-            
-            
-			  <p>이겨레님의 후기</p>
-			  
-			  <textarea class="textwrite" placeholder="상세일정"></textarea>
-			  
-			  
-			  <div>
-			  
-			  <button class="shortbtn" type="button">이미지1</button>
-			  <input  class="middleinput" placeholder="이미지파일명">
-			  
-			  <button class="shortbtn" type="button">이미지2</button>
-			  <input class="middleinput" placeholder="이미지파일명">
-			  
-			  <button class="shortbtn" type="button">이미지3</button>
-			  <input class="middleinput" placeholder="이미지파일명">
-			  
-			  <button class="shortbtn"  type="button">이미지4</button>
-			  <input class="middleinput" placeholder="이미지파일명">
-			  
-			  <button class="shortbtn"  type="button">이미지5</button>
-			  <input class="middleinput" placeholder="이미지파일명">
-			  
-			  
-			  </div>
-			
-			<div>
-			  <button class="shortbtn" type="button"  onclick="scheduleModal('ReviewAdd','none');">취소하기</button>
-			  <button class="graybtn" type="button">후기등록</button>
-			</div>
-			
-			</form>
-        </div>
-    </div>
-    <script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    
 	
-	<script type="text/javascript">
-	window.onload = function () {
-		var ReviewAdd = document.getElementById("ReviewAdd");
-		ReviewAdd.style.display='none';
-		
-	}
-	function scheduleModal(name, state) {
-		if(state=='show'){
-			document.getElementById(name).style.display='block';
-		}else if(state=='none'){
-			document.getElementById(name).style.display='none';
-		}
-	};
-	
-	</script>
 </body>
 </html>

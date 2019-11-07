@@ -196,7 +196,8 @@
 					<div class='right-box'>
 
 						<div style="">
-							<button class="btnConfirm" style="float: right;" onclick="scheduleModal('peapleList','show');">등록하기</button>
+							<button class="btnConfirm" style="float: right;"
+								onclick="scheduleModal('ScheduleAdd','show');">등록하기</button>
 						</div>
 
 						<!--날짜가 들어가는 부분-->
@@ -205,18 +206,20 @@
 
 							<tr align="left" bgcolor="#eeeeee" height="35"
 								style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-								<th colspan="5" width="60"
+								<th colspan="6" width="60"
 									style="color: #787878; padding-left: 15px;">17일</th>
 							</tr>
 
 
 							<tr align="center" bgcolor="#ffffff" height="35"
-								style="border-bottom: 1px solid #cccccc;"  onclick="scheduleModal('scheduleArticle', 'show');">
+								style="border-bottom: 1px solid #cccccc;"
+								>
 								<td colspan="2">오후 18:00</td>
 								<td>[홍대]</td>
-								<td align="left" style="padding-left: 10px;"><a href="#">웹
+								<td align="left" style="padding-left: 10px;"><a onclick="scheduleModal('scheduleArticle', 'show');">웹
 										페이지 만들기 스터디</a></td>
-								<td>참여인원 3명</td>
+								<td style="width: 65px;"><a onclick="scheduleModal('peapleList', 'show');">인원(1/5)</a></td>
+<td style="width: 80px;"><button >참가하기</button> </td>
 
 							</tr>
 
@@ -232,141 +235,150 @@
 					</div>
 				</div>
 			</div>
-			
-			</div>
+
+		</div>
 
 		<!-- 			일정 등록 모달 -->
 		<div class="modal show-modal" id="ScheduleAdd">
-				<div class="modal-content">
-					<div>
-						<table id="moo">
-							<tr>
-								<th>일정 등록 입니다. <span class="close-button" onclick="scheduleModal('ScheduleAdd','none');">×</span>
-								</th>
+			<div class="modal-content">
+				<div>
+					<table id="moo">
+						<tr>
+							<th>일정 등록 입니다. <span class="close-button"
+								onclick="scheduleModal('ScheduleAdd','none');">×</span>
+							</th>
 
-							</tr>
-						</table>
-					</div>
-
-					<form class="modalForm" action="#post.php" method="POST" name="ScheduleAddForm">
-
-						<input class="shortinput" placeholder="시작날짜"> <input
-							class="shortinput" placeholder="시작시간"> <input
-							class="shortinput" placeholder="종료날짜"> <input
-							class="shortinput" placeholder="종료시간"> <input
-							class="longinput" required="required" type="text"
-							placeholder="일정명">
-
-						<textarea class="textwrite" required="required" placeholder="상세일정"></textarea>
-
-						<input class="middleinput" placeholder="장소명/주소">
-
-						<button class="shortbtn" type="button">주소검색</button>
-
-
-						<button class="middlebtn" type="button" onclick="scheduleModal('peapleList', 'show');">인원추가하기</button>
-						<p>(1/5)</p>
-
-						<button class="graylongbtn" type="button">등록</button>
-
-
-					</form>
+						</tr>
+					</table>
 				</div>
+
+				<form class="modalForm" action="#post.php" method="POST"
+					name="ScheduleAddForm">
+
+					<input class="shortinput" placeholder="시작날짜"> <input
+						class="shortinput" placeholder="시작시간"> <input
+						class="shortinput" placeholder="종료날짜"> <input
+						class="shortinput" placeholder="종료시간"> <input
+						class="longinput" required="required" type="text"
+						placeholder="일정명">
+
+					<textarea class="textwrite" required="required" placeholder="상세일정"></textarea>
+
+					<input class="middleinput" placeholder="장소명/주소">
+
+					<button class="shortbtn" type="button">주소검색</button>
+
+
+					<input class="middleinput" placeholder="최대정원">
+
+					<button class="graylongbtn" type="button">등록</button>
+
+
+				</form>
 			</div>
 		</div>
-	
-	<!-- 일정 보기 --> 
-    <div class="modal show-modal" id="scheduleArticle">
+	</div>
 
-        <div class="modal-content" >
-        
-        <div>
-        	    <table id="moo">
-            	<tr>
-	            	<th>여기는 모임명 들어갈 곳
-	            	<span class="close-button"  onclick="scheduleModal('scheduleArticle', 'none');">×</span>
-	            	</th>
-            	</tr>
-            </table>
-        </div>
-         
-            <form class="modalForm" action="#post.php" method="POST">
-           
-			  <div class="scheduleList">
-			  
-			  	<p>일시</p>
-			  	<p>일시내용</p>  	
-			  	<p>상세설명</p> 	
-			  	<p>상세설명(내용)</p>			  	
-			  	<p>장소</p>			  	
-			  	<p>장소내용</p>			  	
-			  	<p>지도나오기</p>
-			  		  	
-			  	
-			  	<p><button class="middlebtn" onclick="scheduleModal('peapleList', 'show');">참여인원보기(인원수)</button></p>
-			  
-			  </div>
+	<!-- 일정 보기 -->
+	<div class="modal show-modal" id="scheduleArticle">
+
+		<div class="modal-content">
+
+			<div>
+				<table id="moo">
+					<tr>
+						<th>여기는 모임명 들어갈 곳 <span class="close-button"
+							onclick="scheduleModal('scheduleArticle', 'none');">×</span>
+						</th>
+					</tr>
+				</table>
+			</div>
+
+			<form class="modalForm" action="#post.php" method="POST">
+
+				<div class="scheduleList">
+
+					<p>일시</p>
+					<p>일시내용</p>
+					<p>상세설명</p>
+					<p>상세설명(내용)</p>
+					<p>장소</p>
+					<p>장소내용</p>
+					<p>지도나오기</p>
+					
+				</div>
 
 
-			  <button class="shortbtn" type="button" onclick="scheduleModal('scheduleArticle', 'none');">닫기</button>
-			  <button class="graybtn" type="button">수정하기</button>
-			  <button class="graybtn" type="button">삭제하기</button>
-			  
-			</form>
-        </div>
-    </div>
-<!-- 참여인원목록 --> 
-<!--     <div class="my-modal show-modal"> -->
-
-        <div class="my-modal-content"  id="peapleList">
-        
-        <div>
-        	<table id="mymoo">
-            	<tr>
-	            	<th>참여인원목록
-	            	<span class="close-button" onclick="scheduleModal('peapleList', 'none');">×</span>
-	            	</th>
-            	</tr>
-            </table>
-        </div>
-            <form action="#post.php" method="POST">
-            <div style="overflow: scroll;"> 
-            	<ol class="list">
-            		<li>박수진(sujin)</li>
-            		<li>이겨레(gyeo)</li>
-            		<li>이중경(brother)</li>
-            		<li>김윤식(evaring)</li>
-            		<li>김윤식(evaring)</li>
-
-
-            	</ol>	
-            </div>
-            
+				<button class="shortbtn" type="button"
+					onclick="scheduleModal('scheduleArticle', 'none');">닫기</button>
+				<button class="graybtn" type="button" onclick="modify();">수정하기</button>
+				<button class="graybtn" type="button">삭제하기</button>
 
 			</form>
-        </div>
-<!--     </div> -->
+		</div>
+	</div>
+	<!-- 참여인원목록 -->
+	<!--     <div class="my-modal show-modal"> -->
+
+	<div class="my-modal-content" id="peapleList">
+
+		<div>
+			<table id="mymoo">
+				<tr>
+					<th>참여인원목록 <span class="close-button"
+						onclick="scheduleModal('peapleList', 'none');">×</span>
+					</th>
+				</tr>
+			</table>
+		</div>
+		<form action="#post.php" method="POST">
+			<div style="overflow: scroll;">
+				<ol class="list">
+					<li>박수진(sujin)</li>
+					<li>이겨레(gyeo)</li>
+					<li>이중경(brother)</li>
+					<li>김윤식(evaring)</li>
+					<li>김윤식(evaring)</li>
+				</ol>
+			</div>
+
+
+		</form>
+	</div>
+	<!--     </div> -->
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 	<script type="text/javascript">
-	window.onload = function () {
-		var ScheduleAdd = document.getElementById("ScheduleAdd");
-		ScheduleAdd.style.display='none';
-		var peapleList = document.getElementById("peapleList");
-		peapleList.style.display='none';
-		
-		var scheduleArticle = document.getElementById("scheduleArticle");
-		scheduleArticle.style.display='none';
-	}
-	function scheduleModal(name, state) {
-		if(state=='show'){
-			document.getElementById(name).style.display='block';
-		}else if(state=='none'){
-			document.getElementById(name).style.display='none';
+	var i =1;
+		window.onload = function() {
+			var ScheduleAdd = document.getElementById("ScheduleAdd");
+			ScheduleAdd.style.display = 'none';
+			var peapleList = document.getElementById("peapleList");
+			peapleList.style.display = 'none';
+
+			var scheduleArticle = document.getElementById("scheduleArticle");
+			scheduleArticle.style.display = 'none';
 		}
-	};
-	
+		
+		function modify() {
+			scheduleModal('scheduleArticle','none'); 
+			scheduleModal('ScheduleAdd','show');
+		}
+		function scheduleModal(name, state) {
+			if (state == 'show') {
+				if(name=='peapleList')
+					document.getElementById(name).style.display = 'block';
+				else
+				document.getElementById(name).style.display = 'contents';
+				
+// 				document.getElementById(name).style.zindex = i;
+// 				i--;
+				
+			} else if (state == 'none') {
+				document.getElementById(name).style.display = 'none';
+			}
+		};
 	</script>
 </body>
 </html>
