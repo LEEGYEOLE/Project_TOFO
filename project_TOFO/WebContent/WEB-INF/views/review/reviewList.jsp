@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset=EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css"
 	type="text/css">
@@ -98,7 +98,7 @@ margin-top: 3px;
 		<div class="body-container">
 			<div class="container-block">
 				<div style="">
-							<button class="btnConfirm trigger" style="float: right;">등록하기</button>
+							<button class="btnConfirm trigger" style="float: right;"  onclick="scheduleModal('ReviewAdd', 'show');">등록하기</button>
 						</div>
 					<div style="clear: both;
     padding-bottom: 10px;">
@@ -135,7 +135,7 @@ margin-top: 3px;
 							</tr>
 						</thead>
 						<tbody>
-							<tr>
+							<tr onclick="javacript:location.href='<%=cp%>/review/review.do'">
 								<td>1</td>
 								<td>A모임</td>
 								<td>서울</td>
@@ -196,7 +196,7 @@ margin-top: 3px;
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 	<!-- 팝업 될 레이어 --> 
-    <div class="modal show-modal">
+    <div class="modal show-modal" id="ReviewAdd">
 
         <div class="modal-content">
         
@@ -204,7 +204,7 @@ margin-top: 3px;
         	    <table id="moo">
             	<tr>
             	<th>일정후기등록
-            	<span class="close-button">×</span>
+            	<span class="close-button"  onclick="scheduleModal('ReviewAdd', 'none');">×</span>
             	</th>
             	
             	</tr>
@@ -243,31 +243,31 @@ margin-top: 3px;
 			  </div>
 			
 			<div>
-			  <button class="shortbtn" type="button">취소하기</button>
+			  <button class="shortbtn" type="button"  onclick="scheduleModal('ReviewAdd','none');">취소하기</button>
 			  <button class="graybtn" type="button">후기등록</button>
 			</div>
 			
 			</form>
         </div>
     </div>
+    <script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    
 	
 	<script type="text/javascript">
-		var modal = document.querySelector(".modal");
-		var trigger = document.querySelector(".trigger");
-		var closeButton = document.querySelector(".close-button");
-
-		function toggleModalOn(s) {
-			console.log("토글토글");
-			modal.classList.toggle("show-modal", true);
+	window.onload = function () {
+		var ReviewAdd = document.getElementById("ReviewAdd");
+		ReviewAdd.style.display='none';
+		
+	}
+	function scheduleModal(name, state) {
+		if(state=='show'){
+			document.getElementById(name).style.display='block';
+		}else if(state=='none'){
+			document.getElementById(name).style.display='none';
 		}
-		function toggleModalOff() {
-			modal.classList.toggle("show-modal", false);
-		}
-
-		trigger.addEventListener("click", toggleModalOn); //자동으로 로그인 창이 뜸
-		closeButton.addEventListener("click", toggleModalOff);
-
-		toggleModalOff();
+	};
+	
 	</script>
 </body>
 </html>

@@ -18,7 +18,10 @@
 	height: 100%;
 	min-height: 700px;
 }
-
+.container-block{
+	width: 90%;
+    margin: 0 auto;
+}
 .body-title {
 	color: #424951;
 	padding-top: 20px;

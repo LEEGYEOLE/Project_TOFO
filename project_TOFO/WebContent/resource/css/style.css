@@ -2,11 +2,11 @@
 
 @FONT-FACE{
 	font-family: 'aaa';
-	src: url('/grouping/resource/font/ayyyL.ttf');
+	src: url('/project_TOFO/resource/font/ayyyL.ttf');
 }
 @FONT-FACE{
 	font-family: 'aaaB';
-	src: url('/grouping/resource/font/ayyyB.ttf');
+	src: url('/project_TOFO/resource/font/ayyyB.ttf');
 }
 * {
 	font-family: aaa;
@@ -65,6 +65,7 @@ a:hover, a:active {
 }
 
 .btnConfirm {
+	margin-bottom: 5px;
 	font-size: 20px;
     border: none;
     color: #ffffff;

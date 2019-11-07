@@ -37,6 +37,8 @@ public class ReviewServlet extends HttpServlet {
 
 		if (uri.indexOf("list.do") != -1) {
 			forward(req, resp, "/WEB-INF/views/review/reviewList.jsp");
+		}else if (uri.indexOf("review.do") != -1) {
+			forward(req, resp, "/WEB-INF/views/review/review.jsp");
 		}
 	}
 }

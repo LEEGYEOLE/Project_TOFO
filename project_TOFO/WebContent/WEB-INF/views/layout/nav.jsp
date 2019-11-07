@@ -16,23 +16,15 @@ String cp = request.getContextPath();
         </li>
 
         <li>
-            <a href="#">회계관리</a>
-        </li>
-
-        <li>
             <a href="#">건의게시판</a>
         </li>
 
         <li>
+            <a href="#">게시판</a>
+        </li>
+
+        <li>
             <a href="#">회원관리</a>
-            <ul>
-                <li><a href="#" style="margin-left:230px; " onmouseover="this.style.marginLeft='230px';">정보확인</a></li>
-                <li><a href="#">쪽지</a></li>
-                <li><a href="#">일정관리</a></li>
-                <li><a href="#">친구관리</a></li>
-                <li><a href="#">사진첩</a></li>
-                <li><a href="#">채팅</a></li>
-            </ul>
         </li>
     </ul>      
 </div>

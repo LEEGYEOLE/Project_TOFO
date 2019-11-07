@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css"
 	type="text/css">
@@ -196,7 +196,7 @@
 					<div class='right-box'>
 
 						<div style="">
-							<button class="btnConfirm" style="float: right;" onclick="scheduleModal('ScheduleAdd','show');">등록하기</button>
+							<button class="btnConfirm" style="float: right;" onclick="scheduleModal('peapleList','show');">등록하기</button>
 						</div>
 
 						<!--날짜가 들어가는 부분-->
@@ -211,7 +211,7 @@
 
 
 							<tr align="center" bgcolor="#ffffff" height="35"
-								style="border-bottom: 1px solid #cccccc;" onclick="scheduleModal('scheduleArticle','show');">
+								style="border-bottom: 1px solid #cccccc;"  onclick="scheduleModal('scheduleArticle', 'show');">
 								<td colspan="2">오후 18:00</td>
 								<td>[홍대]</td>
 								<td align="left" style="padding-left: 10px;"><a href="#">웹
@@ -264,7 +264,7 @@
 						<button class="shortbtn" type="button">주소검색</button>
 
 
-						<button class="middlebtn" type="button">인원추가하기</button>
+						<button class="middlebtn" type="button" onclick="scheduleModal('peapleList', 'show');">인원추가하기</button>
 						<p>(1/5)</p>
 
 						<button class="graylongbtn" type="button">등록</button>
@@ -278,13 +278,13 @@
 	<!-- 일정 보기 --> 
     <div class="modal show-modal" id="scheduleArticle">
 
-        <div class="modal-content">
+        <div class="modal-content" >
         
         <div>
         	    <table id="moo">
             	<tr>
 	            	<th>여기는 모임명 들어갈 곳
-	            	<span class="close-button" onclick="scheduleModal('scheduleArticle','none');">×</span>
+	            	<span class="close-button"  onclick="scheduleModal('scheduleArticle', 'none');">×</span>
 	            	</th>
             	</tr>
             </table>
@@ -303,19 +303,49 @@
 			  	<p>지도나오기</p>
 			  		  	
 			  	
-			  	<p><button class="middlebtn">참여인원보기(인원수)</button></p>
+			  	<p><button class="middlebtn" onclick="scheduleModal('peapleList', 'show');">참여인원보기(인원수)</button></p>
 			  
 			  </div>
 
 
-			  <button class="shortbtn" type="button" onclick="scheduleModal('scheduleArticle','none');">닫기</button>
+			  <button class="shortbtn" type="button" onclick="scheduleModal('scheduleArticle', 'none');">닫기</button>
 			  <button class="graybtn" type="button">수정하기</button>
 			  <button class="graybtn" type="button">삭제하기</button>
 			  
 			</form>
         </div>
     </div>
+<!-- 참여인원목록 --> 
+<!--     <div class="my-modal show-modal"> -->
 
+        <div class="my-modal-content"  id="peapleList">
+        
+        <div>
+        	<table id="mymoo">
+            	<tr>
+	            	<th>참여인원목록
+	            	<span class="close-button" onclick="scheduleModal('peapleList', 'none');">×</span>
+	            	</th>
+            	</tr>
+            </table>
+        </div>
+            <form action="#post.php" method="POST">
+            <div style="overflow: scroll;"> 
+            	<ol class="list">
+            		<li>박수진(sujin)</li>
+            		<li>이겨레(gyeo)</li>
+            		<li>이중경(brother)</li>
+            		<li>김윤식(evaring)</li>
+            		<li>김윤식(evaring)</li>
+
+
+            	</ol>	
+            </div>
+            
+
+			</form>
+        </div>
+<!--     </div> -->
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
@@ -323,6 +353,8 @@
 	window.onload = function () {
 		var ScheduleAdd = document.getElementById("ScheduleAdd");
 		ScheduleAdd.style.display='none';
+		var peapleList = document.getElementById("peapleList");
+		peapleList.style.display='none';
 		
 		var scheduleArticle = document.getElementById("scheduleArticle");
 		scheduleArticle.style.display='none';

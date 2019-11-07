@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>TOFO</title>
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css" type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" type="text/css">
@@ -95,7 +95,6 @@ ul {
 	
 	<div class="container">
 		<div class="body-container">
-		<div>윤식바보??;;;</div>
 			<div class="slide-wrap" style="padding-bottom: 150px;">
 				<div class="slide-content">
 					<ul id="slider" class="slider">
