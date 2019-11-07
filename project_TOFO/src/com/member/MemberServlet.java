@@ -83,7 +83,8 @@ public class MemberServlet extends HttpServlet {
 
 				// 메인 화면으로 리다이렉트
 				String cp = req.getContextPath();
-				resp.sendRedirect(cp);
+				resp.sendRedirect(cp+"/main/myMain.do");
+//				resp.sendRedirect(cp+"/main/myMain.do");
 				return;
 				
 //				forward(req, resp, "/WEB-INF/views/member/complete.jsp");

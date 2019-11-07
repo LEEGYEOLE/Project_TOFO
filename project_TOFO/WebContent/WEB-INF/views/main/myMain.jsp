@@ -5,7 +5,6 @@
 <%
 	String cp = request.getContextPath();
 %>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,7 +17,6 @@
 	type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/modal.css"
 	type="text/css">
-
 <style type="text/css">
 .mainTb th, tr, td {
 	border: 1px solid black;
@@ -98,7 +96,6 @@
 </style>
 </head>
 <body>
-
 	<div class="header">
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 
