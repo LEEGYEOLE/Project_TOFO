@@ -86,18 +86,16 @@ ul {
 		});
 	});
 </script>
-
-
 </head>
 
 <body>
-
 	<div class="header">
 		<jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
 	</div>
 	
 	<div class="container">
 		<div class="body-container">
+		<div>À±½Ä¹Ùº¸??;;;</div>
 			<div class="slide-wrap" style="padding-bottom: 150px;">
 				<div class="slide-content">
 					<ul id="slider" class="slider">
