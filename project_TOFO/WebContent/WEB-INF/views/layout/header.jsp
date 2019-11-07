@@ -14,20 +14,26 @@
 	</div>
 	<div class="header-right">
 	<!-- 		로그인 했으면 보여주기 -->
+	<c:if test="${not empty sessionScope.member}">
 		<ul class="nav">
 			<li><a style="margin-top: 0px;"><button
 						class="my-header-button">
+					
 						<img alt="" src="<%=cp%>/resource/img/icon/my.png"
 							style="width: 25px; height: auto; margin-right: 10px; vertical-align: middle;"><span
-							style="vertical-align: middle;">이겨레</span><img alt=""
+							style="vertical-align: middle;">${sessionScope.member.userName}</span><img alt=""
 							src="<%=cp%>/resource/img/icon/arrow-down-wh.png"
 							style="width: 25px; height: auto; vertical-align: middle;">
 					</button></a>
 				<ul class="my">
 					<li><a href="<%=cp%>/member/created.do">마이페이지</a></li>
-					<li><a href="<%=cp%>">로그아웃</a></li>
+					<li><a href="<%=cp%>/member/logout.do">로그아웃</a></li>
 				</ul></li>
 		</ul>
+		</c:if>
+		
+		<!--로그인 안했을 시 보여주기-->
+		<c:if test="${empty sessionScope.member}">
 		<ul class="nav">
 			<li><a><button
 						onclick="javascript:location.href='<%=cp%>/member/created.do'"
@@ -39,6 +45,6 @@
 						onclick="javascript:location.href='<%=cp%>/member/login.do'"
 						class="header-button">로그인</button></a></li>
 		</ul>
-
+		   </c:if>
 	</div>
 </div>

@@ -85,6 +85,28 @@ background: lightsteelblue;
 	color: white;
 }
 </style>
+<script type="text/javascript">
+function sendLogin() {
+    var f = document.loginForm;
+
+	var str = f.id.value;
+    if(!str) {
+        alert("아이디를 입력하세요. ");
+        f.userId.focus();
+        return;
+    }
+
+    str = f.pwd.value;
+    if(!str) {
+        alert("패스워드를 입력하세요. ");
+        f.userPwd.focus();
+        return;
+    }
+
+    f.action = "<%=cp%>/member/login_ok.do";
+    f.submit();
+}
+</script>
 </head>
 
 <body>
@@ -98,7 +120,9 @@ background: lightsteelblue;
 				<div class="ipb">
 					<div class=logInLayout">
 						<h1 class="title40">로그인</h1>
-
+						
+						
+					<form name="loginForm" method="post" action="">
 						<table class="tb1">
 							<tr>
 							<td><img alt="" src="<%=cp%>/resource/img/icon/user.png"
@@ -115,7 +139,7 @@ background: lightsteelblue;
 							</tr>
 
 							<tr style="border-spacing: 3px">
-								<td colspan="2"><button class="bt1" onclick="javascript:location.href='<%=cp%>/main/myMain.do'">로그인</button>
+								<td colspan="2"><button class="bt1" onclick="sendLogin();">로그인</button>
 							</tr>
 
 							<tr>
@@ -128,6 +152,7 @@ background: lightsteelblue;
 									href="#">아이디/패스워드 찾기</a>
 							</tr>
 						</table>
+					</form>
 					</div>
 				</div>
 			</div>
