@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String cp = request.getContextPath();
 %>
@@ -54,6 +56,7 @@ $(function(){
 	});
 });
 
+// 버튼을 누르면 찾아가기
 function userSearch(){
 	var userId = document.getElementById("form-subject").value;
 	
@@ -63,8 +66,8 @@ function userSearch(){
 			$("#form-subject").closest("td").after(data);
 		});
 	});
-	
 }
+
 </script>
 </head>
 <body>
@@ -88,38 +91,19 @@ function userSearch(){
 							<th width="50">-</th>
 							<th width="50">-</th>
 						</tr>
-					<c:forEach var="dto" items="${list}">
+			<c:forEach var="dto" items="${list}">
 			  <tr> 
-			      <td>${dto.listNum}</td>
-			      <td>
-
-			      </td>
+			      <td>1</td>
+			      <td>${dto.rank}</td>
+			      <td>${dto.userId}</td>
 			      <td>${dto.userName}</td>
-			      <td>${dto.created}</td>
+			      <td>${dto.birth}</td>
+			      <td>${dto.tel}</td>
 			      <td><button>위임하기</button></td>
 				  <td><button>강퇴하기</button></td>
 			  </tr>
 			  </c:forEach>
-						<tr>
-							<td>1</td>
-							<td>모임장</td>
-							<td>rufl95</td>
-							<td>이겨레</td>
-							<td>1995-11-27</td>
-							<td>010-5220-4222</td>
-							<td><button>위임하기</button></td>
-							<td><button>강퇴하기</button></td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>모임원</td>
-							<td>rufl95</td>
-							<td>이겨레</td>
-							<td>1995-11-27</td>
-							<td>010-5220-4222</td>
-							<td><button>위임하기</button></td>
-							<td><button>강퇴하기</button></td>
-						</tr>
+			 
 					</table>
 					<div style="width: 100%; clear: both; height: 50px;">
 						<div style="width: 120px; height: 100%; float: left;">
@@ -154,18 +138,7 @@ function userSearch(){
 					
 				</tr>
 					
-				<c:forEach var="dto" items="${list}">
-			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
-			      <td>${dto.userId}</td>
-			      <td align="left" style="padding-left: 10px;">
-			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
-			           <c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
-			      </td>
-			      <td>${dto.userName}</td>
-			      <td>${dto.created}</td>
-			      <td>${dto.hitCount}</td>
-			  </tr>
-			</c:forEach> 
+				
 
 				<tr>
 					<td width="100" valign="top"

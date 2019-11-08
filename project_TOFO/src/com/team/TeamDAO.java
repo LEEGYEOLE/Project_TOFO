@@ -3,6 +3,8 @@ package com.team;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.util.DBConn;
 
@@ -47,8 +49,8 @@ public class TeamDAO {
 		return dto;
 	}
 	
-	public TeamDTO readTeamMember(int num) {
-		TeamDTO dto = null;
+	public List<TeamDTO> readTeamMember(int num) {
+		List<TeamDTO> list = new ArrayList<TeamDTO>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String sql;
@@ -63,13 +65,15 @@ public class TeamDAO {
 			pstmt.setInt(1, num);
 			
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				dto = new TeamDTO();
+			while(rs.next()) {
+				TeamDTO dto = new TeamDTO();
 				dto.setUserId(rs.getString("userId"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setBirth(rs.getString("birth"));
 				dto.setTel(rs.getString("tel"));
 				dto.setRank(rs.getString("rank"));
+				
+				list.add(dto);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,7 +91,7 @@ public class TeamDAO {
 				}
 			}
 		}
-		return dto;		
+		return list;		
 	}
 	
 	

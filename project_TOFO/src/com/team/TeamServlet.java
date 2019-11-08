@@ -2,6 +2,7 @@ package com.team;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.member.SessionInfo;
 
 @WebServlet("/team/*")
 public class TeamServlet extends HttpServlet {
@@ -37,11 +41,11 @@ public class TeamServlet extends HttpServlet {
 		String uri = req.getRequestURI();
 
 		if (uri.indexOf("memberList.do") != -1) {
-			forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
+			readTeamMember(req, resp);
 		} else if(uri.indexOf("userSearch.do") != -1) {
 			readMember(req,resp);
 		} else if(uri.indexOf("")!=-1) {
-			readTeamMember(req, resp);
+			
 		}
 	}
 	
@@ -63,6 +67,25 @@ public class TeamServlet extends HttpServlet {
 	}
 	
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		TeamDAO dao = new TeamDAO();
+		List<TeamDTO> list;
 		
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		if(info==null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+
+		// int num =Integer.parseInt(req.getParameter("num"));
+		
+		try {
+			list = dao.readTeamMember(7); // 리스트로 받았어
+			req.setAttribute("list", list); // 키, 값
+		} catch (Exception e) {
+			String cp = req.getContextPath();
+			resp.sendRedirect(cp);
+		}
+		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
 	}
 }
