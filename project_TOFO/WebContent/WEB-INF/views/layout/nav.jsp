@@ -16,11 +16,11 @@ String cp = request.getContextPath();
         </li>
 
         <li>
-            <a href="#">건의게시판</a>
+            <a href="<%=cp%>/board/list.do">건의게시판</a>
         </li>
 
         <li>
-            <a href="#">공지사항</a>
+            <a href="<%=cp%>/notice/list.do">공지사항</a>
         </li>
 
         <li>
