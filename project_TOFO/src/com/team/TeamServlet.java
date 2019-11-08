@@ -1,6 +1,8 @@
 package com.team;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +10,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.board.BoardDAO;
+import com.board.BoardDTO;
+import com.util.MyUtil;
 
 @WebServlet("/team/*")
 public class TeamServlet extends HttpServlet {
@@ -38,5 +44,10 @@ public class TeamServlet extends HttpServlet {
 		if (uri.indexOf("memberList.do") != -1) {
 			forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
 		} 
+	}
+	
+	protected void readMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// ÆÀÀÇ ¸â¹ö º¸±â
+		
 	}
 }

@@ -39,7 +39,7 @@ $(function(){
 			  modal: true,
 			  height: 650,
 			  width: 600,
-			  title: '스케쥴 등록',
+			  title: '회원 추가',
 			  close: function(event, ui) {
 			  }
 		});
@@ -118,27 +118,39 @@ $(function(){
 				<tr>
 					<td width="100" valign="top"
 						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">제목</label></td>
+						style="font-weight: 900;">아이디</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<input type="text" name="subject" id="form-subject"
-								maxlength="100" class="boxTF" style="width: 95%;">
+								maxlength="100" class="boxTF" style="width: 85%;">
+								<button>검색</button>
 						</p>
-						<p class="help-block">* 제목은 필수 입니다.</p>
+						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
 					</td>
 				</tr>
+					
+				<c:forEach var="dto" items="${list}">
+			  <tr align="center" bgcolor="#ffffff" height="35" style="border-bottom: 1px solid #cccccc;"> 
+			      <td>${dto.userId}</td>
+			      <td align="left" style="padding-left: 10px;">
+			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
+			           <c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
+			      </td>
+			      <td>${dto.userName}</td>
+			      <td>${dto.created}</td>
+			      <td>${dto.hitCount}</td>
+			  </tr>
+			</c:forEach> 
 
 				<tr>
 					<td width="100" valign="top"
 						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">일정분류</label></td>
+						style="font-weight: 900;">등급</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<select name="color" id="form-color" class="selectField">
-								<option value="green">개인일정</option>
-								<option value="blue">가족일정</option>
-								<option value="tomato">회사일정</option>
-								<option value="purple">기타일정</option>
+								<option value="green">모임장</option>
+								<option value="blue">모임원</option>
 							</select>
 						</p>
 					</td>
