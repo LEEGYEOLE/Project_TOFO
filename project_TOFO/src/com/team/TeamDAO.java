@@ -54,21 +54,22 @@ public class TeamDAO {
 		String sql;
 		
 		try {
-			sql = "select tl.userId, userName, t.num, birth, tel, rank " + 
+			sql = "select tl.userId, userName, birth, tel, rank " + 
 					"from teamList tl " + 
 					"left outer join member m on tl.userId=m.userId " + 
 					"left outer join team t on tl.num=t.num where t.num=?";
 			
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, dto.getNum());
+			pstmt.setInt(1, num);
 			
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
 				dto = new TeamDTO();
 				dto.setUserId(rs.getString("userId"));
-				dto.setUserId(rs.getString("userName"));
-				dto.setUserId(rs.getString("birth"));
-				dto.setUserId(rs.getString("created_Date"));
+				dto.setUserName(rs.getString("userName"));
+				dto.setBirth(rs.getString("birth"));
+				dto.setTel(rs.getString("tel"));
+				dto.setRank(rs.getString("rank"));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,4 +89,6 @@ public class TeamDAO {
 		}
 		return dto;		
 	}
+	
+	
 }

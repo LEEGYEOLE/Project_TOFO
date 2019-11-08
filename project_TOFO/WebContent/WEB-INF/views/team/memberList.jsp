@@ -88,6 +88,18 @@ function userSearch(){
 							<th width="50">-</th>
 							<th width="50">-</th>
 						</tr>
+					<c:forEach var="dto" items="${list}">
+			  <tr> 
+			      <td>${dto.listNum}</td>
+			      <td>
+
+			      </td>
+			      <td>${dto.userName}</td>
+			      <td>${dto.created}</td>
+			      <td><button>위임하기</button></td>
+				  <td><button>강퇴하기</button></td>
+			  </tr>
+			  </c:forEach>
 						<tr>
 							<td>1</td>
 							<td>모임장</td>

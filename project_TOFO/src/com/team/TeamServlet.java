@@ -38,13 +38,15 @@ public class TeamServlet extends HttpServlet {
 
 		if (uri.indexOf("memberList.do") != -1) {
 			forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
-		}else if(uri.indexOf("userSearch.do") != -1) {
+		} else if(uri.indexOf("userSearch.do") != -1) {
 			readMember(req,resp);
+		} else if(uri.indexOf("")!=-1) {
+			readTeamMember(req, resp);
 		}
 	}
 	
 	protected void readMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 팀의 멤버 보기
+		// 모달 창에서 아이디 검색하고 싶어..
 		String userId=req.getParameter("userId");
 		TeamDAO dao=new TeamDAO();
 		TeamDTO dto=dao.readMember(userId);
@@ -58,5 +60,9 @@ public class TeamServlet extends HttpServlet {
 		PrintWriter out = resp.getWriter();
 		
 		out.print(aa);
+	}
+	
+	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 	}
 }
