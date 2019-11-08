@@ -53,6 +53,18 @@ $(function(){
 		$('#schedule-dialog').dialog("close");
 	});
 });
+
+function userSearch(){
+	var userId = document.getElementById("form-subject").value;
+	
+	$(function(){
+		var url="<%=cp%>/team/userSearch.do";
+		$.get(url, {userId:userId}, function(data){
+			$("#form-subject").closest("td").after(data);
+		});
+	});
+	
+}
 </script>
 </head>
 <body>
@@ -123,10 +135,11 @@ $(function(){
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<input type="text" name="subject" id="form-subject"
 								maxlength="100" class="boxTF" style="width: 85%;">
-								<button>검색</button>
+								<button onclick="userSearch();">검색</button>
 						</p>
 						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
 					</td>
+					
 				</tr>
 					
 				<c:forEach var="dto" items="${list}">
