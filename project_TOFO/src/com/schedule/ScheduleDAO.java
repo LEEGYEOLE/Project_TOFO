@@ -61,14 +61,14 @@ public class ScheduleDAO {
 				rs=pstmt.executeQuery();
 				if(rs.next()) {
 					dto = new ScheduleDTO();
-					dto.setSche_Num(rs.getInt("s.sche_Num"));
-					dto.setNum(rs.getInt("t.num"));
-					dto.setUserId(rs.getString("tl.userId"));
-					dto.setsDate(rs.getString("s.sDate"));
-					dto.seteDate(rs.getString("s.eDate"));
-					dto.setCreated(rs.getString("s.created"));
-					dto.setTitle(rs.getString("s.title"));
-					dto.setColor(rs.getString("s.color"));
+					dto.setSche_Num(rs.getInt("sche_Num"));
+					dto.setNum(rs.getInt("num"));
+					dto.setUserId(rs.getString("userId"));
+					dto.setsDate(rs.getString("sDate"));
+					dto.seteDate(rs.getString("eDate"));
+					dto.setCreated(rs.getString("created"));
+					dto.setTitle(rs.getString("title"));
+					dto.setColor(rs.getString("color"));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

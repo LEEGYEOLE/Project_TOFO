@@ -1,86 +1,124 @@
-<%@page import="java.util.Calendar"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
-	String cp = request.getContextPath();
-
-	request.setCharacterEncoding("UTF-8");
-
-	Calendar cal = Calendar.getInstance();
-	int year = cal.get(Calendar.YEAR);
-	int month = cal.get(Calendar.MONTH) + 1;
-
-	String sy = request.getParameter("year");
-	String sm = request.getParameter("month");
-
-	if (sy != null) {
-		year = Integer.parseInt(sy);
-	}
-	if (sm != null) {
-		month = Integer.parseInt(sm);
-	}
-
-	cal.set(year, month - 1, 1);
-
-	year = cal.get(Calendar.YEAR);
-	month = cal.get(Calendar.MONTH) + 1;
-
-	int week = cal.get(Calendar.DAY_OF_WEEK); // ¿äÀÏ (1:ÀÏ, 7:Åä) 1~7
-	int endDay = cal.getActualMaximum(Calendar.DATE); //ÇØ´ç ¿ùÀÇ ¸¶Áö¸· ÀÏÀÚ
+   String cp = request.getContextPath();
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
-<link rel="stylesheet" href="<%=cp%>/resource/css/style.css"
-	type="text/css">
-<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css"
-	type="text/css">
+<title>spring</title>
+
+<link rel="stylesheet" href="<%=cp%>/resource/css/style.css" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" type="text/css">
+<link rel="stylesheet" href="<%=cp%>/resource/jquery/css/smoothness/jquery-ui.min.css" type="text/css">
+
 <link rel="stylesheet" href="<%=cp%>/resource/css/modal.css"
 	type="text/css">
-<style>
-.left-box {
-	float: left;
-	width: 50%;
+
+<style type="text/css">
+/* ëª¨ë‹¬ëŒ€í™”ìƒì íƒ€ì´í‹€ë°” */
+.ui-widget-header {
+	background: none;
+	border: none;
+	height:35px;
+	line-height:35px;
+	border-bottom: 1px solid #cccccc;
+	border-radius: 0px;
+}
+.help-block {
+	margin-top: 3px; 
 }
 
-.right-box {
-	float: right;
-	width: 50%;
+.titleDate {
+	display: inline-block;
+	font-weight: 600; 
+	font-size: 19px;
+	font-family: ë‚˜ëˆ”ê³ ë”•, "ë§‘ì€ ê³ ë”•", ë‹ì›€, sans-serif;
+	padding:2px 4px 4px;
+	text-align:center;
+	position: relative;
+	top: 4px;
+}
+.btnDate {
+	display: inline-block;
+	font-size: 10px;
+	font-family: ë‚˜ëˆ”ê³ ë”•, "ë§‘ì€ ê³ ë”•", ë‹ì›€, sans-serif;
+	color:#333333;
+	padding:3px 5px 5px;
+	border:1px solid #cccccc;
+    background-color:#fff;
+    text-align:center;
+    cursor: pointer;
+    border-radius:2px;
 }
 
-.shortbtn {
-	margin-top: 3px;
+.textDate {
+      font-weight: 500; cursor: pointer;  display: block; color:#333333;
+}
+.preMonthDate, .nextMonthDate {
+      color:#aaaaaa;
+}
+.nowDate {
+      color:#111111;
+}
+.saturdayDate{
+      color:#0000ff;
+}
+.sundayDate{
+      color:#ff0000;
 }
 
-.container-block {
-	width: 90%;
-	margin: 0 auto;
+.scheduleSubject {
+   display:block;
+   /*width:100%;*/
+   width:110px;
+   margin:1.5px 0;
+   font-size:13px;
+   color:#555555;
+   background:#eeeeee;
+   cursor: pointer;
+   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.scheduleMore {
+   display:block;
+   width:110px;
+   margin:0 0 1.5px;
+   font-size:13px;
+   color:#555555;
+   cursor: pointer;
+   text-align:right;
 }
 </style>
+
+<script type="text/javascript" src="<%=cp%>/resource/js/util.js"></script>
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
+
 <script type="text/javascript">
-	function change() {
-		var f = document.yearMonthForm;
-		var lenY = f.selectYear.length;
-		var lenM = f.selectMonth.length;
-		var nowYear, nowMonth;
-		for (var i = 0; i < lenY; i++) {
-			if (f.selectYear[i].selected) {
-				nowYear = f.selectYear[i].value;
-				break;
-			}
-		}
-		for (var i = 0; i < lenM; i++) {
-			if (f.selectMonth[i].selected) {
-				nowMonth = f.selectMonth[i].value;
-				break;
-			}
-		}
-		var url = "cal.jsp?year=" + nowYear + "&month=" + nowMonth;
-		location.href = url;
-	}
+
+//ìŠ¤ì¼€ì¥´ ë“±ë¡ -----------------------
+//ë“±ë¡ ëŒ€í™”ìƒì ì¶œë ¥
+$(function(){
+	$(".textDate").click(function(){
+		$('#schedule-dialog').dialog({
+			  modal: true,
+			  height: 650,
+			  width: 600,
+			  title: 'ìŠ¤ì¼€ì¥´ ë“±ë¡',
+			  close: function(event, ui) {
+			  }
+		});
+
+	});
+});
+//ë“±ë¡ ëŒ€í™”ìƒì ë‹«ê¸°
+$(function(){
+	$("#btnScheduleSendCancel").click(function(){
+		$('#schedule-dialog').dialog("close");
+	});
+});
 </script>
 </head>
 <body>
@@ -91,294 +129,177 @@
 	<div class="container">
 		<div class="body-container">
 			<div class="container-block">
-				<div style="margin: 10px 10px;">
-					<!----------------div ¿ŞÂÊ------------------------->
+				<div class="body-title">
+            <h3><span style="font-family: Webdings">2</span> ì¼ì •ê´€ë¦¬ </h3>
+            <button class="btnConfirm" style="float: right;"
+								onclick="scheduleModal('ScheduleAdd','show');">ë“±ë¡í•˜ê¸°</button>
+        </div>
+        
+        <div>
 
-					<div class='left-box'>
-						<div style="width: 90%; height: 90%; margin-left: 5%">
-							<form name="yearMonthForm" method="post">
-								<table
-									style="width: 100%; border-spacing: 0; border-collapse: collapse;">
-									<tr height="35" align="left">
-										<td style="padding-top: 17px;"><select
-											style="height: 30px; width: 90px" name="selectYear"
-											onchange="change();">
-												<%
-													for (int i = year - 5; i <= year + 5; i++) {
-														if (i == year) {
-															out.println("<option value='" + i + "' selected='selected'>" + i + "</option>");
-														} else
-															out.println("<option value='" + i + "'>" + i + "</option>");
-													}
-												%>
-
-										</select> <select style="height: 30px; width: 60px" name="selectMonth"
-											onchange="change();">
-												<%
-													for (int i = 1; i <= 12; i++) {
-														if (i == month)
-															out.println("<option value='" + i + "' selected='selected'>" + i + "</option>");
-														else
-															out.println("<option value='" + i + "'>" + i + "</option>");
-													}
-												%>
-										</select></td>
-									</tr>
-								</table>
-							</form>
-							<table border="1"
-								style="width: 100%; border-spacing: 0; border-collapse: collapse;">
-								<tr height="30" align="center" bgcolor="#e4e4e4">
-									<td width="100" style="color: red;">ÀÏ</td>
-									<td width="100">¿ù</td>
-									<td width="100">È­</td>
-									<td width="100">¼ö</td>
-									<td width="100">¸ñ</td>
-									<td width="100">±İ</td>
-									<td width="100" style="color: blue;">Åä</td>
-								</tr>
-
-								<%
-									int col = 0;
-									out.println("<tr height='30' align='center'>");
-
-									//1ÀÏ ¾Õ °ø¹é
-									for (int i = 1; i < week; i++) {
-										out.println("<td>&nbsp;</td>");
-										col++;
-									}
-
-									//1~¸¶Áö¸·ÀÏÀÚ±îÁö Ãâ·Â
-									String color;
-									for (int i = 1; i <= endDay; i++) {
-										color = col == 0 ? "red" : col == 6 ? "blue" : "black";
-										out.println("<td style='color:" + color + ";'>" + i + "</td>");
-										col++;
-										if (col == 7 && i != endDay) {
-											out.println("</tr>");
-
-											out.println("<tr height='100' align='center'>");
-											for (int j = 0; j < 7; j++) {
-												out.println("<td>&nbsp;</td>");
-											}
-											out.println("</tr>");
-
-											out.println("<tr height='30' align='center'>");
-											col = 0;
-										}
-									}
-									//¸¶Áö¸· ÁÖÀÇ ¸¶Áö¸· ÀÏÀÚ Ãâ·Â ÈÄ µŞ ºÎºĞ °ø¹é
-									while (col > 0 && col < 7) {
-										out.println("<td>&nbsp;</td>");
-										col++;
-									}
-									out.println("</tr>");
-
-									out.println("<tr height='100' align='center'>");
-									for (int j = 0; j < 7; j++) {
-										out.println("<td>&nbsp;</td>");
-									}
-									out.println("</tr>");
-								%>
-							</table>
-						</div>
-					</div>
-
-
-
-
-
-
-
-
-					<!----------------div ¿À¸¥ÂÊ------------------------->
-
-					<div class='right-box'>
-
-						<div style="">
-							<button class="btnConfirm" style="float: right;"
-								onclick="scheduleModal('ScheduleAdd','show');">µî·ÏÇÏ±â</button>
-						</div>
-
-						<!--³¯Â¥°¡ µé¾î°¡´Â ºÎºĞ-->
-						<table
-							style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
-
-							<tr align="left" bgcolor="#eeeeee" height="35"
-								style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-								<th colspan="6" width="60"
-									style="color: #787878; padding-left: 15px;">17ÀÏ</th>
-							</tr>
-
-
-							<tr align="center" bgcolor="#ffffff" height="35"
-								style="border-bottom: 1px solid #cccccc;"
-								>
-								<td colspan="2">¿ÀÈÄ 18:00</td>
-								<td>[È«´ë]</td>
-								<td align="left" style="padding-left: 10px;"><a onclick="scheduleModal('scheduleArticle', 'show');">À¥
-										ÆäÀÌÁö ¸¸µé±â ½ºÅÍµğ</a></td>
-								<td style="width: 65px;"><a onclick="scheduleModal('peapleList', 'show');">ÀÎ¿ø(1/5)</a></td>
-<td style="width: 80px;"><button >Âü°¡ÇÏ±â</button> </td>
-
-							</tr>
-
-						</table>
-						<!--³¯Â¥º° ÀÏÁ¤ÀÌ µé¾î°¡´Â ºÎºĞ-->
-						<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
-							<tr height="35">
-								<td align="center">
-									<!-- 								  ${dataCount==0? "µî·ÏµÈ °Ô½Ã±ÛÀÌ ¾ø½À´Ï´Ù." : paging} 1 2 3 -->
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-
-		</div>
-
-		<!-- 			ÀÏÁ¤ µî·Ï ¸ğ´Ş -->
-		<div class="modal show-modal" id="ScheduleAdd">
-			<div class="modal-content">
-				<div>
-					<table id="moo">
-						<tr>
-							<th>ÀÏÁ¤ µî·Ï ÀÔ´Ï´Ù. <span class="close-button"
-								onclick="scheduleModal('ScheduleAdd','none');">¡¿</span>
-							</th>
-
-						</tr>
-					</table>
-				</div>
-
-				<form class="modalForm" action="#post.php" method="POST"
-					name="ScheduleAddForm">
-
-					<input class="shortinput" placeholder="½ÃÀÛ³¯Â¥"> <input
-						class="shortinput" placeholder="½ÃÀÛ½Ã°£"> <input
-						class="shortinput" placeholder="Á¾·á³¯Â¥"> <input
-						class="shortinput" placeholder="Á¾·á½Ã°£"> <input
-						class="longinput" required="required" type="text"
-						placeholder="ÀÏÁ¤¸í">
-
-					<textarea class="textwrite" required="required" placeholder="»ó¼¼ÀÏÁ¤"></textarea>
-
-					<input class="middleinput" placeholder="Àå¼Ò¸í/ÁÖ¼Ò">
-
-					<button class="shortbtn" type="button">ÁÖ¼Ò°Ë»ö</button>
-
-
-					<input class="middleinput" placeholder="ÃÖ´ëÁ¤¿ø">
-
-					<button class="graylongbtn" type="button">µî·Ï</button>
-
-
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<!-- ÀÏÁ¤ º¸±â -->
-	<div class="modal show-modal" id="scheduleArticle">
-
-		<div class="modal-content">
-
-			<div>
-				<table id="moo">
-					<tr>
-						<th>¿©±â´Â ¸ğÀÓ¸í µé¾î°¥ °÷ <span class="close-button"
-							onclick="scheduleModal('scheduleArticle', 'none');">¡¿</span>
-						</th>
+            <div style="clear: both;">
+	           <ul class="tabs">
+			       <li id="tab-month" data-tab="month">ì›”ë³„ì¼ì •</li>
+			       <li id="tab-day" data-tab="day">ìƒì„¸ì¼ì •</li>
+			       <li id="tab-year" data-tab="year">ë…„ë„</li>
+			   </ul>
+		   </div>
+		
+		   <div id="tab-content" style="clear:both; padding: 20px 0px 0px;">
+		   
+		   		<table style="width: 840px; margin:0px auto; border-spacing: 0;" >
+		   			<tr height="60">
+		   			     <td width="200">&nbsp;</td>
+		   			     <td align="center">
+		   			         <span class="btnDate" onclick="changeDate(${todayYear}, ${todayMonth});">ì˜¤ëŠ˜</span>
+		   			         <span class="btnDate" onclick="changeDate(${year}, ${month-1});">ï¼œ</span>
+		   			         <span class="titleDate">${year}å¹´ ${month}æœˆ</span>
+		   			         <span class="btnDate" onclick="changeDate(${year}, ${month+1});">ï¼</span>
+		   			     </td>
+		   			     <td width="200">&nbsp;</td>
+		   			</tr>
+		   		</table>
+		   		
+			    <table id="largeCalendar" style="width: 840px; margin:0px auto; border-spacing: 1px; background: #cccccc;" >
+					<tr align="center" height="30" bgcolor="#ffffff">
+						<td width="120" style="color:#ff0000;">ì¼</td>
+						<td width="120">ì›”</td>
+						<td width="120">í™”</td>
+						<td width="120">ìˆ˜</td>
+						<td width="120">ëª©</td>
+						<td width="120">ê¸ˆ</td>
+						<td width="120" style="color:#0000ff;">í† </td>
 					</tr>
-				</table>
+
+				<c:forEach var="row" items="${days}" >
+						<tr align="left" height="120" valign="top" bgcolor="#ffffff">
+							<c:forEach var="d" items="${row}">
+								<td style="padding: 5px; box-sizing:border-box;">
+									${d}
+								</td>
+							</c:forEach>
+						</tr>
+				</c:forEach>
+			    </table>		   
+		   
+		   </div>
+		
+        </div>
+        
 			</div>
 
-			<form class="modalForm" action="#post.php" method="POST">
-
-				<div class="scheduleList">
-
-					<p>ÀÏ½Ã</p>
-					<p>ÀÏ½Ã³»¿ë</p>
-					<p>»ó¼¼¼³¸í</p>
-					<p>»ó¼¼¼³¸í(³»¿ë)</p>
-					<p>Àå¼Ò</p>
-					<p>Àå¼Ò³»¿ë</p>
-					<p>Áöµµ³ª¿À±â</p>
-					
-				</div>
-
-
-				<button class="shortbtn" type="button"
-					onclick="scheduleModal('scheduleArticle', 'none');">´İ±â</button>
-				<button class="graybtn" type="button" onclick="modify();">¼öÁ¤ÇÏ±â</button>
-				<button class="graybtn" type="button">»èÁ¦ÇÏ±â</button>
-
-			</form>
 		</div>
-	</div>
-	<!-- Âü¿©ÀÎ¿ø¸ñ·Ï -->
-	<!--     <div class="my-modal show-modal"> -->
 
-	<div class="my-modal-content" id="peapleList">
+		<div id="schedule-dialog" style="display: none;">
+		<form name="scheduleForm">
+			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì œëª©</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="subject" id="form-subject" maxlength="100" class="boxTF" style="width: 95%;">
+			        </p>
+			        <p class="help-block">* ì œëª©ì€ í•„ìˆ˜ ì…ë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
+			
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì¼ì •ë¶„ë¥˜</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			          <select name="color" id="form-color" class="selectField">
+			              <option value="green">ê°œì¸ì¼ì •</option>
+			              <option value="blue">ê°€ì¡±ì¼ì •</option>
+			              <option value="tomato">íšŒì‚¬ì¼ì •</option>
+			              <option value="purple">ê¸°íƒ€ì¼ì •</option>
+			          </select>
+			        </p>
+			      </td>
+			  </tr>
+			
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì¢…ì¼ì¼ì •</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 5px; margin-bottom: 5px;">
+			             <input type="checkbox" name="allDay" id="form-allDay" value="1" checked="checked">
+			             <label for="allDay">í•˜ë£¨ì¢…ì¼</label>
+			        </p>
+			      </td>
+			  </tr>
+			
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì‹œì‘ì¼ì</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="sday" id="form-sday" maxlength="10" class="boxTF" readonly="readonly" style="width: 25%; background: #ffffff;">
+			            <input type="text" name="stime" id="form-stime" maxlength="5" class="boxTF" style="width: 15%; display: none;" placeholder="ì‹œì‘ì‹œê°„">
+  			        </p>
+			        <p class="help-block">* ì‹œì‘ë‚ ì§œëŠ” í•„ìˆ˜ì…ë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
 
-		<div>
-			<table id="mymoo">
-				<tr>
-					<th>Âü¿©ÀÎ¿ø¸ñ·Ï <span class="close-button"
-						onclick="scheduleModal('peapleList', 'none');">¡¿</span>
-					</th>
-				</tr>
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì¢…ë£Œì¼ì</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="eday" id="form-eday" maxlength="10" class="boxTF" readonly="readonly" style="width: 25%; background: #ffffff;">
+			            <input type="text" name="etime" id="form-etime" maxlength="5" class="boxTF" style="width: 15%; display: none;" placeholder="ì¢…ë£Œì‹œê°„">
+			        </p>
+			        <p class="help-block">ì¢…ë£Œì¼ìëŠ” ì„ íƒì‚¬í•­ì´ë©°, ì‹œì‘ì¼ìë³´ë‹¤ ì‘ì„ ìˆ˜ ì—†ìŠµë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
+
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì¼ì •ë°˜ë³µ</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <select name="repeat" id="form-repeat" class="selectField">
+			              <option value="0">ë°˜ë³µì•ˆí•¨</option>
+			              <option value="1">ë…„ë°˜ë³µ</option>
+			            </select>
+			            <input type="text" name="repeat_cycle" id="form-repeat_cycle" maxlength="2" class="boxTF" style="width: 20%; display: none;" placeholder="ë°˜ë³µì£¼ê¸°">
+			        </p>
+			      </td>
+			  </tr>
+			  
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ë©”ëª¨</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <textarea name="memo" id="form-memo" class="boxTA" style="width:93%; height: 70px;"></textarea>
+			        </p>
+			      </td>
+			  </tr>
+			  
+			  <tr height="45">
+			      <td align="center" colspan="2">
+			        <button type="button" class="btn" id="btnScheduleSendOk">ì¼ì •ë“±ë¡</button>
+			        <button type="reset" class="btn">ë‹¤ì‹œì…ë ¥</button>
+			        <button type="button" class="btn" id="btnScheduleSendCancel">ë“±ë¡ì·¨ì†Œ</button>
+			      </td>
+			  </tr>
 			</table>
-		</div>
-		<form action="#post.php" method="POST">
-			<div style="overflow: scroll;">
-				<ol class="list">
-					<li>¹Ú¼öÁø(sujin)</li>
-					<li>ÀÌ°Ü·¹(gyeo)</li>
-					<li>ÀÌÁß°æ(brother)</li>
-					<li>±èÀ±½Ä(evaring)</li>
-					<li>±èÀ±½Ä(evaring)</li>
-				</ol>
-			</div>
-
-
 		</form>
+    </div>
 	</div>
-	<!--     </div> -->
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
-	<script type="text/javascript">
-	var i =1;
-		window.onload = function() {
-			var ScheduleAdd = document.getElementById("ScheduleAdd");
-			ScheduleAdd.style.display = 'none';
-			var peapleList = document.getElementById("peapleList");
-			peapleList.style.display = 'none';
-
-			var scheduleArticle = document.getElementById("scheduleArticle");
-			scheduleArticle.style.display = 'none';
-		}
-		
-		function modify() {
-			scheduleModal('scheduleArticle','none'); 
-			scheduleModal('ScheduleAdd','show');
-		}
-		function scheduleModal(name, state) {
-			if (state == 'show') {
-				if(name=='peapleList')
-					document.getElementById(name).style.display = 'block';
-				else
-				document.getElementById(name).style.display = 'contents';
-				
-// 				document.getElementById(name).style.zindex = i;
-// 				i--;
-				
-			} else if (state == 'none') {
-				document.getElementById(name).style.display = 'none';
-			}
-		};
-	</script>
+	<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery.ui.datepicker-ko.js"></script>
 </body>
 </html>
