@@ -3,6 +3,7 @@ package com.team;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,5 +95,94 @@ public class TeamDAO {
 		return list;		
 	}
 	
+	public int dataCount(int num) {
+		int result=0;
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		String sql;
+		
+		try {
+			sql="SELECT NVL(COUNT(*), 0) FROM teamList where num=?;";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			rs=pstmt.executeQuery();
+			if(rs.next())
+				result=rs.getInt(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
 	
+	public void updateRank(TeamDTO dto) {
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql="update teamList set rank='모임원' where userId=? and num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserId());
+			pstmt.setInt(2, dto.getNum());
+			
+			pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			
+			sql="update teamList set rank='모임장' where userId=? and num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserId());
+			pstmt.setInt(2, dto.getNum());
+			
+			pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+	
+	public int deleteTeamList(TeamDTO dto, int num, String rank) {
+    	int result=0;
+    	PreparedStatement pstmt = null;
+    	String sql;
+    	
+    	try {
+    		if(rank.equals("모임장")) {
+    			sql="delete from teamList where userId=?";
+    			pstmt=conn.prepareStatement(sql);
+    			pstmt.setString(1, dto.getUserId());
+    		}
+    		result = pstmt.executeUpdate();		
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+    	return result;
+    }
 }

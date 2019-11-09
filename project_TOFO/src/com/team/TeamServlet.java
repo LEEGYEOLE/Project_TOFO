@@ -44,8 +44,8 @@ public class TeamServlet extends HttpServlet {
 			readTeamMember(req, resp);
 		} else if(uri.indexOf("userSearch.do") != -1) {
 			readMember(req,resp);
-		} else if(uri.indexOf("")!=-1) {
-			
+		} else if(uri.indexOf("updateRank.do")!=-1) {
+			updateRank(req, resp);
 		}
 	}
 	
@@ -79,13 +79,41 @@ public class TeamServlet extends HttpServlet {
 
 		// int num =Integer.parseInt(req.getParameter("num"));
 		
+		int dataCount;
+		
 		try {
 			list = dao.readTeamMember(7); // 리스트로 받았어
+			dataCount = dao.dataCount(7);
 			req.setAttribute("list", list); // 키, 값
+			req.setAttribute("dataCount", dataCount);
+			
 		} catch (Exception e) {
 			String cp = req.getContextPath();
 			resp.sendRedirect(cp);
 		}
 		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
+	}
+	
+	private void updateRank(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info==null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		
+		TeamDAO dao = new TeamDAO();
+		TeamDTO dto = new TeamDTO();
+		
+		dto.setRank(req.getParameter("rank"));
+		
+		try {
+			dao.updateRank(dto);
+		} catch (Exception e) {
+			forward(req, resp, "/WEB-INF/views/main/main.jsp");
+		}
+		resp.sendRedirect(cp);
 	}
 }

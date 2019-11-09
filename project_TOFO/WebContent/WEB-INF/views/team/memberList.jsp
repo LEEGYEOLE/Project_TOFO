@@ -68,6 +68,17 @@ function userSearch(){
 	});
 }
 
+function updateRank() {
+	var userId=document.getElementById("update1").value;
+	
+	$(function() {
+		var url ="<%=cp%>/team/updateRank.do";
+		$.get(url, {userId:userId}, function(data){
+			$("#update1").closest("tr").after(data);
+		});
+	});
+}
+
 </script>
 </head>
 <body>
@@ -93,14 +104,14 @@ function userSearch(){
 						</tr>
 			<c:forEach var="dto" items="${list}">
 			  <tr> 
-			      <td>1</td>
+			      <td>${dto.dataCount}</td>
 			      <td>${dto.rank}</td>
 			      <td>${dto.userId}</td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.birth}</td>
 			      <td>${dto.tel}</td>
-			      <td><button>위임하기</button></td>
-				  <td><button>강퇴하기</button></td>
+			      <td><button id="update1" onclick="updateRank();">위임하기</button></td>
+				  <td><button id="delete1" onclick="delete">강퇴하기</button></td>
 			  </tr>
 			  </c:forEach>
 			 

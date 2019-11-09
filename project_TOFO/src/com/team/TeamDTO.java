@@ -3,8 +3,15 @@ package com.team;
 public class TeamDTO {
 	private String userId, userName, birth, email, tel, created_Date, signup_Date;
 	private String modify_Date, title, content, titleCreated, imageFilename, rank;
-	private int num, enabled, userCount, listNum;
+	private int num, enabled, userCount, listNum, dataCount;
 	
+	
+	public int getDataCount() {
+		return dataCount;
+	}
+	public void setDataCount(int dataCount) {
+		this.dataCount = dataCount;
+	}
 	public String getUserId() {
 		return userId;
 	}
