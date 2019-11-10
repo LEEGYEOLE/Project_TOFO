@@ -84,8 +84,7 @@ function updateRank() {
 	<script type="text/javascript">
 	function deleteTeamList(userId) {
 		if(confirm("회원을 강퇴 하시겠습니까 ?")) {
-			var url="<%=cp%>/team/deleteTeamList.do";
-			location.href=url;
+			location.href="delete.jsp";
 		}
 	}
 	</script>
@@ -121,8 +120,8 @@ function updateRank() {
 			      <td>${dto.userName}</td> 
 			      <td>${dto.birth}</td>
 			      <td>${dto.tel}</td>
-			      <td><button id="update1" onclick="updateRank('${dto.rank}');">위임하기</button></td>
-				  <td><button id="delete1" onclick="deleteTeamList('${dto.userId}');">강퇴하기</button></td>
+			      <td><input type="button" value="위임하기" onclick="updateRank('${dto.userId}')" class="btn"></td>
+			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}')" class="btn"></td>
 			  </tr>
 			  </c:forEach>
 			 

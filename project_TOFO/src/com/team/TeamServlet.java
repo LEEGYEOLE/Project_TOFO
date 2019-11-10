@@ -115,7 +115,7 @@ public class TeamServlet extends HttpServlet {
 		resp.sendRedirect(cp+"/team/memberList.do");
 	}
 	
-	private void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	public void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		String cp = req.getContextPath();
 		
