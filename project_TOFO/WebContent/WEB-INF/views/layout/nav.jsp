@@ -24,7 +24,7 @@ String cp = request.getContextPath();
         </li>
 
         <li>
-            <a href="<%=cp%>/team/memberList.do">회원관리</a>
+            <a href="<%=cp%>/teamList/memberList.do">회원관리</a>
         </li>
     </ul>      
 </div>

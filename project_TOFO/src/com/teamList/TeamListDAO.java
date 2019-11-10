@@ -5,14 +5,65 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
+import com.member.MemberDTO;
+import com.sun.javafx.collections.MappingChange.Map;
 import com.util.DBConn;
 
 public class TeamListDAO {
 	private Connection conn = DBConn.getConnection();
 	
-	
+	public List<HashMap<String, Object>> listTeamMember(int num){
+		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql;
+		
+		try {
+			sql = "select listNum, tl.num, tl.userId, userName, to_char(birth,'YYYY-MM-DD') birth, tel, rank " + 
+					"from teamList tl " + 
+					"left outer join member m on tl.userId=m.userId " + 
+					"left outer join team t on tl.num=t.num where t.num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				map.put("listNum", rs.getInt("listNum"));
+				map.put("num", rs.getInt("num"));
+				map.put("userId", rs.getString("userId"));
+				map.put("userName", rs.getString("userName"));
+				map.put("birth", rs.getString("birth"));
+				map.put("tel", rs.getString("tel"));
+				map.put("rank", rs.getString("rank"));
+				
+				list.add(map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		return list;
+	}
 	
 //	
 //	public TeamDTO readMember(String userId) {

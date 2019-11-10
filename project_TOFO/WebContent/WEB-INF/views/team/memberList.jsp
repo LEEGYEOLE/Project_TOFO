@@ -111,14 +111,14 @@ function updateRank(userId) {
 							<th width="50">-</th>
 							<th width="50">-</th>
 						</tr>
-			<c:forEach var="dto" items="${list}">
+			<c:forEach var="map" items="${list}">
 			  <tr> 
-			      <td>${dto.listNum}</td>
-			      <td>${dto.rank}</td>
-			      <td>${dto.userId}</td>
-			      <td>${dto.userName}</td> 
-			      <td>${dto.birth}</td>
-			      <td>${dto.tel}</td>
+			      <td>${map.listNum}</td>
+			      <td>${map.rank}</td>
+			      <td>${map.userId}</td>
+			      <td>${map.userName}</td> 
+			      <td>${map.birth}</td>
+			      <td>${map.tel}</td>
 			      <td><input type="button" value="위임하기" onclick="updateRank('${dto.userId}');" class="btn"></td>
 			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}');" class="btn"></td>
 			  </tr>

@@ -2,6 +2,8 @@ package com.teamList;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -69,31 +71,26 @@ public class TeamListServlet extends HttpServlet {
 	}
 	
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		TeamDAO dao = new TeamDAO();
-//		List<TeamDTO> list;
-//		
-//		HttpSession session=req.getSession();
-//		SessionInfo info=(SessionInfo)session.getAttribute("member");
-//		if(info==null) {
-//			forward(req, resp, "/WEB-INF/views/member/login.jsp");
-//			return;
-//		}
-//
-//		// int num =Integer.parseInt(req.getParameter("num"));
-//		
-//		int dataCount;
-//		
-//		try {
-//			list = dao.readTeamMember(7); // 리스트로 받았어 // 모임번호를 7번으로 지정해놓음.
-//			dataCount = dao.dataCount(7);
-//			req.setAttribute("list", list); // 키, 값
-//			req.setAttribute("dataCount", dataCount);
-//			
-//		} catch (Exception e) {
-//			String cp = req.getContextPath();
-//			resp.sendRedirect(cp);
-//		}
-//		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
+		HttpSession session=req.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		if(info==null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		
+		String snum = req.getParameter("num");
+		int num;
+		if(snum==null) {
+			num = 7;
+		}else {
+			num =Integer.parseInt(req.getParameter("num"));
+		}
+		TeamListDAO dao = new TeamListDAO();
+		List<HashMap<String, Object>> list = dao.listTeamMember(num);
+		
+		req.setAttribute("list", list);
+		req.setAttribute("num", num);
+		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
 	}
 	
 	private void updateRank(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
