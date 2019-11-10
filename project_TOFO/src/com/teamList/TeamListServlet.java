@@ -1,4 +1,4 @@
-package com.team;
+package com.teamList;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,8 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import com.member.SessionInfo;
 
-@WebServlet("/team/*")
-public class TeamServlet extends HttpServlet {
+@WebServlet("/teamList/*")
+public class TeamListServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class TeamServlet extends HttpServlet {
 	}
 	
 	protected void readMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		// 모달 창에서 아이디 검색하고 싶어..
+		// 모달 창에서 아이디 검색하고 싶어..
 //		String userId=req.getParameter("userId");
 //		TeamDAO dao=new TeamDAO();
 //		TeamDTO dto=dao.readMember(userId);

@@ -1,4 +1,4 @@
-package com.team;
+package com.teamList;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +9,11 @@ import java.util.List;
 
 import com.util.DBConn;
 
-public class TeamDAO {
+public class TeamListDAO {
 	private Connection conn = DBConn.getConnection();
+	
+	
+	
 //	
 //	public TeamDTO readMember(String userId) {
 //		TeamDTO dto = null;

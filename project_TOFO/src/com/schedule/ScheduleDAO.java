@@ -3,90 +3,295 @@ package com.schedule;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.util.DBConn;
 
 public class ScheduleDAO {
 	private Connection conn = DBConn.getConnection();
 	
+	
+	//일정 전체 가져오기
+	public List<ScheduleDTO> listMonth(String startDay, String endDay, String userId, int num) {
+		List<ScheduleDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			sb.append("SELECT sche_num, num, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+			sb.append("               color, repeat, repeat_cycle ");
+			sb.append("  FROM schedule");
+			sb.append("  WHERE num = ? AND ");
+			sb.append("     ( ");
+			sb.append("        ( ");
+			sb.append("           sdate >= ? ");
+			sb.append("               AND sdate <= ?  ");
+			sb.append("               OR edate <= ?  ");
+			sb.append("         ) OR ("); // 반복일정
+			sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
+			sb.append("              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
+			sb.append("              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
+			sb.append("         )");
+			sb.append("    ) ");
+			sb.append("  ORDER BY sdate ASC, sche_num DESC ");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			pstmt.setString(2, startDay);
+			pstmt.setString(3, endDay);
+			pstmt.setString(4, endDay);
+
+			pstmt.setString(5, startDay);
+			pstmt.setString(6, startDay);
+			pstmt.setString(7, startDay);
+			pstmt.setString(8, endDay);
+
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				ScheduleDTO dto = new ScheduleDTO();
+				dto.setScheNum(rs.getInt("sche_num"));
+				dto.setNum(rs.getInt("num"));
+				dto.setTitle(rs.getString("title"));
+				dto.setsDate(rs.getString("sdate"));
+				dto.seteDate(rs.getString("sdate"));
+				dto.setStime(rs.getString("stime"));
+				dto.setEtime(rs.getString("etime"));
+				dto.setColor(rs.getString("color"));
+				dto.setRepeat(rs.getInt("repeat"));
+				dto.setRepeat_cycle(rs.getInt("repeat_cycle"));
+
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return list;
+	}
 	// 일정 등록하기.
 	public int insertSchedule(ScheduleDTO dto) {
 		int result = 0;
 		PreparedStatement pstmt = null;
-		String sql;
-		
+		StringBuffer sb = new StringBuffer();
+
 		try {
-			sql="insert into schedule(sche_Num, num, userId, sDate, eDate, title, content, addr, lat, lon, money, color) values(sche_seq.nextval, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?)";
-			pstmt=conn.prepareStatement(sql);
+			sb.append("INSERT INTO schedule(");
+			sb.append(" sche_num, num, userId, title, content, color, sdate, edate,");
+			sb.append(" stime, etime, repeat, repeat_cycle, money, addr) ");
+			sb.append(" VALUES(sche_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ");
+			sb.append(" ?, ?, ?, ?, ?,? )");
+			
+			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, dto.getNum());
 			pstmt.setString(2, dto.getUserId());
-			pstmt.setString(3, dto.getsDate());
-			pstmt.setString(4, dto.geteDate());
-			pstmt.setString(5, dto.getTitle());
-			pstmt.setString(6, dto.getContent());
-			pstmt.setString(7, dto.getAddr());
-			pstmt.setString(8, dto.getLat());
-			pstmt.setString(9, dto.getLon());
-			pstmt.setInt(10, dto.getMoney());
-			pstmt.setString(11, dto.getColor());
+			pstmt.setString(3, dto.getTitle());
+			pstmt.setString(4, dto.getContent());
+			pstmt.setString(5, dto.getColor());
+			pstmt.setString(6, dto.getsDate());
+			pstmt.setString(7, dto.geteDate());
 			
-			result=pstmt.executeUpdate();
+			pstmt.setString(8, dto.getStime());
+			pstmt.setString(9, dto.getEtime());
 			
+			pstmt.setInt(10, dto.getRepeat());
+			pstmt.setInt(11, dto.getRepeat_cycle());
+			pstmt.setInt(12, dto.getMoney());
+			pstmt.setString(13, "empty");
+
+			result = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(pstmt!=null) {
+			if (pstmt != null) {
 				try {
 					pstmt.close();
-				} catch (Exception e2) {
+				} catch (SQLException e) {
 				}
 			}
 		}
+		
 		return result;
 	}
-	
-	// 내가 속한 모임의 전체 일정 가져오기
-		public ScheduleDTO readSchedule(String userId) { // 이래도 오류 안나는건가?
-			ScheduleDTO dto= new ScheduleDTO();
-			PreparedStatement pstmt=null;
-			ResultSet rs=null;
-			String sql;
-				
-			try {
-				sql ="select s.sche_Num, t.num, tl.userId, s.sDate, s.eDate, s.created, s.title, s.color from team t join schedule s on t.num=s.num "; 
-				sql+="join teamList tl on tl.num=t.num where tl.userId=?";		 
-			 
-				pstmt=conn.prepareStatement(sql);
-				pstmt.setString(1, dto.getUserId());
-				rs=pstmt.executeQuery();
-				if(rs.next()) {
-					dto = new ScheduleDTO();
-					dto.setSche_Num(rs.getInt("sche_Num"));
-					dto.setNum(rs.getInt("num"));
-					dto.setUserId(rs.getString("userId"));
-					dto.setsDate(rs.getString("sDate"));
-					dto.seteDate(rs.getString("eDate"));
-					dto.setCreated(rs.getString("created"));
-					dto.setTitle(rs.getString("title"));
-					dto.setColor(rs.getString("color"));
+	/**
+	 * 일정 정보 가져오기
+	 * @param sche_num	일정번호
+	 * @return
+	 */
+	public ScheduleDTO readSchedule(int sche_num) {
+		ScheduleDTO dto = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			sb.append("SELECT sche_num, num, userId, title, content, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+			sb.append("      color, repeat, repeat_cycle, created, ");
+			sb.append("      money, addr, lat, lon ");
+			sb.append("  FROM schedule");
+			sb.append("  WHERE sche_num = ? ");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, sche_num);
+
+			String period, s;
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				dto = new ScheduleDTO();
+				dto.setScheNum(rs.getInt("sche_num"));
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setTitle(rs.getString("title"));
+				dto.setContent(rs.getString("content"));
+				dto.setsDate(rs.getString("sdate"));
+				s = dto.getsDate().substring(0, 4) + "-" + dto.getsDate().substring(4, 6) + "-"
+						+ dto.getsDate().substring(6);
+				dto.setsDate(s);
+				dto.seteDate(rs.getString("edate"));
+				if (dto.geteDate() != null && dto.geteDate().length() == 8) {
+					s = dto.geteDate().substring(0, 4) + "-" + dto.geteDate().substring(4, 6) + "-"
+							+ dto.geteDate().substring(6);
+					dto.seteDate(s);
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if(rs!=null) {
-					try {
-						rs.close();
-					} catch (Exception e2) {
-					}
+				dto.setStime(rs.getString("stime"));
+				if (dto.getStime() != null && dto.getStime().length() == 4) {
+					s = dto.getStime().substring(0, 2) + ":" + dto.getStime().substring(2);
+					dto.setStime(s);
 				}
-				if(pstmt!=null) {
-					try {
-						pstmt.close();
-					} catch (Exception e2) {
-					}
+				dto.setEtime(rs.getString("etime"));
+				if (dto.getEtime() != null && dto.getEtime().length() == 4) {
+					s = dto.getEtime().substring(0, 2) + ":" + dto.getEtime().substring(2);
+					dto.setEtime(s);
+				}
+
+				period = dto.getsDate();
+				if (dto.getStime() != null && dto.getStime().length() != 0) {
+					period += " " + dto.getStime();
+				}
+				if (dto.geteDate() != null && dto.geteDate().length() != 0) {
+					period += " ~ " + dto.geteDate();
+				}
+				if (dto.getEtime() != null && dto.getEtime().length() != 0) {
+					period += " " + dto.getEtime();
+				}
+				dto.setPeriod(period);
+
+				dto.setColor(rs.getString("color"));
+				dto.setRepeat(rs.getInt("repeat"));
+				dto.setRepeat_cycle(rs.getInt("repeat_cycle"));
+				dto.setCreated(rs.getString("created"));
+				dto.setMoney(rs.getInt("money"));
+				dto.setAddr(rs.getString("addr"));
+				dto.setLat(rs.getString("lat"));
+				dto.setLon(rs.getString("lon"));
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
 				}
 			}
-			return dto;
-		}	
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return dto;
+	}
 	
+	/**
+	 * 해당 그룹에서 해당 날짜의 일정 다 가져오기
+	 * @param date	날짜
+	 * @param userId	유저 아이디
+	 * @param num	그룹번호
+	 * @return	
+	 */
+	public List<ScheduleDTO> listDay(String date, String userId, int num) {
+		List<ScheduleDTO> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			sb.append("SELECT sche_num, num, userId, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, ");
+			sb.append("  	TO_CHAR(created, 'YYYY-MM-DD') created, color ");
+			sb.append("  FROM schedule");
+			sb.append("  WHERE num = ? AND ");
+			sb.append("  ( ");
+			sb.append("      ( ");
+			sb.append("         TO_CHAR(sdate, 'YYYYMMDD') = TO_CHAR(TO_DATE(?, 'YYYYMMDD'), 'YYYYMMDD') ");
+			sb.append("         OR (edate IS NOT NULL AND sdate <= TO_DATE(?, 'YYYYMMDD') AND edate >= TO_DATE(?, 'YYYYMMDD')) ");
+			sb.append("      ) OR ( "); // 반복일정
+			sb.append("           repeat=1 AND MOD(MONTHS_BETWEEN(sdate, TO_DATE(?, 'YYYYMMDD'))/12, repeat_cycle) = 0  ");
+			sb.append("      ) ");
+			sb.append("  ) ");
+			sb.append("  ORDER BY sche_num DESC ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, num);
+			pstmt.setString(2, date);
+			pstmt.setString(3, date);
+			pstmt.setString(4, date);
+			
+			pstmt.setString(5, date);
+
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				ScheduleDTO dto = new ScheduleDTO();
+				dto.setScheNum(rs.getInt("sche_num"));
+				dto.setNum(rs.getInt("num"));
+				dto.setUserId(rs.getString("userId"));
+				dto.setTitle(rs.getString("title"));
+				dto.setsDate(rs.getString("sdate"));
+				dto.seteDate(rs.getString("edate"));
+				dto.seteDate(rs.getString("created"));
+				dto.setColor(rs.getString("color"));
+
+				list.add(dto);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+
+		return list;
+	}
+
 }

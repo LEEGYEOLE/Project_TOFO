@@ -68,8 +68,7 @@ function userSearch(){
 	});
 }
 
-function updateRank() {
-	var userId=document.getElementById("update1").value;
+function updateRank(userId) {
 	
 	$(function() {
 		var url ="<%=cp%>/team/updateRank.do";
@@ -120,8 +119,8 @@ function updateRank() {
 			      <td>${dto.userName}</td> 
 			      <td>${dto.birth}</td>
 			      <td>${dto.tel}</td>
-			      <td><input type="button" value="위임하기" onclick="updateRank('${dto.userId}')" class="btn"></td>
-			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}')" class="btn"></td>
+			      <td><input type="button" value="위임하기" onclick="updateRank('${dto.userId}');" class="btn"></td>
+			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}');" class="btn"></td>
 			  </tr>
 			  </c:forEach>
 			 
