@@ -7,10 +7,21 @@
 %>
 <div class="header-top">
 	<div class="header-left">
-		<p style="margin: 10px;">
+		<p style="margin: 10px; float: left;">
+		<c:if test="${empty sessionScope.member}">
 			<a href="<%=cp%>/" style="text-decoration: none;"> <span
-				style="width: 200px; height: 70; position: relative; left: 5px; top: 5px; color: black; filter: mask(color = red) shadow(direction = 135) chroma(color = red); font-style: italic; font-family: aaaB; font-size: 35px; font-weight: bold;">T&nbsp;O&nbsp;F&nbsp;O</span></a>
+				style="width: 200px; height: 70; position: relative; left: 5px; top: 5px; color: black; font-family: aaaB; font-size: 35px; font-weight: bold;text-shadow: 0px 1px #ffffff, 4px 4px 0px #dad7d7;">T&nbsp;O&nbsp;F&nbsp;O</span></a>
+		</c:if>
+		<c:if test="${not empty sessionScope.member}">
+			<a href="<%=cp%>/main/myMain.do" style="text-decoration: none;"> <span
+				style="width: 200px; height: 70; position: relative; left: 5px; top: 5px; color: black; font-family: aaaB; font-size: 35px; font-weight: bold;text-shadow: 0px 1px #ffffff, 4px 4px 0px #dad7d7;">T&nbsp;O&nbsp;F&nbsp;O</span></a>
+		</c:if>
 		</p>
+		<c:if test="${not empty sessionScope.title}">
+		<p style="margin: 10px;">
+			<a href="<%=cp%>/schedule/list.do?num=${num}" style="text-decoration: none;"> <span
+				style="width: 200px; height: 70; position: relative; left: 5px; top: 5px; color: black; font-family: aaaB; font-size: 30px; font-weight: bold;">&nbsp; : &nbsp;${sessionScope.title}</span></a>
+		</p></c:if>
 	</div>
 	<div class="header-right">
 	<!-- 		로그인 했으면 보여주기 -->
