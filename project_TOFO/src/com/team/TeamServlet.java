@@ -46,6 +46,8 @@ public class TeamServlet extends HttpServlet {
 			readMember(req,resp);
 		} else if(uri.indexOf("updateRank.do")!=-1) {
 			updateRank(req, resp);
+		} else if(uri.indexOf("deleteTeamList.do")!=-1) {
+			deleteTeamList(req, resp);
 		}
 	}
 	
@@ -82,7 +84,7 @@ public class TeamServlet extends HttpServlet {
 		int dataCount;
 		
 		try {
-			list = dao.readTeamMember(7); // 리스트로 받았어
+			list = dao.readTeamMember(7); // 리스트로 받았어 // 모임번호를 7번으로 지정해놓음.
 			dataCount = dao.dataCount(7);
 			req.setAttribute("list", list); // 키, 값
 			req.setAttribute("dataCount", dataCount);
@@ -108,12 +110,25 @@ public class TeamServlet extends HttpServlet {
 		TeamDTO dto = new TeamDTO();
 		
 		dto.setRank(req.getParameter("rank"));
+		dao.updateRank(dto);
 		
-		try {
-			dao.updateRank(dto);
-		} catch (Exception e) {
-			forward(req, resp, "/WEB-INF/views/main/main.jsp");
+		resp.sendRedirect(cp+"/team/memberList.do");
+	}
+	
+	private void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info==null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
 		}
-		resp.sendRedirect(cp);
+		String userId = req.getParameter("userId");
+		String rank = req.getParameter("rank");
+		TeamDAO dao = new TeamDAO();
+		dao.deleteTeamList(userId, rank);
+		
+		resp.sendRedirect(cp+"/team/memberList.do");
 	}
 }

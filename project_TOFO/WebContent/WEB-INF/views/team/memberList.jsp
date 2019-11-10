@@ -63,7 +63,7 @@ function userSearch(){
 	$(function(){
 		var url="<%=cp%>/team/userSearch.do";
 		$.get(url, {userId:userId}, function(data){
-			$("#form-subject").closest("td").after(data);
+			$("#form-subject").closest("td").after(data); // 옆에 정보가 뜨게 만들기
 		});
 	});
 }
@@ -74,12 +74,23 @@ function updateRank() {
 	$(function() {
 		var url ="<%=cp%>/team/updateRank.do";
 		$.get(url, {userId:userId}, function(data){
-			$("#update1").closest("tr").after(data);
+			$("#update1").closest("tr");
 		});
 	});
 }
 
 </script>
+<c:if test="${sessionScope.team.rank=='모임장'}">
+	<script type="text/javascript">
+	function deleteTeamList(userId) {
+		if(confirm("회원을 강퇴 하시겠습니까 ?")) {
+			var url="<%=cp%>/team/deleteTeamList.do";
+			location.href=url;
+		}
+	}
+	</script>
+</c:if>
+
 </head>
 <body>
 	<div class="header">
@@ -104,14 +115,14 @@ function updateRank() {
 						</tr>
 			<c:forEach var="dto" items="${list}">
 			  <tr> 
-			      <td>${dto.dataCount}</td>
+			      <td>${dto.listNum}</td>
 			      <td>${dto.rank}</td>
 			      <td>${dto.userId}</td>
-			      <td>${dto.userName}</td>
+			      <td>${dto.userName}</td> 
 			      <td>${dto.birth}</td>
 			      <td>${dto.tel}</td>
-			      <td><button id="update1" onclick="updateRank();">위임하기</button></td>
-				  <td><button id="delete1" onclick="delete">강퇴하기</button></td>
+			      <td><button id="update1" onclick="updateRank('${dto.rank}');">위임하기</button></td>
+				  <td><button id="delete1" onclick="deleteTeamList('${dto.userId}');">강퇴하기</button></td>
 			  </tr>
 			  </c:forEach>
 			 

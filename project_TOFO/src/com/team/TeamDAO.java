@@ -57,7 +57,7 @@ public class TeamDAO {
 		String sql;
 		
 		try {
-			sql = "select tl.userId, userName, birth, tel, rank " + 
+			sql = "select listNum, tl.userId, userName, birth, tel, rank " + 
 					"from teamList tl " + 
 					"left outer join member m on tl.userId=m.userId " + 
 					"left outer join team t on tl.num=t.num where t.num=?";
@@ -68,6 +68,7 @@ public class TeamDAO {
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				TeamDTO dto = new TeamDTO();
+				dto.setListNum(rs.getInt("listNum"));
 				dto.setUserId(rs.getString("userId"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setBirth(rs.getString("birth"));
@@ -102,7 +103,7 @@ public class TeamDAO {
 		String sql;
 		
 		try {
-			sql="SELECT NVL(COUNT(*), 0) FROM teamList where num=?;";
+			sql="SELECT NVL(COUNT(*), 0) FROM teamList where num=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs=pstmt.executeQuery();
@@ -127,7 +128,8 @@ public class TeamDAO {
 		return result;
 	}
 	
-	public void updateRank(TeamDTO dto) {
+	public int updateRank(TeamDTO dto) {
+		int result=0;
 		PreparedStatement pstmt=null;
 		String sql;
 		
@@ -138,7 +140,7 @@ public class TeamDAO {
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setInt(2, dto.getNum());
 			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 			pstmt.close();
 			pstmt=null;
 			
@@ -148,7 +150,7 @@ public class TeamDAO {
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setInt(2, dto.getNum());
 			
-			pstmt.executeUpdate();
+			result = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -159,9 +161,10 @@ public class TeamDAO {
 				}
 			}
 		}
+		return result;
 	}
 	
-	public int deleteTeamList(TeamDTO dto, int num, String rank) {
+	public int deleteTeamList(String userId, String rank) {
     	int result=0;
     	PreparedStatement pstmt = null;
     	String sql;
@@ -170,7 +173,7 @@ public class TeamDAO {
     		if(rank.equals("∏¿”¿Â")) {
     			sql="delete from teamList where userId=?";
     			pstmt=conn.prepareStatement(sql);
-    			pstmt.setString(1, dto.getUserId());
+    			pstmt.setString(1, userId);
     		}
     		result = pstmt.executeUpdate();		
 		} catch (Exception e) {
