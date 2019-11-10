@@ -17,31 +17,36 @@
 	type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/modal.css"
 	type="text/css">
+	<link rel="stylesheet"
+	href="<%=cp%>/resource/jquery/css/smoothness/jquery-ui.min.css"
+	type="text/css">
 <style type="text/css">
-.mainTb th, tr, td {
+.mainTb th,.mainTb tr,.mainTb td {
 	border: 1px solid black;
+	height: 40px;
 	border-collapse: collapse;
 	border-spacing: 0;
 	text-align: center;
 }
-
-.mainTb td {
-	font-size: 15px;
+.mainTb td{
+	border-collapse: collapse;
+	font-size: 14px;
 }
-
+.mainTb tr:hover{
+	background: whitesmoke;border: 1px solid white;
+}
 .mainTb {
 	border-collapse: collapse;
-	height: 550px;
 	font-size: 20px;
 }
 
 .mainTb1 {
-	width: 250px;
+	width: 80px;
 	background-color: #e4e4e4;
 }
 
 .mainTb2 {
-	width: 300px;
+	width: 200px;
 	background-color: #e4e4e4;
 }
 
@@ -58,20 +63,25 @@
 
 .backcolor {
 	background: #e4e4e4;
+	    padding-top: 20px;
+    padding-left: 33px;
 }
 
 .teamImg {
+border: 1px solid white;
+    margin-right: 33px;
+    margin-bottom: 20px;
+    border-radius: 40px;
+    background: whitesmoke;
 	text-align: center;
-	padding: 4%;
-	width: 183px;
+	padding: 20px;
+	width: 80px;
 	height: auto;
 	display: inline-block;
-	/* 	border-right: 3px dotted; */
-	/* 	border-left: 3px dotted; */
 }
 
 .teamImg:hover {
-	background: #ccc;
+	background: #c0c0c0;
 }
 
 .container-block {
@@ -192,15 +202,15 @@
 }
 </style>
 <script type="text/javascript"
-	src="<%=cp%>/resource/jquery/jquery-1.12.4.min.js"></script>
+	src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 
 <script type="text/javascript">
 	//스케쥴 등록 -----------------------
 	//등록 대화상자 출력
 	$(function() {
 		$(".mkGroupBtn").click(function() {
-			// 폼 reset
-// 			$("form[name=scheduleForm]").each(function() {
+// 			폼 reset
+// 			$("form[name=teamForm]").each(function() {
 // 				this.reset();
 // 			});
 // 			$("#form-repeat_cycle").hide();
@@ -218,7 +228,7 @@
 // 			$("#form-sday").datepicker("option", "defaultDate", date);
 // 			$("#form-eday").datepicker("option", "defaultDate", date);
 
-			$('#schedule-dialog').dialog({
+			$('#team-dialog').dialog({
 				modal : true,
 				height : 650,
 				width : 600,
@@ -229,11 +239,11 @@
 
 		});
 	});
-
+	
 	//등록 대화상자 닫기
 	$(function() {
 		$("#btnScheduleSendCancel").click(function() {
-			$('#schedule-dialog').dialog("close");
+			$('#team-dialog').dialog("close");
 		});
 	});
 	
@@ -243,6 +253,41 @@
 		userId = encodeURIComponent(userId);
 		var url ="<%=cp%>/schedule/list.do?num="+num+"&title="+title+"&leaderId="+userId;
 		location.href=url;
+	}
+	
+	//모임 등록하기
+	function teamSend() {
+		  var f = document.teamForm;
+
+	    	var str = f.title.value;
+	        if(!str) {
+	            alert("모임명을 입력하세요. ");
+	            f.title.focus();
+	            return;
+	        }
+
+	    	str = f.content.value;
+	        if(!str) {
+	            alert("상세설명를 입력하세요. ");
+	            f.content.focus();
+	            return;
+	        }
+	        str = f.userCount.value;
+	        if(!str) {
+	            alert("정원수를 입력하세요. ");
+	            f.userCount.focus();
+	            return;
+	        }
+	    	  if(f.imageFilename.value!="") {
+	    		if(! /(\.gif|\.jpg|\.png|\.jpeg)$/i.test(f.imageFilename.value)) {
+	    			alert('이미지 파일만 가능합니다. !!!');
+	    			f.imageFilename.focus();
+	    			return;
+	    		}
+	    	  }
+	        		f.action="<%=cp%>/team/insert.do";
+
+	        f.submit();
 	}
 </script>
 </head>
@@ -308,134 +353,95 @@
 				</div>
 				<div class="vl" style="float: right;">
 					<div style="padding: 8px 0px; display: inline-block;">
-						<h2 style="float: left; font-size: 30px;">My Group</h2>
-						<button class="btnConfirm mkGroupBtn" style="float: left;">모임만들기</button>
+						<h2 style="float: left; font-size: 30px;">내 모임</h2>
+						<button class="btnConfirm mkGroupBtn" style="float: left;margin-left: 10px;">모임만들기</button>
 					</div>
 					<div class="backcolor" style="background: #e4e4e4;">
+						<c:if test="${not empty list}">
+						<c:forEach var="dto" items="${list}">
 						<div class="teamImg"
-							onclick="goToGroup('3','맛따라멋따라','admin');">
+							onclick="goToGroup('${dto.num}','${dto.title}','${dto.userId}');">
+							<c:if test="${empty dto.imageFilename}">
 							<img src="<%=cp%>/resource/img/teamwork.png"
-								style="width: 150px;">
-							<p>맛따라멋따라</p>
+								style="    border-radius: 40px;
+    width: 80px;
+    height: 80px;">
+								</c:if>
+								<c:if test="${not empty dto.imageFilename}">
+							<img src="<%=cp%>/uploads/photo/team/${dto.imageFilename}"
+								style="    border-radius: 40px;
+    width: 80px;
+    height: 80px;">
+								</c:if>
+							<p>${dto.title}</p>
 						</div>
-						<div class="teamImg">
-							<img src="<%=cp%>/resource/img/teamwork.png"
-								style="width: 150px;">
-							<p>맛따라멋따라</p>
+						</c:forEach>
+						</c:if>
+						<c:if test="${empty list}">
+						<div style="padding: 0 20px 20px 0;
+    display: block;
+    height: 20px;">
+						가입한 모입이 없습니다. 새로운 모임을 만들고 참여하세요!
 						</div>
-						<div class="teamImg">
-							<img src="<%=cp%>/resource/img/teamwork.png"
-								style="width: 150px;">
-							<p>맛따라멋따라</p>
-						</div>
-						<div class="teamImg">
-							<img src="<%=cp%>/resource/img/teamwork.png"
-								style="width: 150px;">
-							<p>맛따라멋따라</p>
-						</div>
+						
+						</c:if>
 					</div>
 				</div>
 			</div>
 		</div>
 
-    <div id="schedule-dialog" style="display: none;">
-		<form name="scheduleForm">
+    <div id="team-dialog" style="display: none;">
+		<form name="teamForm" method="post" enctype="multipart/form-data">
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">제목</label>
+			            <label style="font-weight: 900;">모임명</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="subject" id="form-subject" maxlength="100" class="boxTF" style="width: 95%;">
+			            <input type="text" name="title" id="form-title" maxlength="20" class="boxTF" style="width: 95%;">
 			        </p>
-			        <p class="help-block">* 제목은 필수 입니다.</p>
+			        <p class="help-block">* 모임명은 필수 입니다.</p>
 			      </td>
 			  </tr>
-			
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">일정분류</label>
+			            <label style="font-weight: 900;">상세정보</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			          <select name="color" id="form-color" class="selectField">
-			              <option value="green">개인일정</option>
-			              <option value="blue">가족일정</option>
-			              <option value="tomato">회사일정</option>
-			              <option value="purple">기타일정</option>
-			          </select>
+			            <input type="text" name="content" id="form-title" maxlength="100" class="boxTF" style="width: 95%;">
 			        </p>
+			        <p class="help-block">* 상세정보는 필수 입니다.</p>
 			      </td>
 			  </tr>
 			
-			  <tr>
+			 <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">종일일정</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 5px; margin-bottom: 5px;">
-			             <input type="checkbox" name="allDay" id="form-allDay" value="1" checked="checked">
-			             <label for="allDay">하루종일</label>
-			        </p>
-			      </td>
-			  </tr>
-			
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">시작일자</label>
+			            <label style="font-weight: 900;">정원</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="sday" id="form-sday" maxlength="10" class="boxTF" readonly="readonly" style="width: 25%; background: #ffffff;">
-			            <input type="text" name="stime" id="form-stime" maxlength="5" class="boxTF" style="width: 15%; display: none;" placeholder="시작시간">
-  			        </p>
-			        <p class="help-block">* 시작날짜는 필수입니다.</p>
+			            <input type="number" name="userCount" id="form-userCount" min="1" max="100" class="boxTF" style="width: 95%;">
+			        </p>
+			        <p class="help-block">* 정원수는 필수 입니다.</p>
 			      </td>
 			  </tr>
 
 			  <tr>
 			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">종료일자</label>
+			            <label style="font-weight: 900;">프로필 사진</label>
 			      </td>
 			      <td style="padding: 0 0 15px 15px;">
 			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <input type="text" name="eday" id="form-eday" maxlength="10" class="boxTF" readonly="readonly" style="width: 25%; background: #ffffff;">
-			            <input type="text" name="etime" id="form-etime" maxlength="5" class="boxTF" style="width: 15%; display: none;" placeholder="종료시간">
-			        </p>
-			        <p class="help-block">종료일자는 선택사항이며, 시작일자보다 작을 수 없습니다.</p>
+			             <input type="file" name="imageFilename" accept="img/*"
+			                      class="boxTF" size="53" style="width: 95%;"> </p>
+			        <p class="help-block">* 이미지 파일만 업로드가능합니다.</p>
 			      </td>
 			  </tr>
-
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">일정반복</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <select name="repeat" id="form-repeat" class="selectField">
-			              <option value="0">반복안함</option>
-			              <option value="1">년반복</option>
-			            </select>
-			            <input type="text" name="repeat_cycle" id="form-repeat_cycle" maxlength="2" class="boxTF" style="width: 20%; display: none;" placeholder="반복주기">
-			        </p>
-			      </td>
-			  </tr>
-			  
-			  <tr>
-			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
-			            <label style="font-weight: 900;">메모</label>
-			      </td>
-			      <td style="padding: 0 0 15px 15px;">
-			        <p style="margin-top: 1px; margin-bottom: 5px;">
-			            <textarea name="memo" id="form-memo" class="boxTA" style="width:93%; height: 70px;"></textarea>
-			        </p>
-			      </td>
-			  </tr>
-			  
 			  <tr height="45">
 			      <td align="center" colspan="2">
-			        <button type="button" class="btn" id="btnScheduleSendOk">일정등록</button>
+			        <button type="button" class="btn" onclick="teamSend();">일정등록</button>
 			        <button type="reset" class="btn">다시입력</button>
 			        <button type="button" class="btn" id="btnScheduleSendCancel">등록취소</button>
 			      </td>
@@ -449,8 +455,8 @@
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 	<script type="text/javascript"
-		src="<%=cp%>/resource/jquery/jquery-ui.min.js"></script>
+		src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>
 	<script type="text/javascript"
-		src="<%=cp%>/resource/jquery/jquery.ui.datepicker-ko.js"></script>
+		src="<%=cp%>/resource/jquery/js/jquery.ui.datepicker-ko.js"></script>
 </body>
 </html>

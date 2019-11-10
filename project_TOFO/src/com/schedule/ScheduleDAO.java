@@ -56,7 +56,7 @@ public class ScheduleDAO {
 				dto.setNum(rs.getInt("num"));
 				dto.setTitle(rs.getString("title"));
 				dto.setsDate(rs.getString("sdate"));
-				dto.seteDate(rs.getString("sdate"));
+				dto.seteDate(rs.getString("edate"));
 				dto.setStime(rs.getString("stime"));
 				dto.setEtime(rs.getString("etime"));
 				dto.setColor(rs.getString("color"));

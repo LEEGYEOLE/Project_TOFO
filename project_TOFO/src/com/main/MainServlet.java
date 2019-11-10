@@ -37,37 +37,29 @@ public class MainServlet extends HttpServlet {
 		String uri = req.getRequestURI();
 		String cp = req.getContextPath();
 		if (uri.indexOf("main.do") != -1) {
-			
 			forward(req, resp, "/WEB-INF/views/main/main.jsp");
-		} else if (uri.indexOf("myMain.do") != -1) {
-			if (session.getAttribute("member") == null) {
-				session.invalidate();
-				forward(req, resp, "/WEB-INF/views/main/main.jsp");
-				return;
-			}
 			
-			if (session.getAttribute("leaderId") != null) {
-				session.removeAttribute("leaderId");
-				session.removeAttribute("num");
-				session.removeAttribute("title");
-			}
-			forward(req, resp, "/WEB-INF/views/main/myMain.jsp");
+		} else if (uri.indexOf("myMain.do") != -1) {
+			myMain(req, resp);
 		}
 	}
 	
 	protected void myMain(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("utf-8");
 		HttpSession session = req.getSession();
-		String uri = req.getRequestURI();
 		String cp = req.getContextPath();
-		if (uri.indexOf("main.do") != -1) {
+		if (session.getAttribute("member") == null) {
+			session.invalidate();
 			forward(req, resp, "/WEB-INF/views/main/main.jsp");
-		} else if (uri.indexOf("myMain.do") != -1) {
-			if (session.getAttribute("member") == null) {
-				forward(req, resp, "/WEB-INF/views/main/main.jsp");
-				return;
-			}
-			forward(req, resp, "/WEB-INF/views/main/myMain.jsp");
+			return;
 		}
+		
+		if (session.getAttribute("leaderId") != null) {
+			session.removeAttribute("leaderId");
+			session.removeAttribute("num");
+			session.removeAttribute("title");
+		}
+		
+		forward(req, resp, "/team/list.do");
+		
 	}
 }

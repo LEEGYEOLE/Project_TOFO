@@ -90,9 +90,14 @@ String cp=req.getContextPath();
 		String leaderId="";
 		if(req.getParameter("leaderId")!=null)
 			leaderId = req.getParameter("leaderId");
-		int num = 3;
+		else if(session.getAttribute("leaderId")!=null)
+			leaderId = (String) session.getAttribute("leaderId");
+		int num = 0;
 		if(req.getParameter("num")!=null)
 			num = Integer.parseInt(req.getParameter("num"));
+		else if(session.getAttribute("num")!=null)
+			num = (int) session.getAttribute("num");
+		
 		String title="";
 		if(req.getParameter("title")!=null)
 			title = req.getParameter("title");
@@ -100,17 +105,13 @@ String cp=req.getContextPath();
 		
 		/* 그룹에 처음 접속할 때 세션에 그룹장, 그룹번호, 그룹제목을 저장한다.*/
 		if(session.getAttribute("leaderId")==null) {
-			System.out.println("leaderId널이니까 저장한다");
 			session.setAttribute("leaderId", leaderId);
 		}else {
-			System.out.println("leaderId널이 아니다");
 		}
 		if(session.getAttribute("num")==null) {
-			System.out.println("num널이니까 저장한다");
 			session.setAttribute("num", num);
 		}
 		if(session.getAttribute("title")==null) {
-			System.out.println("title널이니까 저장한다");
 			session.setAttribute("title", title);
 		}
 		
@@ -159,7 +160,7 @@ String cp=req.getContextPath();
 		// 스케쥴 가져오기
 		String startDay=String.format("%04d%02d%02d", syear, smonth, sdate);
 		String endDay=String.format("%04d%02d%02d", eyear, emonth, edate);
-		List<ScheduleDTO> list=dao.listMonth(startDay, endDay, info.getUserId(),3);
+		List<ScheduleDTO> list=dao.listMonth(startDay, endDay, info.getUserId(),num);
 		
 		String s;
 		String [][]days=new String[cal.getActualMaximum(Calendar.WEEK_OF_MONTH)][7];

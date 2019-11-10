@@ -337,8 +337,8 @@ $(function(){
 	$(".scheduleSubject").click(function(){
 		var date=$(this).attr("data-date");
 		var scheNum=$(this).attr("data-num");
-		var num=3;
-		var url="<%=cp%>/schedule/day.do?date="+date+"&scheNum="+scheNum+"&num="+num;
+		var num=${num};
+		var url="<%=cp%>/schedule/day.do?date="+date+"&scheNum="+scheNum+"&num="+${num};
 		location.href=url;
 	});
 });
@@ -348,7 +348,7 @@ $(function(){
 	$(".scheduleMore").click(function(){
 		var date=$(this).attr("data-date");
 		var num=3;
-		var url="<%=cp%>/schedule/day.do?date="+date+"&num="+num+"&scheNum="+scheNum;
+		var url="<%=cp%>/schedule/day.do?date="+date+"&num="+${num}+"&scheNum="+scheNum;
 		location.href=url;
 	});
 });
@@ -410,8 +410,7 @@ $(function(){
 							<table style="width: 100%; border-spacing: 0px; height: 60px;">
 								<tr height="60">
 									<th align="left"><span class="titleDate">${year}년
-											${month}월 일정목록</span>
-									<button class="textDate">추가하기</button></th>
+											${month}월 일정목록</span></th>
 								</tr>
 
 							</table>
