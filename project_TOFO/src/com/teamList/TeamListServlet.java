@@ -94,24 +94,25 @@ public class TeamListServlet extends HttpServlet {
 	}
 	
 	private void updateRank(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		HttpSession session = req.getSession();
-//		String cp = req.getContextPath();
-//		
-//		SessionInfo info = (SessionInfo)session.getAttribute("member");
-//		if(info==null) { // 로그인이 안 된 경우
-//			resp.sendRedirect(cp+"/member/login.do");
-//			return;
-//		}
-//		String num = req.getParameter("num");
-//		String leader = req.getParameter("leader");
-//		String userId = req.getParameter("userId");
-//		
-//		TeamDAO dao = new TeamDAO();
-//		
-////		dto.setRank(req.getParameter("rank"));
-////		dao.updateRank(dto);
-//		
-//		resp.sendRedirect(cp+"/team/memberList.do?num="+num);
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info==null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		
+		String snum = req.getParameter("num");
+		int num = Integer.parseInt(snum);
+		String leader = req.getParameter("leader");
+		String userId = req.getParameter("userId");
+		
+		TeamListDAO dao = new TeamListDAO();
+		
+		dao.updateRank(leader, userId, num);
+		
+		resp.sendRedirect(cp+"/schedule/list.do?num="+num);
 	}
 	
 	public void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

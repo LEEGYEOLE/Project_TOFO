@@ -82,9 +82,39 @@ String cp=req.getContextPath();
 	private void monthSchedule(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session=req.getSession();
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		String cp=req.getContextPath();
+		if(info==null) {
+			resp.sendRedirect(cp);
+			return;
+		}
+		String leaderId="";
+		if(req.getParameter("leaderId")!=null)
+			leaderId = req.getParameter("leaderId");
 		int num = 3;
 		if(req.getParameter("num")!=null)
 			num = Integer.parseInt(req.getParameter("num"));
+		String title="";
+		if(req.getParameter("title")!=null)
+			title = req.getParameter("title");
+		
+		
+		/* 그룹에 처음 접속할 때 세션에 그룹장, 그룹번호, 그룹제목을 저장한다.*/
+		if(session.getAttribute("leaderId")==null) {
+			System.out.println("leaderId널이니까 저장한다");
+			session.setAttribute("leaderId", leaderId);
+		}else {
+			System.out.println("leaderId널이 아니다");
+		}
+		if(session.getAttribute("num")==null) {
+			System.out.println("num널이니까 저장한다");
+			session.setAttribute("num", num);
+		}
+		if(session.getAttribute("title")==null) {
+			System.out.println("title널이니까 저장한다");
+			session.setAttribute("title", title);
+		}
+		
+		
 		
 		ScheduleDAO dao=new ScheduleDAO();
 		

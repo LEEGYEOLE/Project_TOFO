@@ -69,13 +69,11 @@ function userSearch(){
 }
 
 function updateRank(userId) {
-	
-	$(function() {
-		var url ="<%=cp%>/team/updateRank.do";
-		$.get(url, {userId:userId}, function(data){
-			$("#update1").closest("tr");
-		});
-	});
+	var num =7;
+	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
+		var url ="<%=cp%>/teamList/updateRank.do?num="+num+"&leader=${sessionScope.member.userId}&userId="+userId;
+		location.href=url;
+	}
 }
 
 </script>
@@ -119,8 +117,9 @@ function updateRank(userId) {
 			      <td>${map.userName}</td> 
 			      <td>${map.birth}</td>
 			      <td>${map.tel}</td>
-			      <td><input type="button" value="위임하기" onclick="updateRank('${dto.userId}');" class="btn"></td>
-			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}');" class="btn"></td>
+			      <td><input type="button" value="위임하기" onclick="updateRank('${map.userId}');" class="btn"></td>
+<%-- 			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}');" class="btn"></td> --%>
+			      <td><input type="button" value="강퇴하기" class="btn"></td>
 			  </tr>
 			  </c:forEach>
 			 

@@ -182,41 +182,48 @@ public class TeamListDAO {
 //		return result;
 //	}
 //	
-//	public int updateRank(String leader, String userId, int num) {
-//		int result=0;
-//		PreparedStatement pstmt=null;
-//		String sql;
-//		
-//		try {
-//			sql="update teamList set rank='모임원' where userId=? and num=?";
-//			
-//			pstmt=conn.prepareStatement(sql);
-//			pstmt.setString(1, leader);
-//			pstmt.setInt(2, num);
-//			
-//			result = pstmt.executeUpdate();
-//			pstmt.close();
-//			pstmt=null;
-//			
-//			sql="update teamList set rank='모임장' where userId=? and num=?";
-//			
-//			pstmt=conn.prepareStatement(sql);
-//			pstmt.setString(1, userId);
-//			pstmt.setInt(2, num);
-//			
-//			result = pstmt.executeUpdate();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			if(pstmt!=null) {
-//				try {
-//					pstmt.close();
-//				} catch (SQLException e) {
-//				}
-//			}
-//		}
-//		return result;
-//	}
+	/**
+	 * 모임장 권한 위임 관련, rank update함수
+	 * 0이 모임장, 1이 모임원
+	 * @param leader	모임장이었던 유저 id
+	 * @param userId	권한을 위임받을 유저 id
+	 * @param num	팀 번호
+	 * @return
+	 */
+	public int updateRank(String leader, String userId, int num) {
+		int result=0;
+		PreparedStatement pstmt=null;
+		String sql;
+		
+		try {
+			sql="update teamList set rank='1' where userId=? and num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, leader);
+			pstmt.setInt(2, num);
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			sql="update teamList set rank='0' where userId=? and num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, num);
+			
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
 //	
 //	public int deleteTeamList(String userId, String rank) {
 //    	int result=0;

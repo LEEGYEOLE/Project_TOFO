@@ -236,6 +236,14 @@
 			$('#schedule-dialog').dialog("close");
 		});
 	});
+	
+	//그룹 클릭 했을 때, 그룹 번호랑 타이틀을 넘겨줘서 서버에 저장한다.
+	function goToGroup(num, title, userId) {
+		title = encodeURIComponent(title);
+		userId = encodeURIComponent(userId);
+		var url ="<%=cp%>/schedule/list.do?num="+num+"&title="+title+"&leaderId="+userId;
+		location.href=url;
+	}
 </script>
 </head>
 <body>
@@ -305,7 +313,7 @@
 					</div>
 					<div class="backcolor" style="background: #e4e4e4;">
 						<div class="teamImg"
-							onclick="javascript:location.href='<%=cp%>/schedule/list.do'">
+							onclick="goToGroup('3','맛따라멋따라','admin');">
 							<img src="<%=cp%>/resource/img/teamwork.png"
 								style="width: 150px;">
 							<p>맛따라멋따라</p>
