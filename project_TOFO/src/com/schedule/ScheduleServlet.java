@@ -395,7 +395,6 @@ String cp=req.getContextPath();
 		if(dto==null&&list.size()>0) {
 			dto=dao.readSchedule(list.get(0).getNum());
 		}
-		System.out.println(dto.toString());
 		req.setAttribute("num", num);
 		req.setAttribute("scheNum", scheNum);
 		req.setAttribute("year", year);

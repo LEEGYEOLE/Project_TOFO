@@ -52,9 +52,8 @@
 
 .vl {
 	border-color: #e4e4e4;
-	height: 800px;
 	width: 49%;
-	margin-top: 10px;
+	margin: 30px 0;
 }
 
 .backcolor {
@@ -93,7 +92,7 @@
 }
 
 .btnConfirm {
-	/* margin-bottom: 5px; */
+	 margin-bottom: 0px;
 	font-size: 20px;
 	border: none;
 	color: #ffffff;
@@ -105,6 +104,7 @@
 }
 
 .btnConfirm:hover {
+     margin-bottom: 0px;
 	font-size: 20px;
 	border: none;
 	color: #ffdd79;
@@ -256,7 +256,7 @@
 		<div class="container-block">
 			<div style="width: 100%;">
 				<div class="vl" style="float: left;">
-					<h2 style="padding: 30px 0px; font-size: 30px;">이번주 일정 목록</h2>
+					<h2 style="padding: 10px 0px; font-size: 30px;">이번주 일정 목록</h2>
 					<table class="mainTb">
 						<tr>
 							<th class="mainTb1">날짜</th>
@@ -307,7 +307,7 @@
 					</table>
 				</div>
 				<div class="vl" style="float: right;">
-					<div style="padding: 30px 0px; display: inline-block;">
+					<div style="padding: 8px 0px; display: inline-block;">
 						<h2 style="float: left; font-size: 30px;">My Group</h2>
 						<button class="btnConfirm mkGroupBtn" style="float: left;">모임만들기</button>
 					</div>
