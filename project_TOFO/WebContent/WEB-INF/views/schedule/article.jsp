@@ -263,6 +263,16 @@ function deleteOk(scheNum) {
 		location.href=url;
 	}
 }
+	$("#form-allDay").click(function(){
+		$('#schedule-dialog').dialog({
+			  modal: true,
+			  height: 650,
+			  width: 600,
+			  title: '스케쥴 수정',
+			  close: function(event, ui) {
+			  }
+		});
+	});
 </c:if>
 </script>
 <script type="text/javascript"
@@ -386,6 +396,8 @@ function deleteOk(scheNum) {
 											style="float: right;" onclick="deleteOk('${dto.scheNum}');">삭제</button>
 										<button type="button" id="btnUpdate" class="btn"
 											style="float: right;">수정</button>
+											<button type="button" id="btnLocation" class="btn"
+											style="float: right;">장소등록/수정</button>
 									</td>
 								</tr>
 
