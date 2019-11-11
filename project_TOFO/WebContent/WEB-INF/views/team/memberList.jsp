@@ -69,18 +69,16 @@ function userSearch(){
 }
 
 function updateRank(userId) {
-	var num =7;
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
-		var url ="<%=cp%>/teamList/updateRank.do?num="+num+"&leader=${sessionScope.member.userId}&userId="+userId;
+		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
 		location.href=url;
 	}
 }
 
 
 function deleteTeamList(userId) {
-	var num = 7;
 	if(confirm(userId+"님을 강퇴 하시겠습니까 ?")) {
-		var url = "<%=cp%>/teamList/deleteTeamList.do?num="+num+"&userId="+userId;
+		var url = "<%=cp%>/teamList/deleteTeamList.do?userId="+userId;
 		location.href=url;
 	}
 }

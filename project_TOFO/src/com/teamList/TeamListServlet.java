@@ -42,85 +42,95 @@ public class TeamListServlet extends HttpServlet {
 
 		if (uri.indexOf("memberList.do") != -1) {
 			readTeamMember(req, resp);
-		} else if(uri.indexOf("userSearch.do") != -1) {
-			readMember(req,resp);
-		} else if(uri.indexOf("updateRank.do")!=-1) {
+		} else if (uri.indexOf("userSearch.do") != -1) {
+			readMember(req, resp);
+		} else if (uri.indexOf("updateRank.do") != -1) {
 			updateRank(req, resp);
-		} else if(uri.indexOf("deleteTeamList.do")!=-1) {
+		} else if (uri.indexOf("deleteTeamList.do") != -1) {
 			deleteTeamList(req, resp);
 		}
 	}
-	
+
 	protected void readMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 모달 창에서 아이디 검색하고 싶어..
 		String userId = req.getParameter("userId");
 		TeamListDAO dao = new TeamListDAO();
 		List<HashMap<String, Object>> memberList = dao.readMemberList(userId);
-		
+
 		req.setAttribute("memberList", memberList);
 	}
-	
+
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session=req.getSession();
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		if(info==null) {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-		
-		String snum = req.getParameter("num");
-		int num;
-		if(snum==null) {
-			num = 7;
-		}else {
-			num =Integer.parseInt(req.getParameter("num"));
+
+		if (session.getAttribute("num") == null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp + "/main/myMain.do");
+			return;
 		}
+		int groupNum = (int) session.getAttribute("num");
+
+
 		TeamListDAO dao = new TeamListDAO();
-		List<HashMap<String, Object>> list = dao.listTeamMember(num);
-		
+		List<HashMap<String, Object>> list = dao.listTeamMember(groupNum);
+
 		req.setAttribute("list", list);
-		req.setAttribute("num", num);
 
 		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
 	}
-	
+
 	private void updateRank(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		String cp = req.getContextPath();
-		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		if(info==null) { // 로그인이 안 된 경우
-			resp.sendRedirect(cp+"/member/login.do");
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp + "/member/login.do");
 			return;
 		}
-		
-		String snum = req.getParameter("num");
-		int num = Integer.parseInt(snum);
+
+		if (session.getAttribute("num") == null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp + "/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
 		String leader = req.getParameter("leader");
 		String userId = req.getParameter("userId");
-		
+
 		TeamListDAO dao = new TeamListDAO();
-		
-		dao.updateRank(leader, userId, num);
-		
-		resp.sendRedirect(cp+"/schedule/list.do?num="+num);
+
+		dao.updateRank(leader, userId, groupNum);
+
+		resp.sendRedirect(cp + "/schedule/list.do");
 	}
-	
+
 	public void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		String cp = req.getContextPath();
-		
-		SessionInfo info = (SessionInfo)session.getAttribute("member");
-		if(info==null) { // 로그인이 안 된 경우
-			resp.sendRedirect(cp+"/member/login.do");
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp + "/member/login.do");
 			return;
 		}
-		String snum = req.getParameter("num");
-		int num = Integer.parseInt(snum);
+		
+		if (session.getAttribute("num") == null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp + "/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
 		String userId = req.getParameter("userId");
 		TeamListDAO dao = new TeamListDAO();
-		dao.deleteTeamList(userId, num);
-		
-		resp.sendRedirect(cp+"/teamList/memberList.do?num="+num);
+		dao.deleteTeamList(userId, groupNum);
+
+		resp.sendRedirect(cp + "/teamList/memberList.do");
 	}
 }
