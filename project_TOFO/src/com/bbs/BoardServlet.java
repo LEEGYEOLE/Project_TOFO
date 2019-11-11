@@ -51,37 +51,37 @@ public class BoardServlet extends MainServlet {
 		} else if(uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
 		} else if(uri.indexOf("countBoardLike.do")!=-1) {
-			// �Խù� ���� ����
+			// 占쌉시뱄옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 			countBoardLike(req, resp);
 		} else if(uri.indexOf("insertBoardLike.do")!=-1) {
-			// �Խù� ���� ����
+			// 占쌉시뱄옙 占쏙옙占쏙옙 占쏙옙占쏙옙
 			insertBoardLike(req, resp);
 		} else if(uri.indexOf("insertReply.do")!=-1) {
-			// ��� �߰�
+			// 占쏙옙占� 占쌩곤옙
 			insertReply(req, resp);
 		} else if(uri.indexOf("listReply.do")!=-1) {
-			// ��� ����Ʈ
+			// 占쏙옙占� 占쏙옙占쏙옙트
 			listReply(req, resp);
 		} else if(uri.indexOf("deleteReply.do")!=-1) {
-			// ��� ����
+			// 占쏙옙占� 占쏙옙占쏙옙
 			deleteReply(req, resp);
 		} else if(uri.indexOf("insertReplyLike.do")!=-1) {
-			// ��� ���ƿ�/�Ⱦ�� �߰�
+			// 占쏙옙占� 占쏙옙占싣울옙/占싫억옙占� 占쌩곤옙
 			insertReplyLike(req, resp);
 		} else if(uri.indexOf("countReplyLike.do")!=-1) {
-			// ��� ���ƿ�/�Ⱦ�� ����
+			// 占쏙옙占� 占쏙옙占싣울옙/占싫억옙占� 占쏙옙占쏙옙
 			countReplyLike(req, resp);
 		} else if(uri.indexOf("insertReplyAnswer.do")!=-1) {
-			// ����� ��� �߰�
+			// 占쏙옙占쏙옙占� 占쏙옙占� 占쌩곤옙
 			insertReplyAnswer(req, resp);
 		} else if(uri.indexOf("listReplyAnswer.do")!=-1) {
-			// ����� ��� ����Ʈ
+			// 占쏙옙占쏙옙占� 占쏙옙占� 占쏙옙占쏙옙트
 			listReplyAnswer(req, resp);
 		} else if(uri.indexOf("deleteReplyAnswer.do")!=-1) {
-			// ����� ��� ����
+			// 占쏙옙占쏙옙占� 占쏙옙占� 占쏙옙占쏙옙
 			deleteReplyAnswer(req, resp);
 		} else if(uri.indexOf("countReplyAnswer.do")!=-1) {
-			// ����� ��� ����
+			// 占쏙옙占쏙옙占� 占쏙옙占� 占쏙옙占쏙옙
 			countReplyAnswer(req, resp);
 		}
 
@@ -161,7 +161,7 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("keyword", keyword);
 		req.setAttribute("articleUrl", articleUrl);
 		
-		// list.jsp�� ������
+		// list.jsp占쏙옙 占쏙옙占쏙옙占쏙옙
 		forward(req, resp, "/WEB-INF/views/bbs/list.jsp");
 	}
 	
@@ -215,15 +215,14 @@ public class BoardServlet extends MainServlet {
 			return;
 		}
 		
-		BoardDTO preDto = dao.preReadBoard(num, condition, keyword);
-		BoardDTO nextDto = dao.nextReadBoard(num, condition, keyword);
+		BoardDTO preReadDto = dao.preReadBoard(dto.getNum(), condition, keyword);
+		BoardDTO nextReadDto = dao.nextReadBoard(dto.getNum(), condition, keyword);
 		
 		req.setAttribute("dto", dto);
-		req.setAttribute("preDto", preDto);
-		req.setAttribute("nextDto", nextDto);
+		req.setAttribute("preReadDto", preReadDto);
+		req.setAttribute("nextReadDto", nextReadDto);
 		req.setAttribute("query", query);
 		req.setAttribute("page", page);
-		req.setAttribute("rows", rows);
 		
 		forward(req, resp, "/WEB-INF/views/bbs/article.jsp");
 	}
@@ -310,7 +309,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void countBoardLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// �Խù� ���� ���� - AJAX:JSON
+		// 占쌉시뱄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int num = Integer.parseInt(req.getParameter("num"));
@@ -325,7 +324,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void insertBoardLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// �Խù� ���� ���� - AJAX:JSON
+		// 占쌉시뱄옙 占쏙옙占쏙옙 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -347,7 +346,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void listReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ���� ����Ʈ - AJAX:TEXT
+		// 占쏙옙占쏙옙 占쏙옙占쏙옙트 - AJAX:TEXT
 		BoardDAO dao = new BoardDAO();
 		MyUtil util = new MyUtil();
 		
@@ -368,15 +367,15 @@ public class BoardServlet extends MainServlet {
 
 		int offset = (current_page - 1) * rows;
 
-		// ����Ʈ�� ����� ������
+		// 占쏙옙占쏙옙트占쏙옙 占쏙옙占쏙옙占� 占쏙옙占쏙옙占쏙옙
 		List<ReplyDTO> listReply = dao.listReply(num, offset, rows);
 
-		// ���͸� <br>
+		// 占쏙옙占싶몌옙 <br>
 		for(ReplyDTO dto:listReply) {
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 		}
 
-		// ����¡ ó��(�μ�2�� ¥���� �ڹٽ�ũ��Ʈ listPage(page) �Լ� ȣ��)
+		// 占쏙옙占쏙옙징 처占쏙옙(占싸쇽옙2占쏙옙 짜占쏙옙占쏙옙 占쌘바쏙옙크占쏙옙트 listPage(page) 占쌉쇽옙 호占쏙옙)
 		String paging = util.paging(current_page, total_page);
 
 		req.setAttribute("listReply", listReply);
@@ -385,12 +384,12 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("total_page", total_page);
 		req.setAttribute("paging", paging);
 
-		// ������
+		// 占쏙옙占쏙옙占쏙옙
 		forward(req, resp, "/WEB-INF/views/bbs/listReply.jsp");
 	}
 
 	private void insertReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ���� �Ǵ� ���  ���� - AJAX:JSON
+		// 占쏙옙占쏙옙 占실댐옙 占쏙옙占�  占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -420,7 +419,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void deleteReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ���� �Ǵ� ��� ���� - AJAX:JSON
+		// 占쏙옙占쏙옙 占실댐옙 占쏙옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -442,7 +441,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void insertReplyLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ��� ���ƿ� / �Ⱦ�� ���� - AJAX:JSON
+		// 占쏙옙占� 占쏙옙占싣울옙 / 占싫억옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -471,7 +470,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void countReplyLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ��� ���ƿ� / �Ⱦ�� ���� - AJAX:JSON
+		// 占쏙옙占� 占쏙옙占싣울옙 / 占싫억옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int replyNum = Integer.parseInt(req.getParameter("replyNum"));
@@ -496,19 +495,19 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void insertReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ��� ���� - AJAX:JSON
+		// 占쏙옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		insertReply(req, resp);
 	}
 
 	private void listReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ������ ��� ����Ʈ - AJAX:TEXT
+		// 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占쏙옙占쏙옙트 - AJAX:TEXT
 		BoardDAO dao = new BoardDAO();
 		
 		int answer = Integer.parseInt(req.getParameter("answer"));
 		
 		List<ReplyDTO> listReplyAnswer = dao.listReplyAnswer(answer);
 
-		// ���͸� <br>(��Ÿ�� => style="white-space:pre;")
+		// 占쏙옙占싶몌옙 <br>(占쏙옙타占쏙옙 => style="white-space:pre;")
 		for(ReplyDTO dto:listReplyAnswer) {
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 		}
@@ -519,12 +518,12 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void deleteReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ���� ��� ���� - AJAX:JSON
+		// 占쏙옙占쏙옙 占쏙옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		deleteReply(req, resp);
 	}
 	
 	private void countReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ������ ��� ���� - AJAX:JSON
+		// 占쏙옙占쏙옙占쏙옙 占쏙옙占� 占쏙옙占쏙옙 - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int answer = Integer.parseInt(req.getParameter("answer"));

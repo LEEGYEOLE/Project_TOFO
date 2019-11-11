@@ -30,6 +30,12 @@ font-size: 30px;
 		var f=document.searchForm;
 		f.submit();
 	}
+	
+	function selectList(){
+		var f=document.selectForm;
+		f.submit();
+	}
+	
 </script>
 </head>
 <body>
@@ -53,7 +59,16 @@ font-size: 30px;
 			          ${dataCount}개(${page}/${total_page} 페이지)
 			      </td>
 			      <td align="right">
-			          &nbsp;
+			        <form name="selectForm" action="<%=cp%>/bbs/list.do" method="post" onchange="selectList();">
+			      		<select name="rows" class="selectField">
+			      			<option value="5"  ${rows==5? "selected='selected' ":""}>5개보기</option>
+			      			<option value="10"  ${rows==10? "selected='selected' ":""}>10개보기</option>
+			      			<option value="20"  ${rows==20? "selected='selected' ":""}>20개보기</option>
+			      			<option value="30"  ${rows==30? "selected='selected' ":""}>30개보기</option>
+			      		</select>
+			      			<input type="hidden" name="condition" value="${condition}">
+			      			<input type="hidden" name="keyword" value="${keyword}">
+			      	</form>
 			      </td>
 			   </tr>
 			</table>
