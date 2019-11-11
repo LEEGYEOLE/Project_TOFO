@@ -1,8 +1,6 @@
 package com.teamList;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,19 +53,11 @@ public class TeamListServlet extends HttpServlet {
 	
 	protected void readMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 모달 창에서 아이디 검색하고 싶어..
-//		String userId=req.getParameter("userId");
-//		TeamDAO dao=new TeamDAO();
-//		TeamDTO dto=dao.readMember(userId);
-//		String aa;
-//		if(dto==null) {
-//		aa="<p>해당하는 유저가 존재하지 않습니다.</p>";
-//		}else {
-//		aa="<p>"+dto.getUserId()+"</p>";
-//		}
-//		resp.setContentType("text/html;charset=utf-8");
-//		PrintWriter out = resp.getWriter();
-//		
-//		out.print(aa);
+		String userId = req.getParameter("userId");
+		TeamListDAO dao = new TeamListDAO();
+		List<HashMap<String, Object>> memberList = dao.readMemberList(userId);
+		
+		req.setAttribute("memberList", memberList);
 	}
 	
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -90,6 +80,7 @@ public class TeamListServlet extends HttpServlet {
 		
 		req.setAttribute("list", list);
 		req.setAttribute("num", num);
+
 		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");
 	}
 	
@@ -116,19 +107,20 @@ public class TeamListServlet extends HttpServlet {
 	}
 	
 	public void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		HttpSession session = req.getSession();
-//		String cp = req.getContextPath();
-//		
-//		SessionInfo info = (SessionInfo)session.getAttribute("member");
-//		if(info==null) { // 로그인이 안 된 경우
-//			resp.sendRedirect(cp+"/member/login.do");
-//			return;
-//		}
-//		String userId = req.getParameter("userId");
-//		String rank = req.getParameter("rank");
-//		TeamDAO dao = new TeamDAO();
-//		dao.deleteTeamList(userId, rank);
-//		
-//		resp.sendRedirect(cp+"/team/memberList.do");
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info==null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		String snum = req.getParameter("num");
+		int num = Integer.parseInt(snum);
+		String userId = req.getParameter("userId");
+		TeamListDAO dao = new TeamListDAO();
+		dao.deleteTeamList(userId, num);
+		
+		resp.sendRedirect(cp+"/teamList/memberList.do?num="+num);
 	}
 }
