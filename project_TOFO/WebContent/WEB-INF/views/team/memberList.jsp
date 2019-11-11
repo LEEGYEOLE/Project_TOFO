@@ -62,7 +62,10 @@ $(function(){
 // 버튼을 누르면 찾아가기
 $(function(){
    $("body").on("click",".btn",function(){
+	  var userId = $(this).parent().children("input").val();
       var url = "<%=cp%>/teamList/userSearch.do";
+      var query="userId="+$("#searchId").val();
+      alert(query);
       
       $.ajax({// 함수에 객체를 넘긴다
          type:"GET",
@@ -78,6 +81,7 @@ $(function(){
    });
 });
 
+<%--
 function userSearch(){
 	// ex8.jsp의 쿼리를 뿌려라 유송아 제ㅐ발
 	// url은 내 서블릿으로 보내고
@@ -86,6 +90,7 @@ function userSearch(){
 	});
 	
 }
+--%>
 
 function updateRank(userId) {
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
@@ -169,7 +174,7 @@ function deleteTeamList(userId) {
 								<button type="button" class="btn">검색</button>
 							
 						</p>
-						<div id="searchResult">결과 뿌려주고</div>
+						<div id="searchResult"></div>
 						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
 
 					</td>	

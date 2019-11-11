@@ -60,6 +60,7 @@ public class TeamListServlet extends HttpServlet {
 		req.setAttribute("memberList", memberList);
 		
 		// forward
+		forward(req, resp, "/WEB-INF/views/team/searchId.jsp");
 	}
 
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
