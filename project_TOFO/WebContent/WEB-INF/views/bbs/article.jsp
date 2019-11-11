@@ -535,7 +535,7 @@ $(function(){
             <table style='width: 100%; margin: 15px auto 0px; border-spacing: 0px;'>
             <tr height='30'> 
 	            <td align='left'>
-	            	<span style='font-weight: bold;' >댓글쓰기</span><span> - 타인을 비방하거나 개인정보를 유출하는 글의 게시를 삼가 주세요.</span>
+	            	<span style='font-weight: bold;' >댓글쓰기</span><span> - 남겨주신 의견은 ${dto.userName}님에게 큰 보탬이 됩니다.</span>
 	            </td>
             </tr>
             <tr>

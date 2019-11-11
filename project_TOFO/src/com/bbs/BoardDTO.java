@@ -6,6 +6,7 @@ public class BoardDTO {
 	private String subject, content;
 	private String created;
 	private int hitCount;
+	private long gap;
 	
 	private int replyCount;
 	
@@ -62,5 +63,11 @@ public class BoardDTO {
 	}
 	public void setReplyCount(int replyCount) {
 		this.replyCount = replyCount;
+	}
+	public long getGap() {
+		return gap;
+	}
+	public void setGap(long gap) {
+		this.gap = gap;
 	}
 }

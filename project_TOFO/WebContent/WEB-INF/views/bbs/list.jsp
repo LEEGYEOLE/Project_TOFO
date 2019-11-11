@@ -73,6 +73,11 @@ font-size: 30px;
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
 			           <c:if test="${dto.replyCount!=0}">(${dto.replyCount})</c:if>
+				           <c:if test="${dto.gap<=1}">
+				           
+				           <img src="/project_TOFO/resource/img/icon/new.gif">
+				           
+				           </c:if>
 			      </td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
