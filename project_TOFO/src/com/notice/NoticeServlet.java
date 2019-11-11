@@ -140,7 +140,8 @@ public class NoticeServlet extends HttpServlet {
 			dataCount = dao.dataCount(groupNum);
 		else
 			dataCount = dao.dataCount(condition, keyword, groupNum);
-
+		
+		
 		int total_page = util.pageCount(rows, dataCount);
 		if (current_page > total_page)
 			current_page = total_page;
@@ -148,13 +149,15 @@ public class NoticeServlet extends HttpServlet {
 		int offset = (current_page - 1) * rows;
 		if (offset < 0)
 			offset = 0;
-
+		
+		
 		List<NoticeDTO> list;
 		if (keyword.length() == 0)
 			list = dao.listNotice(offset, rows, groupNum);
 		else
 			list = dao.listNotice(offset, rows, condition, keyword, groupNum);
-
+		
+		
 		// °øÁö±Û
 		List<NoticeDTO> listNotice = null;
 		if (current_page == 1) {

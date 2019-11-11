@@ -93,7 +93,7 @@ function selectList(){
 			      <th width="100" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">작성자</th>
 			      <th width="80" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">작성일</th>
 			      <th width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">조회수</th>
-			      <th width="50" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">첨부</th>
+			      
 			  </tr>
 			 
 			 <c:forEach var="dto" items="${listNotice}">
@@ -129,8 +129,7 @@ function selectList(){
 			      <td>${dto.hitCount}</td>
 			      <td>
 			      	<c:if test="${not empty dto.saveFilename}">
-			      		<a href="<%=cp%>/notice/download.do?num=${dto.num}">
-			      	<img src="/study3/img/gang.jpg" width="20" height="20"></a>
+			      		<a href="<%=cp%>/notice/download.do?num=${dto.num}"></a>
 			      	</c:if>
 			      	
 			      </td>
@@ -167,7 +166,7 @@ function selectList(){
 			        </form>
 			      </td>
 			      <td align="right" width="100">
-			      <c:if test="${sessionScope.member.userId == 'admin' }">
+			      <c:if test="${sessionScope.member.userId == sessionScope.leaderId}">
 			          <button type="button" class="btnConfirm" onclick="javascript:location.href='<%=cp%>/notice/created.do';">글올리기</button>
 			      </c:if>
 			      

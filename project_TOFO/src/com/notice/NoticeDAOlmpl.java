@@ -103,7 +103,7 @@ public class NoticeDAOlmpl implements NoticeDAO {
 
 		try {
 			// 조인안하면 이름 검색이 안된다.
-			sql = "SELECT NVL(COUNT(*), 0) FROM notice b JOIN member m ON b.userId = m.userId WHERE grounNum = ? "; // 이름을 member이 가지고 있기
+			sql = "SELECT NVL(COUNT(*), 0) FROM notice b JOIN member m ON b.userId = m.userId WHERE groupNum = ? "; // 이름을 member이 가지고 있기
 																									// 때문에
 			if (condition.equalsIgnoreCase("created")) { // created이면~
 				keyword = keyword.replace("-", ""); // condition은 컬럼명
