@@ -85,6 +85,7 @@ public class ScheduleDAO {
 
 		return list;
 	}
+	
 	// 일정 등록하기.
 	public int insertSchedule(ScheduleDTO dto) {
 		int result = 0;
@@ -92,11 +93,15 @@ public class ScheduleDAO {
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			sb.append("INSERT INTO schedule(");
-			sb.append(" sche_num, num, userId, title, content, color, sdate, edate,");
-			sb.append(" stime, etime, repeat, repeat_cycle, money, addr) ");
+			sb.append(" INSERT ALL ");
+			sb.append(" INTO schedule( ");
+			sb.append(" 	sche_num, num, userId, title, content, color, sdate, edate, ");
+			sb.append(" 	stime, etime, repeat, repeat_cycle, money, addr) ");
 			sb.append(" VALUES(sche_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ");
-			sb.append(" ?, ?, ?, ?, ?,? )");
+			sb.append(" 	?, ?, ?, ?, ?,? )");
+			sb.append(" INTO ATTENDANCE (USERID,SCHE_NUM,ATTEND) ");
+			sb.append("	VALUES( ?, sche_seq.currval,0 ) ");
+			sb.append("select * from DUAL ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, dto.getNum());
@@ -109,11 +114,12 @@ public class ScheduleDAO {
 			
 			pstmt.setString(8, dto.getStime());
 			pstmt.setString(9, dto.getEtime());
-			
 			pstmt.setInt(10, dto.getRepeat());
 			pstmt.setInt(11, dto.getRepeat_cycle());
 			pstmt.setInt(12, dto.getMoney());
 			pstmt.setString(13, "empty");
+			
+			pstmt.setString(14, dto.getUserId());
 
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
