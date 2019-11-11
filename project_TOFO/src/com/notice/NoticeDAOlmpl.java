@@ -282,6 +282,10 @@ public class NoticeDAOlmpl implements NoticeDAO {
 		return list;
 
 	}
+	
+	
+	
+	
 
 	@Override
 	public List<NoticeDTO> listNotice(int groupNum) {
@@ -620,5 +624,6 @@ public class NoticeDAOlmpl implements NoticeDAO {
 			}
 		}
 	}
+
 
 }
