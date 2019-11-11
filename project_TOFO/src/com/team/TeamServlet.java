@@ -93,6 +93,7 @@ public class TeamServlet extends HttpServlet {
 		TeamDAO dao = new TeamDAO();
 		List<TeamDTO> list = dao.listTeam(info.getUserId());
 		req.setAttribute("list", list);
+		
 
 		forward(req, resp, "/WEB-INF/views/main/myMain.jsp");
 	}

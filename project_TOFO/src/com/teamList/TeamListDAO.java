@@ -13,7 +13,7 @@ import com.util.DBConn;
 public class TeamListDAO {
 	private Connection conn = DBConn.getConnection();
 	
-	public List<HashMap<String, Object>> listTeamMember(int num){
+	public List<HashMap<String, Object>> listTeamMember(int groupNum){
 		List<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -24,9 +24,9 @@ public class TeamListDAO {
 					"from teamList tl " + 
 					"left outer join member m on tl.userId=m.userId " + 
 					"left outer join team t on tl.num=t.num where t.num=? order by rank";
-			
+
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setInt(1, num);
+			pstmt.setInt(1, groupNum);
 			
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
@@ -108,7 +108,7 @@ public class TeamListDAO {
 	 * @param num	ÆÀ ¹øÈ£
 	 * @return
 	 */
-	public int updateRank(String leader, String userId, int num) {
+	public int updateRank(String leader, String userId, int groupNum) {
 		int result=0;
 		PreparedStatement pstmt=null;
 		String sql;
@@ -118,7 +118,7 @@ public class TeamListDAO {
 			
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, leader);
-			pstmt.setInt(2, num);
+			pstmt.setInt(2, groupNum);
 			
 			result = pstmt.executeUpdate();
 			pstmt.close();
@@ -127,7 +127,7 @@ public class TeamListDAO {
 			
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
-			pstmt.setInt(2, num);
+			pstmt.setInt(2, groupNum);
 			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
@@ -143,7 +143,7 @@ public class TeamListDAO {
 		return result;
 	}
 	
-	public int deleteTeamList(String userId, int num) {
+	public int deleteTeamList(String userId, int groupNum) {
     	int result=0;
     	PreparedStatement pstmt = null;
     	String sql;
@@ -152,7 +152,7 @@ public class TeamListDAO {
     		sql="delete from teamList where userId=? and num=?";
     		pstmt=conn.prepareStatement(sql);
     		pstmt.setString(1, userId);
-    		pstmt.setInt(2, num);
+    		pstmt.setInt(2, groupNum);
     		
     		result = pstmt.executeUpdate();		
 		} catch (Exception e) {
