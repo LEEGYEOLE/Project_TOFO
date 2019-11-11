@@ -540,6 +540,8 @@ ul, li {
 					<input type="hidden" name="rows" value="${rows}">
 					<input type="hidden" name="condition" value="${condition}">
 					<input type="hidden" name="groupnum" value="${groupNum}">
+					
+					<input type="hidden" name="sche_num" value="${schedule_num}">
 				</div>
 
 			</form>

@@ -330,7 +330,7 @@ public class ReviewServlet extends HttpServlet {
 		
 		int page = Integer.parseInt(req.getParameter("page"));
 		int rows = Integer.parseInt(req.getParameter("rows"));
-		int num = Integer.parseInt(req.getParameter("reviewNum"));
+		int num = Integer.parseInt(req.getParameter("sche_num"));
 		int groupnum = Integer.parseInt(req.getParameter("groupnum"));
 		String condition = req.getParameter("condition");
 		
