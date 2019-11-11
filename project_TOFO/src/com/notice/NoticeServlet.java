@@ -99,6 +99,14 @@ public class NoticeServlet extends HttpServlet {
 		MyUtil util = new MyUtil();
 		String cp = req.getContextPath();
 
+		HttpSession session = req.getSession();
+		if(session.getAttribute("num")==null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp+"/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
+		
 		String page = req.getParameter("page");
 		int current_page = 1;
 		if (page != null) {
@@ -129,9 +137,9 @@ public class NoticeServlet extends HttpServlet {
 		int dataCount;
 
 		if (keyword.length() == 0)
-			dataCount = dao.dataCount();
+			dataCount = dao.dataCount(groupNum);
 		else
-			dataCount = dao.dataCount(condition, keyword);
+			dataCount = dao.dataCount(condition, keyword, groupNum);
 
 		int total_page = util.pageCount(rows, dataCount);
 		if (current_page > total_page)
@@ -143,14 +151,14 @@ public class NoticeServlet extends HttpServlet {
 
 		List<NoticeDTO> list;
 		if (keyword.length() == 0)
-			list = dao.listNotice(offset, rows);
+			list = dao.listNotice(offset, rows, groupNum);
 		else
-			list = dao.listNotice(offset, rows, condition, keyword);
+			list = dao.listNotice(offset, rows, condition, keyword, groupNum);
 
 		// 공지글
 		List<NoticeDTO> listNotice = null;
 		if (current_page == 1) {
-			listNotice = dao.listNotice();
+			listNotice = dao.listNotice(groupNum);
 			for (NoticeDTO dto : listNotice) {
 				dto.setCreated(dto.getCreated().substring(0, 10));
 			}
@@ -199,6 +207,7 @@ public class NoticeServlet extends HttpServlet {
 		req.setAttribute("condition", condition);
 		req.setAttribute("keyword", keyword);
 		req.setAttribute("articleUrl", articleUrl);
+		req.setAttribute("groupNum", groupNum);
 
 		forward(req, resp, "/WEB-INF/views/notice/noticeList.jsp");
 
@@ -222,7 +231,16 @@ public class NoticeServlet extends HttpServlet {
 
 		}
 
+		HttpSession session = req.getSession();
+		if(session.getAttribute("num")==null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp+"/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
+		
 		req.setAttribute("mode", "created");
+		req.setAttribute("groupNum", groupNum);
 		forward(req, resp, "/WEB-INF/views/notice/created.jsp");
 
 	}
@@ -243,6 +261,14 @@ public class NoticeServlet extends HttpServlet {
 			return;
 
 		}
+		
+		HttpSession session = req.getSession();
+		if(session.getAttribute("num")==null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp+"/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
 
 		String pathname = getFilepathname(req);
 		File f = new File(pathname);
@@ -262,6 +288,7 @@ public class NoticeServlet extends HttpServlet {
 		NoticeDTO dto = new NoticeDTO();
 
 		dto.setUserId(info.getUserId());
+		dto.setGroupNum(groupNum);
 		dto.setSubject(mreq.getParameter("subject"));
 		dto.setContent(mreq.getParameter("content"));
 		
@@ -296,6 +323,15 @@ public class NoticeServlet extends HttpServlet {
 	
 	//글보기
 	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String cp = req.getContextPath();
+		HttpSession session = req.getSession();
+		if(session.getAttribute("num")==null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp+"/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
+
 		int num = Integer.parseInt(req.getParameter("num"));
 		String page = req.getParameter("page");
 
@@ -320,13 +356,12 @@ public class NoticeServlet extends HttpServlet {
 
 		NoticeDTO dto = dao.readNotice(num);
 		if (dto == null) {
-			String cp = req.getContextPath();
 			resp.sendRedirect(cp + "/notice/list.do?" + query);
 			return;
 		}
 
-		NoticeDTO preDto = dao.preReadNotice(num, condition, keyword);
-		NoticeDTO nextDto = dao.nextReadNotice(num, condition, keyword);
+		NoticeDTO preDto = dao.preReadNotice(num, condition, keyword, groupNum);
+		NoticeDTO nextDto = dao.nextReadNotice(num, condition, keyword, groupNum);
 
 		req.setAttribute("dto", dto);
 		req.setAttribute("preReadDto", preDto);

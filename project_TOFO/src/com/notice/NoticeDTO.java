@@ -11,6 +11,7 @@ public class NoticeDTO {
 	private long filesize;
 	private int hitCount;
 	private String created;	
+	private int groupNum;
 	
 	private int listNum;
 	private String userName;
@@ -92,6 +93,12 @@ public class NoticeDTO {
 	}
 	public void setGap(long gap) {
 		this.gap = gap;
+	}
+	public int getGroupNum() {
+		return groupNum;
+	}
+	public void setGroupNum(int groupNum) {
+		this.groupNum = groupNum;
 	}
 	
 

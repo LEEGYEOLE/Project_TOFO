@@ -58,7 +58,7 @@ $(function(){
 
 // 버튼을 누르면 찾아가기
 function userSearch(){
-	var userId = document.getElementById("form-subject").value;
+	var userId = document.getElementById().value;
 	
 	$(function(){
 		var url="<%=cp%>/team/userSearch.do";
@@ -76,16 +76,16 @@ function updateRank(userId) {
 	}
 }
 
-</script>
-<c:if test="${sessionScope.team.rank=='모임장'}">
-	<script type="text/javascript">
-	function deleteTeamList(userId) {
-		if(confirm("회원을 강퇴 하시겠습니까 ?")) {
-			location.href="delete.jsp";
-		}
+
+function deleteTeamList(userId) {
+	var num = 7;
+	if(confirm(userId+"님을 강퇴 하시겠습니까 ?")) {
+		var url = "<%=cp%>/teamList/deleteTeamList.do?num="+num+"&userId="+userId;
+		location.href=url;
 	}
-	</script>
-</c:if>
+}
+</script>
+
 
 </head>
 <body>
@@ -112,14 +112,13 @@ function updateRank(userId) {
 			<c:forEach var="map" items="${list}">
 			  <tr> 
 			      <td>${map.listNum}</td>
-			      <td>${map.rank}</td>
+			      <td>${map.rank=='0'?'모임장':'모임원'}</td>
 			      <td>${map.userId}</td>
 			      <td>${map.userName}</td> 
 			      <td>${map.birth}</td>
 			      <td>${map.tel}</td>
-			      <td><input type="button" value="위임하기" onclick="updateRank('${map.userId}');" class="btn"></td>
-<%-- 			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${dto.rank}', '${dto.userId}');" class="btn"></td> --%>
-			      <td><input type="button" value="강퇴하기" class="btn"></td>
+			      <td><input type="button" value="위임하기" onclick="updateRank('${map.userId}');" class="btn"></td>			 
+ 			      <td><input type="button" value="강퇴하기" onclick="deleteTeamList('${map.userId}');" class="btn"></td>
 			  </tr>
 			  </c:forEach>
 			 
@@ -139,7 +138,7 @@ function updateRank(userId) {
 	</div>
 
 	<div id="schedule-dialog" style="display: none;">
-		<form name="scheduleForm">
+		<form name="teamMemberForm">
 			<table
 				style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 				<tr>
@@ -150,14 +149,16 @@ function updateRank(userId) {
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<input type="text" name="subject" id="form-subject"
 								maxlength="100" class="boxTF" style="width: 85%;">
-								<button onclick="userSearch();">검색</button>
+								<button onclick="userSearch();" class="btn">검색</button>
 						</p>
 						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
-					</td>
-					
+			  <c:forEach var="map" items="${memberList}">
+			  <tr> 
+			      <td>${map.userId}&nbsp;&nbsp;${map.userName}&nbsp;&nbsp;${map.birth}&nbsp;&nbsp;${map.created_Date}</td>
+			  </tr>
+			  </c:forEach>
+					</td>	
 				</tr>
-					
-				
 
 				<tr>
 					<td width="100" valign="top"
@@ -173,83 +174,9 @@ function updateRank(userId) {
 					</td>
 				</tr>
 
-				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">종일일정</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 5px; margin-bottom: 5px;">
-							<input type="checkbox" name="allDay" id="form-allDay" value="1"
-								checked="checked"> <label for="allDay">하루종일</label>
-						</p>
-					</td>
-				</tr>
-
-				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">시작일자</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<input type="text" name="sday" id="form-sday" maxlength="10"
-								class="boxTF" readonly="readonly"
-								style="width: 25%; background: #ffffff;"> <input
-								type="text" name="stime" id="form-stime" maxlength="5"
-								class="boxTF" style="width: 15%; display: none;"
-								placeholder="시작시간">
-						</p>
-						<p class="help-block">* 시작날짜는 필수입니다.</p>
-					</td>
-				</tr>
-
-				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">종료일자</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<input type="text" name="eday" id="form-eday" maxlength="10"
-								class="boxTF" readonly="readonly"
-								style="width: 25%; background: #ffffff;"> <input
-								type="text" name="etime" id="form-etime" maxlength="5"
-								class="boxTF" style="width: 15%; display: none;"
-								placeholder="종료시간">
-						</p>
-						<p class="help-block">종료일자는 선택사항이며, 시작일자보다 작을 수 없습니다.</p>
-					</td>
-				</tr>
-
-				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">일정반복</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<select name="repeat" id="form-repeat" class="selectField">
-								<option value="0">반복안함</option>
-								<option value="1">년반복</option>
-							</select> <input type="text" name="repeat_cycle" id="form-repeat_cycle"
-								maxlength="2" class="boxTF" style="width: 20%; display: none;"
-								placeholder="반복주기">
-						</p>
-					</td>
-				</tr>
-
-				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">메모</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<textarea name="memo" id="form-memo" class="boxTA"
-								style="width: 93%; height: 70px;"></textarea>
-						</p>
-					</td>
-				</tr>
-
 				<tr height="45">
 					<td align="center" colspan="2">
-						<button type="button" class="btn" id="btnScheduleSendOk">일정등록</button>
+						<button type="button" class="btn" id="btnScheduleSendOk">회원등록</button>
 						<button type="reset" class="btn">다시입력</button>
 						<button type="button" class="btn" id="btnScheduleSendCancel">등록취소</button>
 					</td>
