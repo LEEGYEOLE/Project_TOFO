@@ -1,7 +1,7 @@
-<%@page import="java.util.Calendar"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String cp = request.getContextPath();
 %>
@@ -24,6 +24,84 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
 	src="https://han3283.cafe24.com/js/lightslider/js/lightslider.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+
+<!--ì´ë¯¸ì§€ ìŠ¬ë¼ì´ë“œ ìŠ¤í¬ë¦½íŠ¸-->
+  <script>
+    $(document).ready(function(){
+      $('.slider').bxSlider({
+    	  speed:700,
+    	  auto:true,
+    	  controls:false
+ 
+    	  
+      });
+    });
+  </script>
+  
+
+<!--ì´ë¯¸ì§€ ë“±ë¡-->
+<script type="text/javascript">
+	$(function() {
+		$("body").on("change","form input[name=upload]",function() {	//ë™ì ìœ¼ë¡œ ì¶”ê°€ëœ ê°ì²´ë„ ì´ë²¤íŠ¸ ì²˜ë¦¬ ê°€ëŠ¥í•˜ë„ë¡.
+			if (!$(this).val())
+				return false;
+
+			var b = false;
+			$("form input[name=upload]").each(function() {
+				if (!$(this).val()) {
+					b = true;
+					return false;
+				}
+			});
+			
+			if(b) return;
+			
+			var $input;
+			//ê°ì²´ì˜ ì´ë¦„ì´ ë˜‘ê°™ìœ¼ë©´ ë‹¤ì¤‘ ì—…ë¡œë“œê°€ ë¶ˆê°€ëŠ¥í•˜ë‹¤
+			var n=0;
+			n++;
+		
+			$input=$("<input>",{type:"file",name:"upload"+n, class:"boxTF",size:"53",style:"height:25px; margin-bottom: 7px;"});
+			
+			$("#imageupload").append($input);
+				
+		});
+	})
+</script>
+
+<script type="text/javascript">
+	$(function() {
+		$("body").on("change","form input[name=upload1]",function() {	//ë™ì ìœ¼ë¡œ ì¶”ê°€ëœ ê°ì²´ë„ ì´ë²¤íŠ¸ ì²˜ë¦¬ ê°€ëŠ¥í•˜ë„ë¡.
+			if (!$(this).val())
+				return false;
+
+			var b = false;
+			$("form input[name=upload1]").each(function() {
+				if (!$(this).val()) {
+					b = true;
+					return false;
+				}
+			});
+			
+			if(b) return;
+			
+			var $input;
+			//ê°ì²´ì˜ ì´ë¦„ì´ ë˜‘ê°™ìœ¼ë©´ ë‹¤ì¤‘ ì—…ë¡œë“œê°€ ë¶ˆê°€ëŠ¥í•˜ë‹¤
+			var n=1;
+			n++;
+			
+			$input=$("<input>",{type:"file",name:"upload"+n,class:"boxTF",size:"53",style:"height:25px; margin-bottom: 7px;"});
+			
+			$("#imageupload").append($input);
+				
+		});
+	})
+</script>
+
+
 
 
 <style>
@@ -74,7 +152,7 @@ ul, li {
 	overflow: hidden;
 	position: relative;
 	margin-top: 10px;
-	margin-bottom: 50px; 
+	margin-bottom: 50px;
 	border-radius: 30px;
 }
 
@@ -128,13 +206,13 @@ ul, li {
 	transition: 0.5s;
 	cursor: pointer;
 }
-/* ½½¶óÀÌµå Á¶ÀÛ */
+/* ìŠ¬ë¼ì´ë“œ ì¡°ì‘ */
 #pos1:checked ~ ul li:nth-child(1), #pos2:checked ~ ul li:nth-child(2),
 	#pos3:checked ~ ul li:nth-child(3), #pos4:checked ~ ul li:nth-child(4)
 	{
 	opacity: 1;
 }
-/* bullet Á¶ÀÛ */
+/* bullet ì¡°ì‘ */
 #pos1:checked ~ .bullet label:nth-child(1), #pos2:checked ~ .bullet label:nth-child(2),
 	#pos3:checked ~ .bullet label:nth-child(3), #pos4:checked ~ .bullet label:nth-child(4)
 	{
@@ -144,6 +222,7 @@ ul, li {
 .myfont {
 	font-size: 23px;
 	font-weight: 900;
+	padding-bottom: 15px;
 }
 
 .myfont2 {
@@ -180,11 +259,14 @@ ul, li {
 	padding: 10px;
 }
 
-#aHover{
-color: blue;}
-#aHover:hover{
-color: #00008c;
-font-weight: 900;}
+#aHover {
+	color: blue;
+}
+
+#aHover:hover {
+	color: #00008c;
+	font-weight: 900;
+}
 </style>
 </head>
 <body>
@@ -196,32 +278,29 @@ font-weight: 900;}
 		<div class="body-container">
 			<div class="container-block">
 				<div style="margin: 10px 10px">
-					<div class='left-box' style="">
-						<div>
-							<span style="font-size: 30px; font-family: Webdings">2</span> <span
-								style="font-size: 25px;">»çÁøÃ¸</span>
+					<div class='left-box' style="margin-bottom: 30px;">
+						<div style="margin-bottom: 20px;">
+							<span style="font-size: 30px; font-family: Webdings">N</span> <span
+								style="font-size: 25px;">ì‚¬ì§„ì²©</span>
 						</div>
-						<div class="slide">
-							<input type="radio" name="pos" id="pos1" checked> <input
-								type="radio" name="pos" id="pos2"> <input type="radio"
-								name="pos" id="pos3"> <input type="radio" name="pos"
-								id="pos4">
-							<ul>
-								<li style="background-image: url('a.jpeg')"></li>
-								<li></li>
-								<li></li>
-								<li></li>
-							</ul>
-							<p class="bullet">
-								<label for="pos1">1</label> <label for="pos2">2</label> <label
-									for="pos3">3</label> <label for="pos4">4</label>
-							</p>
+						
+							
+						<div class="slider">
+						<c:forEach var="photolist" items="${photolist}">
+							<div style="height: 300px;"><img  title="${photolist.userId}ë‹˜ì˜ ì‚¬ì§„" src="<%=cp%>/uploads/picture/${photolist.imageFilename}" style="width: 100%; height: 100%;"></div>							
+						</c:forEach>
+						
+						<c:if test="${empty photolist }">
+						<div style="height: 300px; text-align: center; font-size: 30px; line-height: 300px;">ì•„ì§ ì‚¬ì§„ì´ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤</div>
+						</c:if>
 						</div>
-
-
+							
+							
+						
+						
 						<div
 							style="margin-left: 35px; position: relative; width: 500px; bottom: -50px;">
-<%-- 							<img alt="" src="<%=cp%>/resource/images/what.png" style="max-width: 300px; height: auto;"> --%>
+							<%-- <img alt="" src="<%=cp%>/resource/images/what.png" style="max-width: 300px; height: auto;"> --%>
 						</div>
 
 
@@ -229,40 +308,44 @@ font-weight: 900;}
 						<div class="ipb3">
 							<div class="ipb2">
 								<div class="ipb2" style="text-align: left; padding-left: 30px;">
-									<div style="text-align: right;">
-										<a id="aHover" onclick="scheduleModal('peapleList','show');">Âü¿©ÀÎ¿øº¸±â</a>
+									<div style=" text-align: right;">
+										<a style="color: gray;" id="aHover" onclick="scheduleModal('peapleList','show');">ì°¸ì—¬ì¸ì›ë³´ê¸°</a>
 									</div>
-									<div style="float: left; width: 30%">
+									
+									<div style="float: left; width: 30%; height: 50px;">
 										<div>
-											<p class="myfont">ÀÏ½Ã</p>
+											<p class="myfont" >ì¼ì‹œ</p>
 										</div>
-										<p class="myfont2">2010-10-11</p>
+										<p class="myfont2">${dto.startDate}</p>
 									</div>
 
 									<div style="float: left; width: 40%">
-										<p class="myfont">»ó¼¼¼³¸í</p>
+										<p class="myfont">ìƒì„¸ì„¤ëª…</p>
 										<div id="style1"
-											style="overflow: scroll; overflow-x: hidden; width: 90%; height: 150px;">
-											<p class="myfont2">Áõ¸»·ç
-												¿¡Áõ¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¿¡Áõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·çÁõ¸»·ç³Ñ¤º¹Ù¸®´Ù~~~~dfadfasfasdfadsfasfasd~~~~~~~~~</p>
+											style="overflow: scroll; overflow-x: hidden; width: 90%; height: 100px;">
+											<p class="myfont2">${dto.contentDetail}</p>
 										</div>
 									</div>
 
-									<div style="float: left; width: 30%">
-										<p class="myfont">Àå¼Ò</p>
+									<div style=" float: left; width: 30% ;">
+										<p class="myfont">ì¥ì†Œ</p>
 										<p class="myfont2">
-											<span>È«´ëÀÔ±¸¿ª 2¹ø Ãâ±¸ ÇÒ¸®½º</span><span><button
-													id="click_button" style="margin-left: 5px;">Áöµµ</button></span>
+											<span id="forkakaomap">${dto.location}</span><span>
+											<c:if test="${dto.location != 'empty'}">
+											<button id="click_button" style="margin-left: 5px;">ì§€ë„</button>
+											</c:if>
+											</span>
+											
 										</p>
-									</div>
-
+									</div >
+								</div>
 
 								</div>
 
 
-								<!-- Áöµµ¸¦ Ç¥½ÃÇÒ div ÀÔ´Ï´Ù -->
-								<div class="aa" id="staticMap"
-									style="max-width: 100%; height: 500px; margin-top: 10px; display: none;"></div>
+								<!-- ì§€ë„ë¥¼ í‘œì‹œí•  div ì…ë‹ˆë‹¤ -->
+								<div class="aa" id="map"
+									style="max-width: 100%; height: 500px; display: none;"></div>
 
 							</div>
 
@@ -274,186 +357,366 @@ font-weight: 900;}
 
 
 					<div class='right-box'>
-						<span style="font-size: 30px; font-family: Webdings">2</span> <span
-							style="font-size: 25px;">ÈÄ±â</span> <span style="float: right">
+						<span style="font-size: 30px; font-family: Webdings">_</span> <span
+							style="font-size: 25px;">í›„ê¸°</span> <span style="float: right">
 
-							<button class="btnConfirm"
-								onclick="scheduleModal('ReviewAdd','show');">ÈÄ±âµî·Ï</button>
+							<button class="btnConfirm" name="hello"
+								onclick="scheduleModal('ReviewAdd','show','created');">í›„ê¸°ë“±ë¡</button>
 						</span>
 
-
-						<!--³¯Â¥°¡ µé¾î°¡´Â ºÎºĞ-->
+					<div id="style1" style="overflow: scroll; overflow-x: hidden; width: 100%; height: 550px; " >
+						<!--ë‚ ì§œê°€ ë“¤ì–´ê°€ëŠ” ë¶€ë¶„-->
 						<table
 							style="width: 100%; margin: 0px auto; border-spacing: 0px; border-collapse: collapse;">
 
-							<tr align="left" bgcolor="#eeeeee" height="35"
-								style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
-								<th colspan="5" width="60">ÀÌ°Ü·¹ ´ÔÀÇ ÈÄ±â
-									<div style="float: right; display: inline-block;">
-										<button onclick="scheduleModal('ReviewAdd','show');">¼öÁ¤</button>
-										<button>»èÁ¦</button>
-									</div>
-								</th>
-							</tr>
+							<c:forEach var="listdto" items="${listdto}">
+								
+								<tr align="left" bgcolor="#eeeeee" height="35"
+									style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
+									<th colspan="5" width="60">${listdto.userName}ë‹˜ì˜ í›„ê¸°
+									
+										<div style="float: right; display: inline-block;">
+											<span>${listdto.created}</span>
+											<c:if test="${sessionScope.member.userId=='admin' || sessionScope.member.userId==listdto.userId}">
+											<button onclick="scheduleModal('ReviewUpdate','show','update',${listdto.reviewNum},'${listdto.contentDetail}');">ìˆ˜ì •</button>
+											<button onclick="javascript:location.href='<%=cp%>/review/delete.do?reviewnum=${listdto.reviewNum}&page=${page}&rows=${rows}&condition=${condition}&num=${schedule_num}&groupnum=${groupNum}'">ì‚­ì œ</button>
+											</c:if>
+										</div>
+									</th>
+								</tr>
 
 
-							<tr align="left" bgcolor="#ffffff" height="35"
-								style="border-bottom: 1px solid #cccccc;">
-								<td colspan="5">³Ê¹« Àë¾ø´ç Å°Å° ¿¡¹Ù¸µÀÌ¶ó±¸ÇÒ ¼ö ÀÖÂî ±ÛÁö ? Áı¿¡ °¥ ½Ã°£Àº ¾ğÁ¦ÀÎ°¡
-									µÎºñµÎ¹ä µÎ¹ÙµÎ¹Ù~ ¿©±â´Â ³»¿ëÀÔ´Ï´Ù ³»¿ëÄ­À» Ç¥½ÃÇÏ±â À§ÇÑ ³ë·Â~ ÄìÄìÄì</td>
+								<tr align="left" bgcolor="#ffffff" height="35"
+									style="border-bottom: 1px solid #cccccc;">
+									<td colspan="5">${listdto.contentDetail}</td>
 
 
-							</tr>
-
+								</tr>
+							</c:forEach>
 						</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-		<div class="footer">
+	
+	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
-	<!-- Âü¿©ÀÎ¿ø¸ñ·Ï --> 
-    <div class="my-modal show-modal" id="peapleList">
+	<!-- ì°¸ì—¬ì¸ì›ëª©ë¡ -->
+	<div class="my-modal show-modal" id="peapleList">
 
-        <div class="modal-content">
-        
-        <div>
-        	<table id="moo">
-            	<tr>
-	            	<th>Âü¿©ÀÎ¿ø¸ñ·Ï
-	            	<span class="close-button" onclick="scheduleModal('peapleList', 'none');">¡¿</span>
-	            	</th>
-            	</tr>
-            </table>
-        </div>
-         
+		<div class="modal-content">
 
-            <form action="#post.php" method="POST">
-            
-            
-            <div style="overflow: scroll;"> 
-            	<ol class="list">
-            		<li>¹Ú¼öÁø(sujin)</li>
-            		<li>ÀÌ°Ü·¹(gyeo)</li>
-            		<li>ÀÌÁß°æ(brother)</li>
-            		<li>±èÀ±½Ä(evaring)</li>
-            		<li>±èÀ±½Ä(evaring)</li>
+			<div>
+				<table id="moo">
+					<tr>
+						<th>ì°¸ì—¬ì¸ì›ëª©ë¡
+							
+							 <span class="close-button"
+							onclick="scheduleModal('peapleList', 'none');">Ã—</span>
+						</th>
+					</tr>
+				</table>
+			</div>
 
 
-            	</ol>	
-            </div>
-            
+			<form action="#post.php" method="POST">
+
+
+				<div style="overflow: scroll; overflow-x: hidden; overflow-y : auto;width: 100%; height: 300px;">
+					<ol class="list">
+					<c:forEach var="personlist" items="${personlist}">
+						<li style="font-size: 15px; padding:13px 15px 13px 15px; background-color: white;  margin: 10px; border-radius: 5px;">
+
+						ì•„ì´ë”” :${personlist.userId} <br>
+						ì´ë¦„ : ${personlist.userName} <br>
+						ë²ˆí˜¸ : ${personlist.tel}<br>
+
+						</li>
+					</c:forEach>
+					</ol>
+				</div>
+
 
 			</form>
-        </div>
-    </div>
-	 <!-- ÈÄ±âµî·Ï --> 
-    <div class="modal show-modal" id = "ReviewAdd">
+		</div>
+	</div>
 
-        <div class="modal-content">
-        
-        <div>
-        	    <table id="moo">
-            	<tr>
-            	<th>ÀÏÁ¤ÈÄ±âµî·Ï
-            	<span class="close-button" onclick="scheduleModal('ReviewAdd', 'none');">¡¿</span>
-            	</th>
-            	
-            	</tr>
-            </table>
-        </div>
-         
-            
-           
-           
-            <form class="modalForm" action="#post.php" method="POST">
-            
-            
-			  <p>ÀÌ°Ü·¹´ÔÀÇ ÈÄ±â</p>
-			  
-			  <textarea class="textwrite" placeholder="»ó¼¼ÀÏÁ¤"></textarea>
-			  
-			  
-			  <div>
-			  
-			  <button class="shortbtn" type="button">ÀÌ¹ÌÁö1</button>
-			  <input  class="middleinput" placeholder="ÀÌ¹ÌÁöÆÄÀÏ¸í">
-			  
-			  <button class="shortbtn" type="button">ÀÌ¹ÌÁö2</button>
-			  <input class="middleinput" placeholder="ÀÌ¹ÌÁöÆÄÀÏ¸í">
-			  
-			  <button class="shortbtn" type="button">ÀÌ¹ÌÁö3</button>
-			  <input class="middleinput" placeholder="ÀÌ¹ÌÁöÆÄÀÏ¸í">
-			  
-			  <button class="shortbtn"  type="button">ÀÌ¹ÌÁö4</button>
-			  <input class="middleinput" placeholder="ÀÌ¹ÌÁöÆÄÀÏ¸í">
-			  
-			  <button class="shortbtn"  type="button">ÀÌ¹ÌÁö5</button>
-			  <input class="middleinput" placeholder="ÀÌ¹ÌÁöÆÄÀÏ¸í">
-			  
-			  
-			  </div>
-			
+	<!-- í›„ê¸°ë“±ë¡ -->
+	<div class="modal show-modal" id="ReviewAdd">
+
+		<div class="modal-content">
+
 			<div>
-			  <button class="shortbtn" type="button" onclick="scheduleModal('ReviewAdd', 'none');">Ãë¼ÒÇÏ±â</button>
-			  <button class="graybtn" type="button">ÈÄ±âµî·Ï</button>
+				<table id="moo">
+					<tr>
+						<th style="font-size: 26px; text-align: left">í›„ê¸° ë“±ë¡<span class="close-button"
+							onclick="scheduleModal('ReviewAdd', 'none');">Ã—</span>
+						</th>
+
+					</tr>
+				</table>
 			</div>
 			
+
+			<form class="modalForm" name="modalForm" action="#post.php"
+				method="POST" enctype="multipart/form-data">
+
+
+				<p>${sessionScope.member.userName}ë‹˜ì˜í›„ê¸°</p>
+
+				<textarea class="textwrite" name="reviewcontetn" placeholder="ìƒì„¸ì¼ì •"></textarea>
+
+				<div style="text-align: right; font-size: 12px ;margin: 6px 0px;">*íŒŒì¼ ì—…ë¡œë“œëŠ” 3ì¥ê¹Œì§€ ê°€ëŠ¥í•©ë‹ˆë‹¤.</div>
+
+
+				<div id =imageupload>
+					<input type="file" name="upload" accept="image/*" class="boxTF" size="53" style="height: 25px; margin-bottom: 7px;">
+					<input type="hidden" name="reviewNum" value="${schedule_num}">
+					
+				
+				</div>
+
+					
+				<div>
+							
+					<button class="shortbtn" type="button"
+						onclick="scheduleModal('ReviewAdd', 'none');">ì·¨ì†Œí•˜ê¸°</button>
+						
+					<button name="graybtnname"class="graybtn" type="button" onclick="sendOk();"></button>
+					
+						
+					
+					
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="rows" value="${rows}">
+					<input type="hidden" name="condition" value="${condition}">
+					<input type="hidden" name="groupnum" value="${groupNum}">
+				</div>
+
 			</form>
-        </div>
-    </div>
-	<script type="text/javascript">
-	window.onload = function () {
-		var ReviewAdd = document.getElementById("ReviewAdd");
-		ReviewAdd.style.display='none';
+		</div>
+
+	</div>
+	
+	<!-- í›„ê¸°ìˆ˜ì • -->
+	<div class="modal show-modal" id="ReviewUpdate">
+
+		<div class="modal-content">
+
+			<div>
+				<table id="moo">
+					<tr>
+						<th style="font-size: 26px; text-align: left">í›„ê¸° ìˆ˜ì • <span class="close-button"
+							onclick="scheduleModal('ReviewUpdate', 'none');">Ã—</span>
+						</th>
+
+					</tr>
+				</table>
+			</div>
+			
+
+		<form class="modalForm" name="modalFormUpdate" action="#post.php"
+				method="POST" enctype="multipart/form-data">
+
+
+				<p>${sessionScope.member.userName}ë‹˜ì˜í›„ê¸°</p>
+
+				<textarea class="textwrite" name="reviewcontetnUpdate" placeholder="ìƒì„¸ì¼ì •"></textarea>
+				
+				<span><a href ="">ì´ë¯¸ì§€1</a></span><button>ì‚­ì œ</button><br>	
+				<span><a href ="">ì´ë¯¸ì§€2</a></span><button>ì‚­ì œ</button>	
+
+				
+				<h3>ìƒˆë¡œìš´ ì´ë¯¸ì§€ ì¶”ê°€í•˜ê¸°</h3>
+				<div id =imageupload>
+					<input type="file" name="uploadupdate" accept="image/*" class="boxTF" size="53" style="height: 25px;">
+					<input type="hidden" name="reviewNum" value="${schedule_num}">
+									
+				</div>
+				
+
+				<div>
+					
+					<button class="shortbtn" type="button"
+						onclick="scheduleModal('ReviewUpdate', 'none');">ì·¨ì†Œí•˜ê¸°</button>
+						
+					<button name="graybtnnameupdate"class="graybtn" type="button" onclick="sendOkUpdate();"></button>
+					
+						
+					
+					
+					<input type="hidden" name="page" value="${page}">
+					<input type="hidden" name="rows" value="${rows}">
+					<input type="hidden" name="condition" value="${condition}">
+					<input type="hidden" name="groupnum" value="${groupNum}">
+				</div>
+
+			</form>
+		</div>
+
+	</div>
+
+
+
+
+
+
+
+	<script type="text/javascript"
+		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e99194984cb0bb9f3ba4db6533fbba3c&libraries=services"></script>
+		 <!--í›„ê¸° ë“±ë¡ ìŠ¤í¬ë¦½íŠ¸--> 
+<script type="text/javascript">
+    function sendOk() {
+        var f = document.modalForm;
+        
+    	var str = f.reviewcontetn.value;
+	  	
+        if(!str) {
+            alert("í›„ê¸°ì„ ì…ë ¥í•˜ì„¸ìš”. ");
+            f.subject.focus();
+            return;
+        } 
+
 		
+
+        f.action="<%=cp%>/review/created_ok.do";
+
+        
+        f.submit();
+    	
+    
+    }   
+    
+</script>
+
+<script type="text/javascript">
+    function sendOkUpdate() {
+        var f = document.modalFormUpdate;
+        
+    	var str = f.reviewcontetnUpdate.value;
+	  	
+        if(!str) {
+            alert("í›„ê¸°ì„ ì…ë ¥í•˜ì„¸ìš”. ");
+            f.subject.focus();
+            return;
+        } 
+
+		
+
+        f.action="<%=cp%>/review/update_ok.do";
+
+        
+        f.submit();
+    	
+    
+    }   
+    
+</script>
+
+
+
+
+
+	<script>
+		var mapContainer = document.getElementById('map'), // ì§€ë„ë¥¼ í‘œì‹œí•  div 
+		mapOption = {
+			center : new kakao.maps.LatLng(33.450701, 126.570667), // ì§€ë„ì˜ ì¤‘ì‹¬ì¢Œí‘œ
+			level : 3
+		// ì§€ë„ì˜ í™•ëŒ€ ë ˆë²¨
+		};
+
+		//ì´ë¯¸ì§€ í† ê¸€ 
+		$('#click_button').click(function()
+				{$('.aa').slideToggle('normal',function() {
+					
+												// ì§€ë„ë¥¼ ìƒì„±í•©ë‹ˆë‹¤    
+												var map = new kakao.maps.Map(
+														mapContainer, mapOption);
+
+												// ì£¼ì†Œ-ì¢Œí‘œ ë³€í™˜ ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤
+												var geocoder = new kakao.maps.services.Geocoder();
+												
+/* 												//ì£¼ì†Œê°€ ì •í•´ì§€ì§€ ì•Šì•˜ì„ ì‹œ
+												if($("#forkakaomap").text()=='empty'){
+													$("#forkakaomap").innerHTML ="ì¥ì†Œ ë¯¸ì •";
+												} */
+												
+												// ì£¼ì†Œë¡œ ì¢Œí‘œë¥¼ ê²€ìƒ‰í•©ë‹ˆë‹¤
+												geocoder.addressSearch(
+														
+													$("#forkakaomap").text(),function(result, status) {
+
+																	// ì •ìƒì ìœ¼ë¡œ ê²€ìƒ‰ì´ ì™„ë£Œëìœ¼ë©´ 
+																	if (status === kakao.maps.services.Status.OK) {
+
+																		var coords = new kakao.maps.LatLng(
+																				result[0].y,
+																				result[0].x);
+
+																		// ê²°ê³¼ê°’ìœ¼ë¡œ ë°›ì€ ìœ„ì¹˜ë¥¼ ë§ˆì»¤ë¡œ í‘œì‹œí•©ë‹ˆë‹¤
+																		var marker = new kakao.maps.Marker(
+																				{
+																					map : map,
+																					position : coords
+																				});
+
+																		// ì¸í¬ìœˆë„ìš°ë¡œ ì¥ì†Œì— ëŒ€í•œ ì„¤ëª…ì„ í‘œì‹œí•©ë‹ˆë‹¤
+																		var infowindow = new kakao.maps.InfoWindow(
+																				{
+																					content : '<div style="width:150px;text-align:center;padding:3px 0;">ë§Œë‚¬ë˜ ì¥ì†Œ</div>'
+																				});
+																		infowindow
+																				.open(
+																						map,
+																						marker);
+
+																		// ì§€ë„ì˜ ì¤‘ì‹¬ì„ ê²°ê³¼ê°’ìœ¼ë¡œ ë°›ì€ ìœ„ì¹˜ë¡œ ì´ë™ì‹œí‚µë‹ˆë‹¤
+																		map
+																				.setCenter(coords);
+																	}
+																});
+											});
+
+						});
+	</script>
+	
+<script type="text/javascript">
+	window.onload = function() {
+		
+		var ReviewAdd = document.getElementById("ReviewAdd");
+		ReviewAdd.style.display = 'none';
+
 		var peapleList = document.getElementById("peapleList");
-		peapleList.style.display='none';
+		peapleList.style.display = 'none';
+		
+		var ReviewUpdate = document.getElementById("ReviewUpdate");
+		ReviewUpdate.style.display = 'none';
 	}
-	function scheduleModal(name, state) {
-		if(state=='show'){
-			document.getElementById(name).style.display='block';
-		}else if(state=='none'){
-			document.getElementById(name).style.display='none';
+
+	function scheduleModal(name, state, mode,reviewNum,content) {
+		
+		if (state == 'show') {
+			document.getElementById(name).style.display = 'block';
+		} else if (state == 'none') {
+			document.getElementById(name).style.display = 'none';
+
+		}
+		
+		if(mode=='created'){
+	        var f = document.modalForm;
+	        f.graybtnname.innerHTML="í›„ê¸°ë“±ë¡"; 
+	       
+		}else if(mode=='update'){
+			 var f = document.modalFormUpdate;
+		    f.graybtnnameupdate.innerHTML="í›„ê¸°ìˆ˜ì •"; 
+		    f.reviewcontetnUpdate.innerHTML = content;
+	    
 		}
 	};
+</script>
 	
-	</script>
-	<script type="text/javascript"
-		src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e99194984cb0bb9f3ba4db6533fbba3c"></script>
-	<script>
-		// ÀÌ¹ÌÁö Áöµµ¿¡¼­ ¸¶Ä¿°¡ Ç¥½ÃµÉ À§Ä¡ÀÔ´Ï´Ù 
-		var markerPosition = new kakao.maps.LatLng(33.450701, 126.570667);
-
-		// ÀÌ¹ÌÁö Áöµµ¿¡ Ç¥½ÃÇÒ ¸¶Ä¿ÀÔ´Ï´Ù
-		// ÀÌ¹ÌÁö Áöµµ¿¡ Ç¥½ÃÇÒ ¸¶Ä¿´Â Object ÇüÅÂÀÔ´Ï´Ù
-		var marker = {
-			position : markerPosition
-		};
-
-		var staticMapContainer = document.getElementById('staticMap'), // ÀÌ¹ÌÁö Áöµµ¸¦ Ç¥½ÃÇÒ div  
-		staticMapOption = {
-			center : new kakao.maps.LatLng(33.450701, 126.570667), // ÀÌ¹ÌÁö ÁöµµÀÇ Áß½ÉÁÂÇ¥
-			level : 3, // ÀÌ¹ÌÁö ÁöµµÀÇ È®´ë ·¹º§
-			marker : marker
-		// ÀÌ¹ÌÁö Áöµµ¿¡ Ç¥½ÃÇÒ ¸¶Ä¿ 
-		};
-
-		//ÀÌ¹ÌÁö Åä±Û 
-		$('#click_button').click(
-				function() {
-
-					$('.aa').slideToggle(
-							'normal',
-							function() {
-								// °´Ã¼°¡ ´Ù ÆîÄ¡Áö°Å³ª Á¢È÷°í ³ª¸é ¿©±â¿¡ µç ³»¿ëÀÌ ½ÇÇàµÈ´Ù.
-								var staticMap = new kakao.maps.StaticMap(
-										staticMapContainer, staticMapOption);
-							});
-
-				});
-	</script>
+	
 </body>
 </html>

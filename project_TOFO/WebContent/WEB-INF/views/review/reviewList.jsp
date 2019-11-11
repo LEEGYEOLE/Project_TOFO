@@ -1,7 +1,7 @@
-<%@page import="java.util.Calendar"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
-
+<%@ page contentType="text/html; charset=UTF-8"%>
+<%@ page trimDirectiveWhitespaces="true"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String cp = request.getContextPath();
 %>
@@ -18,6 +18,15 @@
 	type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/table.css"
 	type="text/css">
+
+<script type="text/javascript">
+	function selectList() {
+		var f = document.selectForm;
+		f.submit();
+	}
+</script>
+
+
 <style>
 .left-box {
 	float: left;
@@ -33,38 +42,39 @@
 	width: 90%;
 	margin: 2% auto;
 }
-   
 
-    p {
-    text-align: left;
-    color: black;
-    font-weight: 900;
-    }
-    
+p {
+	text-align: left;
+	color: black;
+	font-weight: 900;
+}
 
-.modal-content{
-height: 530px;}
+.modal-content {
+	height: 530px;
+}
 
 .modalForm {
-margin-top: 2px;
+	margin-top: 2px;
 }
-
 
 .middleinput {
-margin-left: 11px;
+	margin-left: 11px;
 }
 
-
 .shortbtn {
-float: left;
-margin-top: 3px;
+	float: left;
+	margin-top: 3px;
 }
 
 .graybtn {
-margin-left: 120px;
-margin-top: 3px;
+	margin-left: 120px;
+	margin-top: 3px;
 }
 
+.colorhover:hover{
+background-color: gray;
+cursor: pointer;
+}
 </style>
 <script type="text/javascript">
 	function change() {
@@ -97,101 +107,76 @@ margin-top: 3px;
 	<div class="container">
 		<div class="body-container">
 			<div class="container-block">
-					<div style="clear: both;
-    padding-bottom: 10px;">
-						<p id="reviewTitle">ÀÏÁ¤ ÈÄ±â °Ô½ÃÆÇ</p>
+				<div style="clear: both; padding-bottom: 10px;">
+					<p id="reviewTitle">ì¼ì • í›„ê¸° ê²Œì‹œíŒ</p>
 
-						<div id="selectbox">
-							<select id="viewNum">
-								<option value="Âü¼®ÇÑ ¸ğÀÓ¸¸ º¸±â" selected="selected">Âü¼®ÇÑ ¸ğÀÓ¸¸
-									º¸±â</option>
-								<option value="#">#</option>
-								<option value="#">#</option>
-							</select>
-						</div>
+					<div id="selectbox">
+						<form name="selectForm" action="<%=cp%>/review/list.do"
+							method="post" onchange="selectList();">
+							<select name="condition" id="viewNum">
+								<option value="att" ${condition.equalsIgnoreCase("att") ? "selected='selected'" : ""}>ì°¸ì„ì—¬ë¶€ ë³´ê¸°</option>
+								<option value="attend" ${condition.equalsIgnoreCase("attend") ? "selected='selected'" : ""}>ì°¸ì„</option>
+								<option value="notattend" ${condition.equalsIgnoreCase("notattend") ? "selected='selected'" : ""}>ë¶ˆì°¸</option>
+							</select> 
+							<input type="hidden" name="condition" value="${condition}">
+						</form>
 					</div>
+				</div>
 
-					<table class="tableList">
+				<table class="tableList">
 					<colgroup>
-    <col width="5%"/>
-    <col width="28%"/>
-    <col width="25%"/>
-    <col width="5%"/>
-    <col width="12%"/>
-    <col width="5%"/>
-  </colgroup>
-						<thead>
-							<tr>
-								<th>No.</th>
-								<th>ÀÏÁ¤¸í</th>
-								<th>Àå¼Ò</th>
-								<th>Âü¿©ÀÎ¿ø</th>
-								<th>³¯Â¥</th>
-								<th>Âü¼®¿©ºÎ</th>
+						<col width="5%" />
+						<col width="28%" />
+						<col width="25%" />
+						<col width="5%" />
+						<col width="12%" />
+						<col width="5%" />
+					</colgroup>
+					<thead>
+						<tr>
+							<th>No.</th>
+							<th>ì¼ì •ëª…</th>
+							<th>ì¥ì†Œ</th>
+							<th>ì°¸ì—¬ì¸ì›</th>
+							<th>ë‚ ì§œ</th>
+							<th>ì°¸ì„ì—¬ë¶€</th>
 
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach var="dto" items="${list}">
+							<tr class="colorhover" onclick="javacript:location.href='${articleUrl}&num=${dto.reviewNum}&groupnum=${dto.groupNum}'">
+								<td>${dto.listNum}</td>
+								<td>${dto.title}</td>
+								<td>${dto.location}</td>
+								<td>${dto.personnel}</td>
+								<td>${dto.startDate}~ ${dto.endDate}</td>
+								<td>${dto.attendCheck==1 ? "ì°¸ì„" : "ë¶ˆì°¸"}</td>
+								
+								
 							</tr>
-						</thead>
-						<tbody>
-							<tr onclick="javacript:location.href='<%=cp%>/review/review.do'">
-								<td>1</td>
-								<td>A¸ğÀÓ</td>
-								<td>¼­¿ï</td>
-								<td>20</td>
-								<td>2019-11-10</td>
-								<td>Âü¿©</td>
-							</tr>
-							<tr>
-								<td>#</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>#</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>#</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>#</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
-							<tr>
-								<td>#</td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
+						</c:forEach>
 
-						</tbody>
-					</table>
 
-<!-- 					<button class="btnConfirm" id="button5" onclick="button5_click();">ÈÄ±â -->
-<!-- 						°Ô½ÃÆÇ µî·Ï</button> -->
+					</tbody>
+				</table>
+				
+			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
+			   <tr height="35">
+				<td align="center">
+			        ${dataCount==0? "ë“±ë¡ëœ ê²Œì‹œê¸€ì´ ì—†ìŠµë‹ˆë‹¤." : paging}
+				</td>
+			   </tr>
+			</table>
+
+				<!-- 					<button class="btnConfirm" id="button5" onclick="button5_click();">í›„ê¸° -->
+				<!-- 						ê²Œì‹œíŒ ë“±ë¡</button> -->
 			</div>
 		</div>
 	</div>
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
-	
+
 </body>
 </html>
