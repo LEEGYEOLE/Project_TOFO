@@ -89,9 +89,8 @@ font-size: 40px;
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
 			      <td>${dto.hitCount}</td>
-			      <td>
-			      	<img src="/study3/img/gang.jpg" width="20" height="20">
-			      </td>
+			      <td> <img src="/project_TOFO/resource/img/new.gif">
+			     </td>
 			  </tr>
 			  
 			  </c:forEach>

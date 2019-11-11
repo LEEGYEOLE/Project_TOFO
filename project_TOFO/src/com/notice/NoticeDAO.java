@@ -16,6 +16,8 @@ public interface NoticeDAO {
 	public void updateHitCount(int num);
 	public void updateNotice(NoticeDTO dto); //글 수정하기
 	public void deleteNotice(int num, String userId);  //글 삭제하기
+	public NoticeDTO readNotice(int num);
+	
 	
 	
 	
