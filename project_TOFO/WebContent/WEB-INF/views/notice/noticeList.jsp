@@ -29,6 +29,22 @@ font-size: 40px;
 
 </style>
 
+<script type="text/javascript">
+
+function selectList(){
+	var f=document.selectForm;
+	f.submit();
+}
+
+
+	function searchList() {
+		var f=document.searchForm;
+		f.submit();
+	}
+
+
+</script>
+
 
 </head>
 <body>
