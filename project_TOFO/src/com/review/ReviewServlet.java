@@ -107,13 +107,26 @@ public class ReviewServlet extends HttpServlet {
 			condition = "att";
 		}
 
-		// int num = Integer.parseInt(req.getParameter("num"));//그룹번호받아오기
-		int num = 4;
+		//세션에 저장되어있는 그룹번호 가져오기
+		int num=-1;
+		if(session.getAttribute("num")!=null) {
+			num = (int) session.getAttribute("num");
+		}else {
+			resp.sendRedirect(cp + "/main/myMain.do");
+			return;
+		}
+		
 		String userid = info.getUserId();// 현재 로그인 중인 아이디
+		System.out.println(num);
+		
+		//num => 그룹번호야
 
+		
+		
 		// 데이터카운트 갯수 설정
 		int dataCount = dao.dataCount(num, userid, condition);
-
+		
+		
 		int total_page = util.pageCount(rows, dataCount);
 		if (current_page > total_page)
 			current_page = total_page;
@@ -151,6 +164,7 @@ public class ReviewServlet extends HttpServlet {
 		req.setAttribute("dataCount", dataCount);
 		req.setAttribute("total_page", total_page);
 		req.setAttribute("rows", rows);
+		req.setAttribute("rows", rows);
 		req.setAttribute("condition", condition);
 		req.setAttribute("articleUrl", articleUrl);
 
@@ -174,6 +188,11 @@ public class ReviewServlet extends HttpServlet {
 
 		int schedule_num = Integer.parseInt(req.getParameter("num"));
 		int groupNum = Integer.parseInt(req.getParameter("groupnum"));
+		
+		
+		
+		
+		
 		String condition = req.getParameter("condition");
 		String page = req.getParameter("page");
 
@@ -292,7 +311,32 @@ public class ReviewServlet extends HttpServlet {
 			return;
 		}
 
-
+		// 파라미터 넘겨 받기
+		ReviewDTO dto = new ReviewDTO();
+		ReviewDAO dao = new ReviewDAO();
+		
+		dto.setUserId(info.getUserId());
+		dto.setContentDetail(req.getParameter("reviewcontetnUpdate"));
+				
+		dto.setReviewNum(Integer.parseInt(req.getParameter("forreviewNum")));
+		
+		int result = dao.updateReview(dto);
+		
+		if(result==0) {
+			resp.sendRedirect(cp + "/member/login.do");
+			return;
+		}
+	
+		
+		int page = Integer.parseInt(req.getParameter("page"));
+		int rows = Integer.parseInt(req.getParameter("rows"));
+		int num = Integer.parseInt(req.getParameter("reviewNum"));
+		int groupnum = Integer.parseInt(req.getParameter("groupnum"));
+		String condition = req.getParameter("condition");
+		
+		String query = "page=" + page + "&rows=" + rows + "&condition=" + condition + "&num=" + num + "&groupnum="
+				+ groupnum;
+		resp.sendRedirect(cp + "/review/review.do?" + query);
 		
 		
 	}

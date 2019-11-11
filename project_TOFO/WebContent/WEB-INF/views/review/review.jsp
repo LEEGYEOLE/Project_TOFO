@@ -516,25 +516,17 @@ ul, li {
 				</table>
 			</div>
 			
+		
+		<form class="modalForm" name="modalFormUpdate" action="#post.php">
+				
 
-		<form class="modalForm" name="modalFormUpdate" action="#post.php"
-				method="POST" enctype="multipart/form-data">
-
-
+<input type="hidden" name="forreviewNum" value=""/>
 				<p>${sessionScope.member.userName}님의후기</p>
 
 				<textarea class="textwrite" name="reviewcontetnUpdate" placeholder="상세일정"></textarea>
 				
-				<span><a href ="">이미지1</a></span><button>삭제</button><br>	
-				<span><a href ="">이미지2</a></span><button>삭제</button>	
-
 				
-				<h3>새로운 이미지 추가하기</h3>
-				<div id =imageupload>
-					<input type="file" name="uploadupdate" accept="image/*" class="boxTF" size="53" style="height: 25px;">
-					<input type="hidden" name="reviewNum" value="${schedule_num}">
-									
-				</div>
+
 				
 
 				<div>
@@ -543,10 +535,7 @@ ul, li {
 						onclick="scheduleModal('ReviewUpdate', 'none');">취소하기</button>
 						
 					<button name="graybtnnameupdate"class="graybtn" type="button" onclick="sendOkUpdate();"></button>
-					
-						
-					
-					
+				
 					<input type="hidden" name="page" value="${page}">
 					<input type="hidden" name="rows" value="${rows}">
 					<input type="hidden" name="condition" value="${condition}">
@@ -710,9 +699,11 @@ ul, li {
 	       
 		}else if(mode=='update'){
 			 var f = document.modalFormUpdate;
+			 f.forreviewNum.value = reviewNum;
+			
 		    f.graybtnnameupdate.innerHTML="후기수정"; 
 		    f.reviewcontetnUpdate.innerHTML = content;
-	    
+	    	
 		}
 	};
 </script>

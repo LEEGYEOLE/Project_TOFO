@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.util.DBConn;
 
 public class ReviewDAO {
@@ -19,27 +20,33 @@ public class ReviewDAO {
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 
+
 		try {
-			sb.append("select nvl(count(*),0) cnt from schedule sc ,attendance at ");
-
+			
+			sb.append("  select count(s.sche_num)");
+			sb.append("  from schedule s left outer join (");
+			sb.append("     select sche_num, count(sche_num) cnt from attendance where userid=? group by  sche_num");
+			sb.append("   ) a on s.sche_num=a.sche_num");
+			sb.append("  where  s.num=? and sdate <= to_date(sysdate, 'YY/MM/DD')");
+			
 			if (condition.equalsIgnoreCase("att")) {
-				sb.append("  where sc.sche_num =at.sche_num and at.userid = ? and num =? and edate <= to_date(sysdate, 'YY/MM/DD')");
-				
+				sb.append("");
+
 			}
 
+			
 			else if (condition.equalsIgnoreCase("attend")) {
-				sb.append(
-				"   where sc.sche_num =at.sche_num and at.userid = ? and attend=1 and num =? and edate <= to_date(sysdate, 'YY/MM/DD')");
+				sb.append("  and cnt = 1");
 
 
 			}
-
+			
 			else if (condition.equalsIgnoreCase("notattend")) {
-				sb.append(
-					"   where sc.sche_num =at.sche_num and at.userid = ? and attend=0 and num =? and edate <= to_date(sysdate, 'YY/MM/DD')");
+				sb.append("  and cnt is null");
 
 
 			}
+			
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, userId);
 			pstmt.setInt(2, num);
@@ -126,16 +133,17 @@ public class ReviewDAO {
 
 		try {
 
-			sb.append("select sc.sche_num, to_char(sdate, 'YY/MM/DD'), to_char(edate, 'YY/MM/DD'),title,addr,content, nvl(cnt,0) cnt, at.attend ,sc.num from schedule sc ");
-			sb.append("  left outer join");
-			sb.append("  (select  sche_num, count(*) cnt from attendance group by sche_num) c");
-			sb.append("  on sc.sche_num =c.sche_num");
-			sb.append("  left outer join attendance at");
-			sb.append("  on sc.sche_num =at.sche_num ");
-			sb.append("  where at.userid =? and num = ? and edate <= to_date(sysdate, 'YY/MM/DD')");
-			sb.append("  order by sc.sche_num desc");
+			sb.append("  select s.sche_num, to_char(sdate, 'YY/MM/DD'), to_char(edate, 'YY/MM/DD'), title, addr,content, nvl(cnt,0) cnt, s.num ,peo");
+			sb.append("  from schedule s left outer join (");
+			sb.append("   select sche_num, count(sche_num) cnt from attendance where userid=? group by  sche_num");
+			sb.append("     ) a on s.sche_num=a.sche_num");
+			sb.append("  join (select count(*) peo ,sche_num from attendance group by sche_num) t");
+			sb.append("  on s.sche_num =t.sche_num");
+			sb.append("     where  s.num=? and sdate <= to_date(sysdate, 'YY/MM/DD') ");
+			sb.append("  order by s.sche_num desc");
 			sb.append("  offset ? rows fetch first ? rows only");
-
+	
+		
 			pstmt = conn.prepareStatement(sb.toString());
 
 			pstmt.setString(1, userId);
@@ -153,10 +161,10 @@ public class ReviewDAO {
 				dto.setEndDate(rs.getString(3));
 				dto.setTitle(rs.getString(4));
 				dto.setLocation(rs.getString(5));
-				dto.setContentDetail(rs.getString(6));
-				dto.setPersonnel(rs.getInt(7));
-				dto.setAttendCheck(rs.getInt(8));
-				dto.setGroupNum(rs.getInt(9));
+				dto.setContentDetail(rs.getString(6));		
+				dto.setAttendCheck(rs.getInt(7));
+				dto.setGroupNum(rs.getInt(8));
+				dto.setPersonnel(rs.getInt(9));
 
 				list.add(dto);
 			}
@@ -193,13 +201,13 @@ public class ReviewDAO {
 
 		try {
 
-			sb.append("select sc.sche_num, to_char(sdate, 'YY/MM/DD'),to_char(edate, 'YY/MM/DD'),title,addr,content, nvl(cnt,0) cnt, at.attend ,sc.num from schedule sc ");
-			sb.append("  left outer join");
-			sb.append("  (select  sche_num, count(*) cnt from attendance group by sche_num) c");
-			sb.append("  on sc.sche_num =c.sche_num");
-			sb.append("  left outer join attendance at");
-			sb.append("  on sc.sche_num =at.sche_num");
-			sb.append("  where num = ? and edate <= to_date(sysdate, 'YY/MM/DD')");
+			sb.append("  select s.sche_num, to_char(sdate, 'YY/MM/DD'), to_char(edate, 'YY/MM/DD'), title, addr,content, nvl(cnt,0) cnt, s.num ,peo");
+			sb.append("  from schedule s left outer join (");
+			sb.append("   select sche_num, count(sche_num) cnt from attendance where userid=? group by  sche_num");
+			sb.append("     ) a on s.sche_num=a.sche_num");
+			sb.append("  join (select count(*) peo ,sche_num from attendance group by sche_num) t");
+			sb.append("  on s.sche_num =t.sche_num");
+			sb.append("     where  s.num=? and sdate <= to_date(sysdate, 'YY/MM/DD') ");
 
 			
 			if(condition.equalsIgnoreCase("att")) {
@@ -207,23 +215,22 @@ public class ReviewDAO {
 			}
 			
 			else if (condition.equalsIgnoreCase("attend")) {
-				sb.append("  and at.userid=? and attend=1");
+				sb.append("  and cnt = 1");
 
 			}
 
 			else if (condition.equalsIgnoreCase("notattend")) {
-				sb.append("  and at.userid=? and attend=0");
+				sb.append("  and cnt is null");
 				
-
 			}
 
 
-			sb.append("  order by sc.sche_num desc");
-			sb.append("  OFFSET ? ROWS FETCH FIRST ? ROWS ONLY");
+			sb.append("  order by s.sche_num desc");
+			sb.append("  offset ? rows fetch first ? rows only");
 
 			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setInt(1, num);
-			pstmt.setString(2, userid);
+			pstmt.setString(1, userid);
+			pstmt.setInt(2, num);
 			pstmt.setInt(3, offset);
 			pstmt.setInt(4, rows);
 
@@ -232,15 +239,15 @@ public class ReviewDAO {
 			while (rs.next()) {
 				ReviewDTO dto = new ReviewDTO();
 
-				dto.setScheNum(rs.getInt(1));
+				dto.setReviewNum(rs.getInt(1));
 				dto.setStartDate(rs.getString(2));
 				dto.setEndDate(rs.getString(3));
 				dto.setTitle(rs.getString(4));
 				dto.setLocation(rs.getString(5));
-				dto.setContentDetail(rs.getString(6));
-				dto.setPersonnel(rs.getInt(7));
-				dto.setAttendCheck(rs.getInt(8));
-				dto.setGroupNum(rs.getInt(9));
+				dto.setContentDetail(rs.getString(6));		
+				dto.setAttendCheck(rs.getInt(7));
+				dto.setGroupNum(rs.getInt(8));
+				dto.setPersonnel(rs.getInt(9));
 				list.add(dto);
 			}
 
@@ -394,7 +401,8 @@ public class ReviewDAO {
 			
 			pstmt.executeUpdate();
 		} catch (Exception e) {
-			System.out.println(e.toString());
+		
+			
 		} finally {
 			if(pstmt!=null) {
 				try {
@@ -627,5 +635,33 @@ public class ReviewDAO {
 		}
 		
 	}
+	
+    public int updateReview(ReviewDTO dto) {
+    	int result=0;
+    	PreparedStatement pstmt=null;
+    	String sql;
+    	
+    	try {
+			sql = "UPDATE review SET content=?  WHERE rev_num = ? AND userId = ? ";
+			pstmt=conn.prepareStatement(sql);
+			
+			pstmt.setString(1, dto.getContentDetail());
+			pstmt.setInt(2, dto.getReviewNum());
+			pstmt.setString(3, dto.getUserId());
+			result=pstmt.executeUpdate();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+    	
+    	return result;
+    }
 	
 }
