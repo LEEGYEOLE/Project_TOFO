@@ -85,11 +85,12 @@ font-size: 40px;
 			      <td><span style="display: inline-block;padding: 1px 3px; background: #ED4C00; color: #FFFFFF;">공지</span></td>
 			      <td align="left" style="padding-left: 10px;">
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
+			           <img src="/project_TOFO/resource/img/icon/new.gif">
 			      </td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
 			      <td>${dto.hitCount}</td>
-			      <td> <img src="/project_TOFO/resource/img/new.gif">
+			      <td> 
 			     </td>
 			  </tr>
 			  
@@ -103,7 +104,7 @@ font-size: 40px;
 			           <a href="${articleUrl}&num=${dto.num}">${dto.subject}</a>
 			           <c:if test="${dto.gap<=1}">
 			           
-			           <img src="<%=cp%>/resource/images/new.gif">
+			           <img src="/project_TOFO/resource/img/icon/new.gif">
 			           
 			           </c:if>
 			      </td>
