@@ -11,7 +11,7 @@
 
 		<li><a href="<%=cp%>/review/list.do">후기게시판</a></li>
 
-		<li><a href="<%=cp%>/board/list.do">건의게시판</a></li>
+		<li><a href="<%=cp%>/bbs/list.do">건의게시판</a></li>
 
 		<li><a href="<%=cp%>/notice/list.do">공지사항</a></li>
 

@@ -12,12 +12,19 @@
 	text-align: left;
 }
 
+.container2 {
+	clear:both;
+    width:100%;
+    text-align:left;
+}
+
 .body-container {
 	clear: both;
 	margin: 0px auto 15px;
 	height: 100%;
 	min-height: 600px;
 }
+
 .container-block{
 	width: 90%;
     margin: 0 auto;
