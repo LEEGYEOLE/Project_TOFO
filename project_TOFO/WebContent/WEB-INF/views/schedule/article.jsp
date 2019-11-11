@@ -47,7 +47,6 @@
 	position: relative;
 	top: 4px;
 }
-
 </style>
 
 <script type="text/javascript" src="<%=cp%>/resource/js/util.js"></script>
@@ -274,9 +273,14 @@ function deleteOk(scheNum) {
 		});
 	});
 </c:if>
+function hi() {
+	var title = '${title}';
+	var url="<%=cp%>/schedule/updateAddr.do?scheNum=${dto.scheNum}&date=${date}&num=${num}&title="+title;
+	location.href = url;
+}
 </script>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=59052bf5ebf62c8b0beb8b42b5faaeee"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=59052bf5ebf62c8b0beb8b42b5faaeee&libraries=services"></script>
 </head>
 <body>
 
@@ -377,16 +381,23 @@ function deleteOk(scheNum) {
 										style="text-align: right; border-right: 2px solid #ccc; padding-right: 20px;"><label
 										style="font-weight: 900;">장소</label></td>
 									<td style="text-align: left; padding-left: 7px;">
-										<p
-											style="margin-top: 1px; margin-bottom: 1px; border-bottom: 1px solid #cccccc;">서울
-											마포구 월드컵북로 어쩌구 저쩌구</p>
+										<p style="margin-top: 1px; margin-bottom: 1px;">
+											<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+											${dto.addr}
+											</c:if>
+											<c:if test="${dto.addr=='empty' or empty dto.lat or empty dto.lon}">
+											등록된 장소가 없습니다.
+											</c:if>
+										</p>
 									</td>
 								</tr>
-								<tr height="35" style="border-bottom: 1px solid #cccccc;">
-									<td width="100" style="border-right: 2px solid #ccc;"></td>
-									<td><div id="staticMap"
-											style="width: 300px; height: 300px;"></div></td>
-								</tr>
+								<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+									<tr height="35" style="border-bottom: 1px solid #cccccc;">
+										<td width="100" style="border-right: 2px solid #ccc;"></td>
+										<td><div id="staticMap"
+												style="width: 300px; height: 300px;"></div></td>
+									</tr>
+								</c:if>
 								<tr height="45">
 									<td colspan="2" align="right"
 										style="padding-right: 5px; clear: both;">
@@ -396,8 +407,8 @@ function deleteOk(scheNum) {
 											style="float: right;" onclick="deleteOk('${dto.scheNum}');">삭제</button>
 										<button type="button" id="btnUpdate" class="btn"
 											style="float: right;">수정</button>
-											<button type="button" id="btnLocation" class="btn"
-											style="float: right;">장소등록/수정</button>
+										<button type="button" id="btnLocation" class="btn"
+											style="float: right;" onclick="hi();">장소등록/수정</button>
 									</td>
 								</tr>
 
@@ -458,29 +469,41 @@ function deleteOk(scheNum) {
 						</tr>
 
 						<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">색깔</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<select name="color" id="form-color" class="selectField"
-								style="border-radius: 10px;">
-								<option ${dto.color=="black"?"selected='selected' ":""} value="black" style="background: black; color: white;">black</option>
-								<option ${dto.color=="red"?"selected='selected' ":""} value="red" style="background: red;">red</option>
-								<option ${dto.color=="orange"?"selected='selected' ":""} value="orange" style="background: orange;">orange</option>
-								<option ${dto.color=="yellow"?"selected='selected' ":""} value="yellow" style="background: yellow;">yellow</option>
-								<option ${dto.color=="yellowgreen"?"selected='selected' ":""} value="yellowgreen" style="background: yellowgreen;">yellowgreen</option>
-								<option ${dto.color=="forestgreen"?"selected='selected' ":""} value="forestgreen" style="background: forestgreen;">forestgreen</option>
-								<option ${dto.color=="skyblue"?"selected='selected' ":""} value="skyblue" style="background: skyblue;">skyblue</option>
-								<option ${dto.color=="royalblue"?"selected='selected' ":""} value="royalblue" style="background: royalblue;">royalblue</option>
-								<option ${dto.color=="violet"?"selected='selected' ":""} value="violet" style="background: violet;">violet</option>
-								<option ${dto.color=="blueviolet"?"selected='selected' ":""} value="blueviolet" style="background: blueviolet;">blueviolet</option>
-								<option ${dto.color=="hotpink"?"selected='selected' ":""} value="hotpink" style="background: hotpink;">hotpink</option>
-								<option ${dto.color=="brown"?"selected='selected' ":""} value="brown" style="background: brown;">brown</option>
-							</select>
-						</p>
-					</td>
-				</tr>
+							<td width="100" valign="top"
+								style="text-align: right; padding-top: 5px;"><label
+								style="font-weight: 900;">색깔</label></td>
+							<td style="padding: 0 0 15px 15px;">
+								<p style="margin-top: 1px; margin-bottom: 5px;">
+									<select name="color" id="form-color" class="selectField"
+										style="border-radius: 10px;">
+										<option ${dto.color=="black"?"selected='selected' ":""}
+											value="black" style="background: black; color: white;">black</option>
+										<option ${dto.color=="red"?"selected='selected' ":""}
+											value="red" style="background: red;">red</option>
+										<option ${dto.color=="orange"?"selected='selected' ":""}
+											value="orange" style="background: orange;">orange</option>
+										<option ${dto.color=="yellow"?"selected='selected' ":""}
+											value="yellow" style="background: yellow;">yellow</option>
+										<option ${dto.color=="yellowgreen"?"selected='selected' ":""}
+											value="yellowgreen" style="background: yellowgreen;">yellowgreen</option>
+										<option ${dto.color=="forestgreen"?"selected='selected' ":""}
+											value="forestgreen" style="background: forestgreen;">forestgreen</option>
+										<option ${dto.color=="skyblue"?"selected='selected' ":""}
+											value="skyblue" style="background: skyblue;">skyblue</option>
+										<option ${dto.color=="royalblue"?"selected='selected' ":""}
+											value="royalblue" style="background: royalblue;">royalblue</option>
+										<option ${dto.color=="violet"?"selected='selected' ":""}
+											value="violet" style="background: violet;">violet</option>
+										<option ${dto.color=="blueviolet"?"selected='selected' ":""}
+											value="blueviolet" style="background: blueviolet;">blueviolet</option>
+										<option ${dto.color=="hotpink"?"selected='selected' ":""}
+											value="hotpink" style="background: hotpink;">hotpink</option>
+										<option ${dto.color=="brown"?"selected='selected' ":""}
+											value="brown" style="background: brown;">brown</option>
+									</select>
+								</p>
+							</td>
+						</tr>
 
 						<tr>
 							<td width="100" valign="top"
@@ -544,18 +567,19 @@ function deleteOk(scheNum) {
 								</p>
 							</td>
 						</tr>
-<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">예상금액</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<input type="text" name="money" id="form-subject" value="${dto.money}" maxlength="7"
-								class="boxTF" style="width: 95%;">
-						</p>
-						<p class="help-block">* 금액은 1억(100,000,000)원 이하로만 설정 가능합니다.</p>
-					</td>
-				</tr>
+						<tr>
+							<td width="100" valign="top"
+								style="text-align: right; padding-top: 5px;"><label
+								style="font-weight: 900;">예상금액</label></td>
+							<td style="padding: 0 0 15px 15px;">
+								<p style="margin-top: 1px; margin-bottom: 5px;">
+									<input type="text" name="money" id="form-subject"
+										value="${dto.money}" maxlength="7" class="boxTF"
+										style="width: 95%;">
+								</p>
+								<p class="help-block">* 금액은 1억(100,000,000)원 이하로만 설정 가능합니다.</p>
+							</td>
+						</tr>
 						<tr>
 							<td width="100" valign="top"
 								style="text-align: right; padding-top: 5px;"><label
@@ -586,24 +610,25 @@ function deleteOk(scheNum) {
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 	<script>    
-// 이미지 지도에 표시할 마커입니다
-// 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
-var markers = [
-    {
-        position: new kakao.maps.LatLng(33.450001, 126.570467), 
-        text: '쌍용 강북교육센터' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
-    }
-];
+	// 이미지 지도에 표시할 마커입니다
+	// 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
+	var markers = [
+	    {
+	        position: new kakao.maps.LatLng('${dto.lat}', '${dto.lon}'), 
+	        text: '${dto.addr}' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
+	    }
+	];
 
-var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
-    staticMapOption = { 
-        center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
-        level: 3, // 이미지 지도의 확대 레벨
-        marker: markers // 이미지 지도에 표시할 마커 
-    };    
+	var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
+	    staticMapOption = { 
+	        center: new kakao.maps.LatLng(${dto.lat}, ${dto.lon}), // 이미지 지도의 중심좌표
+	        level: 3, // 이미지 지도의 확대 레벨
+	        marker: markers // 이미지 지도에 표시할 마커 
+	    };    
 
-// 이미지 지도를 생성합니다
-var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+	// 이미지 지도를 생성합니다
+	var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+    
 </script>
 	<script type="text/javascript"
 		src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>

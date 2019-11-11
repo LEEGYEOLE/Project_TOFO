@@ -300,4 +300,36 @@ public class ScheduleDAO {
 		return list;
 	}
 
+	// 일정 장소 수정하기
+	public int updateAddress(int scheNum, String addr, String lat, String lon) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			sb.append(" UPDATE Schedule ");
+			sb.append(" SET addr=?, lat=?, lon=? ");
+			sb.append(" WHERE sche_num=? ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, addr);
+			pstmt.setString(2, lat);
+			pstmt.setString(3, lon);
+			pstmt.setInt(4, scheNum);
+
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 }

@@ -353,16 +353,6 @@ $(function(){
 	});
 });
 
-//스케쥴 more(더보기) -----------------------
-$(function(){
-	$(".scheduleMore").click(function(){
-		var date=$(this).attr("data-date");
-		var num=3;
-		var url="<%=cp%>/schedule/day.do?date="+date+"&num="+${num}+"&scheNum="+scheNum;
-		location.href=url;
-	});
-});
-
 </script>
 
 </head>

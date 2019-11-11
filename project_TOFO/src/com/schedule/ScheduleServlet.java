@@ -65,14 +65,10 @@ String cp=req.getContextPath();
 			insertSubmit(req, resp);
 		}else if(uri.indexOf("day.do")!=-1) {
 			daySchedule(req, resp);
-		} else if(uri.indexOf("created_ok.do")!=-1) {
-			createdSubmit(req, resp);
-		} else if(uri.indexOf("article.do")!=-1) {
-			article(req, resp);
-		} else if(uri.indexOf("update.do")!=-1) {
-			updateForm(req, resp);
-		} else if(uri.indexOf("update_ok.do")!=-1) {
-			updateSubmit(req, resp);
+		} else if(uri.indexOf("updateAddr.do")!=-1) {
+			updateAddr(req, resp);
+		} else if(uri.indexOf("updateAddr_ok.do")!=-1) {
+			updateAddrSubmit(req, resp);
 		} else if(uri.indexOf("delete.do")!=-1) {
 			delete(req, resp);
 		}
@@ -408,28 +404,36 @@ String cp=req.getContextPath();
 		forward(req, resp, "/WEB-INF/views/schedule/article.jsp");
 	}
 
-	protected void list(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 리스트
+	protected void updateAddr(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 위치 수정
+		
+		String cp=req.getContextPath();
+		String scheNum = req.getParameter("scheNum");
+		String date = req.getParameter("date");
+		String num = req.getParameter("num");
+		String title = req.getParameter("title");
+		req.setAttribute("scheNum", scheNum);
+		req.setAttribute("date", date);
+		req.setAttribute("num", num);
+		req.setAttribute("title", title);
+		forward(req, resp, "/WEB-INF/views/schedule/addrUpdate.jsp");
 	}
 	
-	protected void createdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 등록 폼
-	}
-	
-	protected void createdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 등록
-	}
-	
-	protected void article(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 보기
-	}
-	
-	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 수정 폼
-	}
-	
-	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 일정 수정 완료
+	protected void updateAddrSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 일정 장소 수정 완료
+ScheduleDAO dao=new ScheduleDAO();
+		String cp = req.getContextPath();
+		String date=req.getParameter("date");
+		String num=req.getParameter("num");
+		String snum=req.getParameter("scheNum");
+		String address=req.getParameter("address");
+		String lat=req.getParameter("lat");
+		String lon=req.getParameter("lon");
+		
+		int scheNum = Integer.parseInt(snum);
+		int result = dao.updateAddress(scheNum, address, lat, lon);
+		
+		resp.sendRedirect(cp+"/schedule/day.do?date="+date+"&scheNum="+scheNum+"&num="+num);
 	}
 	
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
