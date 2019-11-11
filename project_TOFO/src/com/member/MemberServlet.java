@@ -43,6 +43,10 @@ public class MemberServlet extends HttpServlet {
 			loginSubmit(req, resp);
 		} else if (uri.indexOf("logout.do") != -1) {
 			logout(req, resp);
+		}else if (uri.indexOf("created.do") != -1) {
+			memberForm(req, resp);
+		} else if (uri.indexOf("created_ok.do") != -1) {
+			memberSubmit(req, resp);
 		}
 	}
 	
@@ -111,6 +115,21 @@ public class MemberServlet extends HttpServlet {
 		// 메인화면으로 리다리렉트
 		resp.sendRedirect(cp);
 	}
+	
+	private void memberForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 회원가입폼
+		
+		req.setAttribute("title", "회원 가입");
+		req.setAttribute("mode", "created");
+		forward(req, resp, "/WEB-INF/views/member/created.jsp");
+
+	}
+	
+	
+	private void memberSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		//회원가입처리
+	}
+	
 	
 	
 }

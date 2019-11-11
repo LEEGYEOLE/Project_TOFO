@@ -65,4 +65,37 @@ private Connection conn = DBConn.getConnection();
 
 		return dto;
 	}
+	
+	public void insertMember(MemberDTO dto) throws Exception {
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			sql = "INSERT ALL INTO member(userid, username ,userpwd ,birth, email ,tel) VALUES (?, ?, ?, ?, ?, ?)";
+			
+
+					//+ "select * from dual";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserId());
+			pstmt.setString(2, dto.getUserName());
+			pstmt.setString(3, dto.getUserPwd());
+			pstmt.setString(4, dto.getBirth());
+			pstmt.setString(5, dto.getEmail());
+			pstmt.setString(6, dto.getTel());
+
+			
+			pstmt.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+
 }
