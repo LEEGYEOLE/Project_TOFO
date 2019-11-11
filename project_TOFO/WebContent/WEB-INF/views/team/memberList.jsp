@@ -51,21 +51,40 @@ $(function(){
 
 //등록 대화상자 닫기
 $(function(){
-	$("#btnScheduleSendCancel").click(function(){
+	$("#btnTeamListSendCancel").click(function(){
 		$('#schedule-dialog').dialog("close");
 	});
 });
 
+// 등록 완료하기
+
+
 // 버튼을 누르면 찾아가기
+$(function(){
+   $("body").on("click",".btn",function(){
+      var url = "<%=cp%>/teamList/userSearch.do";
+      
+      $.ajax({// 함수에 객체를 넘긴다
+         type:"GET",
+         url:url,
+         data:query,
+         success:function(data){
+             $("#searchResult").html(data);
+         },
+         error:function(e){
+            console.log(e.responseText);
+         }
+      });
+   });
+});
+
 function userSearch(){
-	var userId = document.getElementById().value;
-	
-	$(function(){
-		var url="<%=cp%>/team/userSearch.do";
-		$.get(url, {userId:userId}, function(data){
-			$("#form-subject").closest("td").after(data); // 옆에 정보가 뜨게 만들기
-		});
+	// ex8.jsp의 쿼리를 뿌려라 유송아 제ㅐ발
+	// url은 내 서블릿으로 보내고
+	$(".btn").click(function() { // 안되면 click을 on으로 수정하기
+		var url = "<%=cp%>/teamList/userSearch.do";
 	});
+	
 }
 
 function updateRank(userId) {
@@ -107,9 +126,9 @@ function deleteTeamList(userId) {
 							<th width="50">-</th>
 							<th width="50">-</th>
 						</tr>
-			<c:forEach var="map" items="${list}">
+			<c:forEach var="map" items="${list}" varStatus="i">
 			  <tr> 
-			      <td>${map.listNum}</td>
+			      <td>${i.index+1}</td>
 			      <td>${map.rank=='0'?'모임장':'모임원'}</td>
 			      <td>${map.userId}</td>
 			      <td>${map.userName}</td> 
@@ -145,16 +164,14 @@ function deleteTeamList(userId) {
 						style="font-weight: 900;">아이디</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<input type="text" name="subject" id="form-subject"
+							<input type="text" name="keyword" value="${keyword}" id="searchId"
 								maxlength="100" class="boxTF" style="width: 85%;">
-								<button onclick="userSearch();" class="btn">검색</button>
+								<button type="button" class="btn">검색</button>
+							
 						</p>
+						<div id="searchResult">결과 뿌려주고</div>
 						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
-			  <c:forEach var="map" items="${memberList}">
-			  <tr> 
-			      <td>${map.userId}&nbsp;&nbsp;${map.userName}&nbsp;&nbsp;${map.birth}&nbsp;&nbsp;${map.created_Date}</td>
-			  </tr>
-			  </c:forEach>
+
 					</td>	
 				</tr>
 
@@ -174,9 +191,9 @@ function deleteTeamList(userId) {
 
 				<tr height="45">
 					<td align="center" colspan="2">
-						<button type="button" class="btn" id="btnScheduleSendOk">회원등록</button>
+						<button type="button" class="btn" id="btnTeamListSendOk">회원등록</button>
 						<button type="reset" class="btn">다시입력</button>
-						<button type="button" class="btn" id="btnScheduleSendCancel">등록취소</button>
+						<button type="button" class="btn" id="btnTeamListSendCancel">등록취소</button>
 					</td>
 				</tr>
 			</table>

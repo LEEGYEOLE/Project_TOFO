@@ -58,6 +58,8 @@ public class TeamListServlet extends HttpServlet {
 		List<HashMap<String, Object>> memberList = dao.readMemberList(userId);
 
 		req.setAttribute("memberList", memberList);
+		
+		// forward
 	}
 
 	private void readTeamMember(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
