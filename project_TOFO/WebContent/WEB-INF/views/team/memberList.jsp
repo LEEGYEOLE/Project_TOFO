@@ -176,6 +176,10 @@ function deleteTeamList(userId) {
 			</div>
 		</div>
 	</div>
+	
+	<div class="footer">
+    <jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
+	</div>
 
 	<div id="schedule-dialog" style="display: none;">
 		<form name="teamMemberForm">
