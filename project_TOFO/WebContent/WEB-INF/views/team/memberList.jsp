@@ -61,11 +61,10 @@ $(function(){
 
 // 버튼을 누르면 찾아가기
 $(function(){
-   $("body").on("click",".btn",function(){
+   $("body").on("click",".bntSearch",function(){
 	  var userId = $(this).parent().children("input").val();
       var url = "<%=cp%>/teamList/userSearch.do";
-      var query="userId="+$("#searchId").val();
-      alert(query);
+      var query="userId="+userId;
       
       $.ajax({// 함수에 객체를 넘긴다
          type:"GET",
@@ -81,17 +80,37 @@ $(function(){
    });
 });
 
+// 회원 추가하기
+$(function(){
+   $("body").on("click",".bntInsert",function(){
+	  var userId = $(this).closest("input").val();
+	  var rank = $(this).closest("select").val();
+      var url = "<%=cp%>/teamList/insertTeamList.do";
+      var query="userId="+userId+"&rank="+rank;
+      alert(query);
+      
+      $.ajax({// 함수에 객체를 넘긴다
+         type:"POST",
+         url:url,
+         data:query,
+         success:function(data){
+             $("#insertResult").html(data);
+         },
+         error:function(e){
+            console.log(e.responseText);
+         }
+      });
+   });
+});
+
 <%--
-function userSearch(){
-	// ex8.jsp의 쿼리를 뿌려라 유송아 제ㅐ발
-	// url은 내 서블릿으로 보내고
-	$(".btn").click(function() { // 안되면 click을 on으로 수정하기
-		var url = "<%=cp%>/teamList/userSearch.do";
-	});
-	
+function insertTeamList(userId, rank) {
+	if (confirm(userId+"님을 모임에 등록하시겠습니까?")) {
+		var url = "<%=cp%>/teamList/insertTeamList.do?userId="+userId+"&rank="+rank;
+		location.href=url;
+	}
 }
 --%>
-
 function updateRank(userId) {
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
 		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
@@ -169,13 +188,12 @@ function deleteTeamList(userId) {
 						style="font-weight: 900;">아이디</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<input type="text" name="keyword" value="${keyword}" id="searchId"
-								maxlength="100" class="boxTF" style="width: 85%;">
-								<button type="button" class="btn">검색</button>
+							<input type="text" maxlength="100" class="boxTF" style="width: 70%;">
+							<button type="button" class="btn bntSearch">검색</button>
 							
 						</p>
 						<div id="searchResult"></div>
-						<p class="help-block">* 검색하려는 아이디의 문자열을 입력하세요.</p>
+						<p class="help-block">* 추가하실 아이디를 검색 후 확인해주세요.</p>
 
 					</td>	
 				</tr>
@@ -186,7 +204,7 @@ function deleteTeamList(userId) {
 						style="font-weight: 900;">등급</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<select name="color" id="form-color" class="selectField">
+							<select name="color" id="form-rank" class="selectField">
 								<option value="green">모임장</option>
 								<option value="blue">모임원</option>
 							</select>
@@ -196,7 +214,7 @@ function deleteTeamList(userId) {
 
 				<tr height="45">
 					<td align="center" colspan="2">
-						<button type="button" class="btn" id="btnTeamListSendOk">회원등록</button>
+						<button type="button" class="btn btnInsert" id="insertResult">회원등록</button>	
 						<button type="reset" class="btn">다시입력</button>
 						<button type="button" class="btn" id="btnTeamListSendCancel">등록취소</button>
 					</td>

@@ -3,6 +3,7 @@ package com.teamList;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,6 +49,8 @@ public class TeamListServlet extends HttpServlet {
 			updateRank(req, resp);
 		} else if (uri.indexOf("deleteTeamList.do") != -1) {
 			deleteTeamList(req, resp);
+		} else if (uri.indexOf("insertTeamList.do") != -1) {
+			insertTeamList(req, resp);
 		}
 	}
 
@@ -55,7 +58,7 @@ public class TeamListServlet extends HttpServlet {
 		// 모달 창에서 아이디 검색하고 싶어..
 		String userId = req.getParameter("userId");
 		TeamListDAO dao = new TeamListDAO();
-		List<HashMap<String, Object>> memberList = dao.readMemberList(userId);
+		List<Map<String, Object>> memberList = dao.readMemberList(userId);
 
 		req.setAttribute("memberList", memberList);
 		
@@ -135,5 +138,29 @@ public class TeamListServlet extends HttpServlet {
 		dao.deleteTeamList(userId, groupNum);
 
 		resp.sendRedirect(cp + "/teamList/memberList.do");
+	}
+	
+	public void insertTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) { // 로그인이 안 된 경우
+			resp.sendRedirect(cp + "/member/login.do");
+			return;
+		}
+		
+		if (session.getAttribute("num") == null) {
+			// 메인 화면으로 리다이렉트
+			resp.sendRedirect(cp + "/main/myMain.do");
+			return;
+		}
+		int groupNum = (int) session.getAttribute("num");
+		String userId = req.getParameter("userId");
+		String rank = req.getParameter("rank");
+		TeamListDAO dao = new TeamListDAO();
+		dao.insertTeamList(userId, rank, groupNum);
+		
+		resp.sendRedirect(cp+"/teamList/memberList.do");
 	}
 }

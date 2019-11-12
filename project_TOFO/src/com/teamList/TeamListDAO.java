@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.util.DBConn;
 
@@ -60,14 +61,14 @@ public class TeamListDAO {
 		return list;
 	}
 		
-	public List<HashMap<String, Object>> readMemberList(String userId) {
-		List<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
+	public List<Map<String, Object>> readMemberList(String userId) {
+		List<Map<String, Object>> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuilder sb = new StringBuilder();
 		
 		try {
-			sb.append("select userId, userName, to_char(birth, 'yyyy-mm-dd') birth, created_Date from member where (instr(userId, ?)>=1) and enabled=1");
+			sb.append("select userId, userName, to_char(birth, 'yyyy-mm-dd') birth, to_char(created_Date, 'yyyy-mm-dd') created_Date from member where (instr(userId, ?)>=1) and enabled=1");
 			
 			pstmt=conn.prepareStatement(sb.toString());
 			pstmt.setString(1, userId);
@@ -80,7 +81,7 @@ public class TeamListDAO {
 				map.put("created_Date", rs.getString("created_Date"));	
 				
 				list.add(map);
-				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -167,4 +168,30 @@ public class TeamListDAO {
 		}
     	return result;
     }
+	
+	public int insertTeamList(String userId, String rank, int groupNum){
+		int result=0;
+		PreparedStatement pstmt = null;
+		String sql;
+		
+		try {
+			sql = "insert into teamList(listNum, userId, rank, num) values(list_seq.nextval, ?, ?, ?)";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, rank);
+			pstmt.setInt(3, groupNum);
+			
+			result = pstmt.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {					
+				}
+			}
+		}
+		return result;
+	}
 }
