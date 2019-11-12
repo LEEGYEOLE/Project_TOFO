@@ -156,7 +156,11 @@ cursor: pointer;
 								<td style="color: #333333; font-size: 15px">정해진 모임 장소가 없습니다</td>
 								</c:if>
 								<td>${dto.personnel}</td>
-								<td>${dto.startDate}~ ${dto.endDate}</td>
+								<td>${dto.startDate} 
+								<c:if test="${dto.endDate ne null}">
+								~${dto.endDate}
+								</c:if>
+								</td>
 								<td>${dto.attendCheck==1 ? "참석" : "불참"}</td>
 								
 								
