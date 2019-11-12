@@ -69,7 +69,9 @@ String cp=req.getContextPath();
 			updateAddr(req, resp);
 		} else if(uri.indexOf("updateAddr_ok.do")!=-1) {
 			updateAddrSubmit(req, resp);
-		} else if(uri.indexOf("delete.do")!=-1) {
+		} else if(uri.indexOf("attend.do")!=-1) {
+			attend(req, resp);
+		}  else if(uri.indexOf("delete.do")!=-1) {
 			delete(req, resp);
 		}
 	}
@@ -385,12 +387,12 @@ String cp=req.getContextPath();
 		//파라미터로 받은 일정번호가 있으면 해당 번호에 해당하는 일정정보 가져오기
 		if(scheNum!=null) {
 			sch_num=Integer.parseInt(scheNum);
-			dto=dao.readSchedule(sch_num);
+			dto=dao.readSchedule(info.getUserId(), sch_num);
 		}
 		//디비에 일정번호에 해당하는 정보가 없으면서 (dto==null, 중간에 변경 된 경우), 해당 날짜의 일정이 여러개 존재할 경우
 		//여러개중 첫번째 일정에 대한 정보를 가져와 dto에 저장한다.
 		if(dto==null&&list.size()>0) {
-			dto=dao.readSchedule(list.get(0).getNum());
+			dto=dao.readSchedule(info.getUserId(),list.get(0).getNum());
 		}
 		req.setAttribute("num", num);
 		req.setAttribute("scheNum", scheNum);
@@ -435,7 +437,24 @@ ScheduleDAO dao=new ScheduleDAO();
 		
 		resp.sendRedirect(cp+"/schedule/day.do?date="+date+"&scheNum="+scheNum+"&num="+num);
 	}
-	
+	protected void attend(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 참여하게해줄게
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if(info==null) {
+			
+		}
+		ScheduleDAO dao=new ScheduleDAO();
+		String cp = req.getContextPath();
+		String date=req.getParameter("date");
+		String num=req.getParameter("num");
+		String snum=req.getParameter("scheNum");
+		int scheNum = Integer.parseInt(snum);
+		
+		int result = dao.updateAttend(scheNum, info.getUserId());
+		
+		resp.sendRedirect(cp+"/schedule/day.do?date="+date+"&scheNum="+scheNum+"&num="+num);
+	}
 	protected void delete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 일정 삭제
 	}

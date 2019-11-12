@@ -10,6 +10,7 @@ public class ScheduleDTO {
 	private String color;
 	private String allDay;
 	private int repeat, repeat_cycle;
+	private int attend;
 	
 	public int getScheNum() {
 		return scheNum;
@@ -131,14 +132,19 @@ public class ScheduleDTO {
 	public void setRepeat_cycle(int repeat_cycle) {
 		this.repeat_cycle = repeat_cycle;
 	}
+	
+	public int getAttend() {
+		return attend;
+	}
+	public void setAttend(int attend) {
+		this.attend = attend;
+	}
 	@Override
 	public String toString() {
 		return "ScheduleDTO [scheNum=" + scheNum + ", num=" + num + ", userId=" + userId + ", userName=" + userName
-				+ ", title=" + title + ", content=" + content + ", sDate=" + sDate + ", eDate=" + eDate + ", created="
-				+ created + ", addr=" + addr + ", lat=" + lat + ", lon=" + lon + ", money=" + money + ", color=" + color
-				+ ", allDay=" + allDay + ", repeat=" + repeat + ", repeat_cycle=" + repeat_cycle + "]";
+				+ ", title=" + title + ", content=" + content + ", sDate=" + sDate + ", eDate=" + eDate + ", stime="
+				+ stime + ", etime=" + etime + ", created=" + created + ", period=" + period + ", addr=" + addr
+				+ ", lat=" + lat + ", lon=" + lon + ", money=" + money + ", color=" + color + ", allDay=" + allDay
+				+ ", repeat=" + repeat + ", repeat_cycle=" + repeat_cycle + ", attend=" + attend + "]";
 	}
-	
-	
-	
 }

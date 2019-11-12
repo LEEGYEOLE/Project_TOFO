@@ -290,12 +290,17 @@ min-height: 100%;}
 		<div class="body-container">
 			<div class="container-block">
 				<div style="clear: both; width: 100%; margin: 20px 0;">
+				<div>
+				<h2 style="margin-bottom: 5px;">&lt;장소 등록 &gt;</h2>
+						<h3 style="margin-bottom: 10px; color:red;">검색한 리스트를 클릭하거나, 지도에 마우스 오른쪽 버튼을 눌러주세요.</h3>
+						
+				</div>
 					<div id="scheduleLeft"
 						style="width: 18%; float: left; margin-right: 20px;">
 						<form  method="post" name="addrForm">
 							<div
 								style="border: 1px solid #ccc; padding: 5px; border-radius: 20px; margin-bottom: 5px;">
-								<h2 style="margin-bottom: 20px;">&lt;장소 등록 &gt;</h2>
+								
 								<h4>일정명</h4>
 								<p>${title}</p>
 								<h4>날짜</h4>
@@ -311,7 +316,7 @@ min-height: 100%;}
 								<button class="btnConfirm" type="button" onclick="updateAdd('road');">도로명주소로 저장하기</button>
 								<h4>지번주소</h4>
 								<input type="text" name="addr" value="" height="35" class="boxTF" />
-								<button class="btnConfirm" type="button" onclick="updateAdd('jibun');">지번주소로 저장하기</button>
+								<button class="btnConfirm" type="button" onclick="updateAdd('jibun');" style="margin-bottom: 20px;">지번주소로 저장하기</button>
 
 							</div>
 

@@ -53,7 +53,7 @@
 <script type="text/javascript"
 	src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-
+console.log(${dto.attend});
 <c:if test="${not empty dto}">
 $(function(){
 	$("#btnUpdate").click(function(){
@@ -278,6 +278,16 @@ function hi() {
 	var url="<%=cp%>/schedule/updateAddr.do?scheNum=${dto.scheNum}&date=${date}&num=${num}&title="+title;
 	location.href = url;
 }
+
+function attendOk() {
+	if(confirm("일정에 참여하시겠습니까 ? ")) {
+		var date="${date}";
+		var num="${num}";
+		var scheNum="${scheNum}";
+		var url="<%=cp%>/schedule/attend.do?date="+date+"&num="+num+"&scheNum="+scheNum;
+		location.href=url;
+	}
+}
 </script>
 <script type="text/javascript"
 	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=59052bf5ebf62c8b0beb8b42b5faaeee&libraries=services"></script>
@@ -302,6 +312,13 @@ function hi() {
 							<tr height="35">
 								<td align="left"><span class="titleDate">${year}년
 										${month}월 ${day}일 일정</span></td>
+								<td align="right"><c:if test="${dto.attend eq 0}">
+										<button type="button" class="btn" id="attendBtn"
+											onclick="attendOk();">일정참여하기</button>
+									</c:if> <c:if test="${dto.attend eq 1}">
+										<button type="button" class="btn" disabled="disabled">이미
+											참여한 일정입니다</button>
+									</c:if></td>
 							</tr>
 						</table>
 
@@ -382,16 +399,19 @@ function hi() {
 										style="font-weight: 900;">장소</label></td>
 									<td style="text-align: left; padding-left: 7px;">
 										<p style="margin-top: 1px; margin-bottom: 1px;">
-											<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+											<c:if
+												test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
 											${dto.addr}
 											</c:if>
-											<c:if test="${dto.addr=='empty' or empty dto.lat or empty dto.lon}">
+											<c:if
+												test="${dto.addr=='empty' or empty dto.lat or empty dto.lon}">
 											등록된 장소가 없습니다.
 											</c:if>
 										</p>
 									</td>
 								</tr>
-								<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+								<c:if
+									test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
 									<tr height="35" style="border-bottom: 1px solid #cccccc;">
 										<td width="100" style="border-right: 2px solid #ccc;"></td>
 										<td><div id="staticMap"
@@ -609,7 +629,9 @@ function hi() {
 	<div class="footer">
 		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
+
 	<script>    
+	<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
 	// 이미지 지도에 표시할 마커입니다
 	// 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
 	var markers = [
@@ -628,7 +650,7 @@ function hi() {
 
 	// 이미지 지도를 생성합니다
 	var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-    
+    </c:if>
 </script>
 	<script type="text/javascript"
 		src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>

@@ -140,20 +140,27 @@ public class ScheduleDAO {
 	 * @param sche_num	일정번호
 	 * @return
 	 */
-	public ScheduleDTO readSchedule(int sche_num) {
+	public ScheduleDTO readSchedule(String userId, int sche_num) {
 		ScheduleDTO dto = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			sb.append("SELECT sche_num, num, userId, title, content, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+			sb.append("SELECT s.sche_num, num, userId, title, content, nvl(cnt,0) attend,");
+			sb.append("      TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
 			sb.append("      color, repeat, repeat_cycle, created, ");
 			sb.append("      money, addr, lat, lon ");
-			sb.append("  FROM schedule");
-			sb.append("  WHERE sche_num = ? ");
+			sb.append("  FROM schedule s ");
+			sb.append("  left outer join ( ");
+			sb.append("  select sche_num, count(sche_num) cnt ");
+			sb.append("  from attendance ");
+			sb.append("  where userid=? group by  sche_num ");
+			sb.append("  ) a on s.sche_num=a.sche_num");
+			sb.append("  WHERE s.sche_num = ? ");
 			pstmt = conn.prepareStatement(sb.toString());
-			pstmt.setInt(1, sche_num);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, sche_num);
 
 			String period, s;
 			rs = pstmt.executeQuery();
@@ -205,6 +212,7 @@ public class ScheduleDAO {
 				dto.setAddr(rs.getString("addr"));
 				dto.setLat(rs.getString("lat"));
 				dto.setLon(rs.getString("lon"));
+				dto.setAttend(rs.getInt("attend"));
 			}
 
 		} catch (Exception e) {
@@ -317,6 +325,36 @@ public class ScheduleDAO {
 			pstmt.setString(3, lon);
 			pstmt.setInt(4, scheNum);
 
+			result = pstmt.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+
+	// 일정 참여 수정하기
+	public int updateAttend(int scheNum, String userId) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		StringBuffer sb = new StringBuffer();
+
+		try {
+			sb.append(" Insert INTO attendance(sche_num,userId) ");
+			sb.append(" Values(?,?) ");
+			
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, scheNum);
+			pstmt.setString(2, userId);
+			
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
