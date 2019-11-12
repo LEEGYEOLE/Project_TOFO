@@ -63,20 +63,23 @@ public class MemberServlet extends HttpServlet {
 	}
 
 	private void loginSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		
 		// 로그인 처리
 		// 세션 객체. 세션 정보는 서버에 저장(로그인 정보, 권한 등)
 		HttpSession session = req.getSession();
-
 		MemberDAO dao = new MemberDAO();
-
+		String cp = req.getContextPath();
+		
 		String id = req.getParameter("id");
 		String pwd = req.getParameter("pwd");
 		
 		StringBuffer sb = new StringBuffer();
-
+		System.out.println(pwd);
 		try {
 			MemberDTO dto = dao.readMember(id);
+
 			if (dto.getUserPwd().equals(pwd)) {
+				
 				// 로그인 성공
 				// 세션의 유지 시간을 20분으로 변경(기본은 30분)
 				
@@ -92,13 +95,15 @@ public class MemberServlet extends HttpServlet {
 				session.setAttribute("member", info);
 
 				// 메인 화면으로 리다이렉트
-				String cp = req.getContextPath();
+				
 				resp.sendRedirect(cp+"/main/myMain.do");
 //				resp.sendRedirect(cp+"/main/myMain.do");
 				return;
 				
 //				forward(req, resp, "/WEB-INF/views/member/complete.jsp");
 //				return;
+			}else {
+				resp.sendRedirect(cp);
 			}
 		} catch (NullPointerException e) {
 			// 로그인 실패, 아이디 불일치
