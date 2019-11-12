@@ -467,7 +467,7 @@ public class ReviewDAO {
 		String sql;
 		
 		try {
-			sql = "select m.userid, tel,username from attendance a join member m on a.userid =m.userid where sche_num =? and attend =1";
+			sql = "select m.userid, tel,username from attendance a join member m on a.userid =m.userid where sche_num =? ";
 			pstmt=conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, schedule_num);
