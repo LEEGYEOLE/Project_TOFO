@@ -49,27 +49,28 @@ ul {
 }
 
 .item1 {
-	background-image: url('http://han3283.cafe24.com/images/strawberry.jpg');
+	background-size: 200px 200px;
+	background-image: url('<%=cp%>/resource/img/bg/finalmain.png');
 }
 
 .item2 {
-	background-image: url('http://han3283.cafe24.com/images/cherry.jpg');
+	background-image: url('<%=cp%>/resource/img/bg/picture3.jpg');
 }
 
 .item3 {
-	background-image: url('http://han3283.cafe24.com/images/strawberry.jpg');
+	background-image: url('<%=cp%>/resource/img/bg/picture2.jpg');
 }
 
 .item4 {
-	background-image: url('http://han3283.cafe24.com/images/grape.jpg');
+	background-image: url('<%=cp%>/resource/img/bg/change1.jpg');
 }
 
 .item5 {
-	background-image: url('http://han3283.cafe24.com/images/lemon.jpg');
+	background-image: url('<%=cp%>/resource/img/bg/picture1.jpg');
 }
 
 .item6 {
-	background-image: url('http://han3283.cafe24.com/images/grapefruit.jpg');
+	background-image: url('<%=cp%>/resource/img/bg/picture4.jpg');
 }
 </style>
 

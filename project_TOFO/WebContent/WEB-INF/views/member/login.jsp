@@ -115,7 +115,7 @@ function sendLogin() {
 	</div>
 
 	<div class="container">
-		<div class="body-container">
+		<div class="body-container" style="min-height: 600px;">
 			<div class="wrapper">
 				<div class="ipb">
 					<div class=logInLayout">
@@ -151,7 +151,10 @@ function sendLogin() {
 								<td colspan="2" align="center" style="font-size: 12px"><a
 									href="#">아이디/패스워드 찾기</a>
 							</tr>
-						</table>
+							
+						 </table>
+			        		<p style="color: red; text-align: center;">${message}</p>
+			    
 					</form>
 					</div>
 				</div>

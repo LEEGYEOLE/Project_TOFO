@@ -73,8 +73,6 @@ public class MemberServlet extends HttpServlet {
 		String id = req.getParameter("id");
 		String pwd = req.getParameter("pwd");
 		
-		StringBuffer sb = new StringBuffer();
-		System.out.println(pwd);
 		try {
 			MemberDTO dto = dao.readMember(id);
 
@@ -102,14 +100,17 @@ public class MemberServlet extends HttpServlet {
 				
 //				forward(req, resp, "/WEB-INF/views/member/complete.jsp");
 //				return;
-			}else {
-				resp.sendRedirect(cp);
 			}
 		} catch (NullPointerException e) {
 			// 로그인 실패, 아이디 불일치
 
 		}
-		sb.append("아이디 또는 패스워드가 일치하지 않습니다. <br>");
+
+		String message="아이디 또는 패스워드가 틀렸습니다.";
+		req.setAttribute("message", message);
+		forward(req, resp, "/WEB-INF/views/member/login.jsp");
+		return;
+
 		
 	}
 	
