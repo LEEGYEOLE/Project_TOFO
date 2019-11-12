@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css" type="text/css">
 
 <script type="text/javascript">
-<c:if test="${sessionScope.member.userId=='admin'}">
+<c:if test="${sessionScope.member.userId== sessionScope.leaderId}">
 function deleteNotice(num) {
 	if(confirm("게시물을 삭제 하시겠습니까 ?")) {
 		var url="<%=cp%>/notice/delete.do?num="+num+"&${query}";
@@ -91,7 +91,7 @@ function deleteNotice(num) {
 			       <c:if test="${sessionScope.member.userId==dto.userId}">				    
 			          <button type="button" class="btn" onclick="javascript:location.href='<%=cp%>/notice/update.do?num=${dto.num}&page=${page}';">수정</button>
 			       </c:if>
-			       <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.member.userId=='admin'}">				    
+			       <c:if test="${sessionScope.member.userId==dto.userId || sessionScope.leaderId}">				    
 			          <button type="button" class="btn" onclick="deleteNotice('${dto.num}');">삭제</button>
 			       </c:if>
 			    </td>
