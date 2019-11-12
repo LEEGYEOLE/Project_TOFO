@@ -223,6 +223,7 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("nextReadDto", nextReadDto);
 		req.setAttribute("query", query);
 		req.setAttribute("page", page);
+		req.setAttribute("rows", rows);
 		
 		forward(req, resp, "/WEB-INF/views/bbs/article.jsp");
 	}

@@ -48,7 +48,7 @@ function deleteBoard(num) {
 function updateBoard(num) {
 <c:if test="${sessionScope.member.userId==dto.userId}">
     var page = "${page}";
-    var query = "num="+num+"&page="+page;
+    var query = "num="+num+"&page="+page+"&rows=${rows}";
     var url = "<%=cp%>/bbs/update.do?" + query;
 
     location.href=url;

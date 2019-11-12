@@ -47,7 +47,7 @@ font-size: 30px;
 <br>
 	
 <div class="container">
-    <div class="body-container" style="width: 70%;">
+    <div class="body-container" style="width: 80%;">
         <div>
             <h3 class="noticetitle"><span style="font-family: Webdings;"></span> 건의게시판 </h3>
         </div>
