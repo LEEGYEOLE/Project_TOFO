@@ -53,7 +53,6 @@
 <script type="text/javascript"
 	src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 <script type="text/javascript">
-console.log(${dto.attend});
 <c:if test="${not empty dto}">
 $(function(){
 	$("#btnUpdate").click(function(){
@@ -290,7 +289,7 @@ function attendOk() {
 }
 </script>
 <script type="text/javascript"
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=59052bf5ebf62c8b0beb8b42b5faaeee&libraries=services"></script>
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=59052bf5ebf62c8b0beb8b42b5faaeee"></script>
 </head>
 <body>
 
@@ -411,7 +410,7 @@ function attendOk() {
 									</td>
 								</tr>
 								<c:if
-									test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+												test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
 									<tr height="35" style="border-bottom: 1px solid #cccccc;">
 										<td width="100" style="border-right: 2px solid #ccc;"></td>
 										<td><div id="staticMap"
@@ -632,25 +631,28 @@ function attendOk() {
 
 	<script>    
 	<c:if test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+
 	// 이미지 지도에 표시할 마커입니다
 	// 이미지 지도에 표시할 마커를 아래와 같이 배열로 넣어주면 여러개의 마커를 표시할 수 있습니다 
 	var markers = [
 	    {
-	        position: new kakao.maps.LatLng('${dto.lat}', '${dto.lon}'), 
+	        position: new kakao.maps.LatLng(${dto.lat},${dto.lon}), 
 	        text: '${dto.addr}' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다     
 	    }
 	];
 
 	var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div  
 	    staticMapOption = { 
-	        center: new kakao.maps.LatLng(${dto.lat}, ${dto.lon}), // 이미지 지도의 중심좌표
+	        center: new kakao.maps.LatLng(${dto.lat},${dto.lon}), // 이미지 지도의 중심좌표
 	        level: 3, // 이미지 지도의 확대 레벨
 	        marker: markers // 이미지 지도에 표시할 마커 
 	    };    
 
 	// 이미지 지도를 생성합니다
 	var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-    </c:if>
+    
+	</c:if>
+	console.log('${dto.lat}'+":"+'${dto.lon}');
 </script>
 	<script type="text/javascript"
 		src="<%=cp%>/resource/jquery/js/jquery-ui.min.js"></script>

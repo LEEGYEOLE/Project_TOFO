@@ -99,8 +99,8 @@ public class ScheduleDAO {
 			sb.append(" 	stime, etime, repeat, repeat_cycle, money, addr) ");
 			sb.append(" VALUES(sche_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ");
 			sb.append(" 	?, ?, ?, ?, ?,? )");
-			sb.append(" INTO ATTENDANCE (USERID,SCHE_NUM,ATTEND) ");
-			sb.append("	VALUES( ?, sche_seq.currval,0 ) ");
+			sb.append(" INTO ATTENDANCE (USERID,SCHE_NUM) ");
+			sb.append("	VALUES( ?, sche_seq.currval ) ");
 			sb.append("select * from DUAL ");
 			
 			pstmt = conn.prepareStatement(sb.toString());
