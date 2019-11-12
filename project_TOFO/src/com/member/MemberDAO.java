@@ -70,10 +70,9 @@ private Connection conn = DBConn.getConnection();
 		PreparedStatement pstmt = null;
 		String sql;
 		try {
-			sql = "INSERT ALL INTO member(userid, username ,userpwd ,birth, email ,tel) VALUES (?, ?, ?, ?, ?, ?)";
+			sql = "INSERT INTO member(userid, username ,userpwd ,birth, email ,tel) VALUES (?, ?, ?, ?, ?, ?)";
 			
 
-					//+ "select * from dual";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getUserName());
@@ -85,6 +84,34 @@ private Connection conn = DBConn.getConnection();
 			
 			pstmt.executeUpdate();
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+	}
+	
+	public void updateMember(MemberDTO dto) throws Exception {
+		PreparedStatement pstmt = null;
+		String sql;
+		try {
+			
+			sql = "update member set userpwd =? ,birth =? ,tel =? , email=? where userid = ?";
+
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setString(1, dto.getUserPwd());
+			pstmt.setString(2, dto.getBirth());
+			pstmt.setString(3, dto.getTel());
+			pstmt.setString(4, dto.getEmail());
+			pstmt.setString(5, dto.getUserId());
+			
+			pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;

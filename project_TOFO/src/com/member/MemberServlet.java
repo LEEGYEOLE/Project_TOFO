@@ -47,6 +47,12 @@ public class MemberServlet extends HttpServlet {
 			memberForm(req, resp);
 		} else if (uri.indexOf("created_ok.do") != -1) {
 			memberSubmit(req, resp);
+		}else if (uri.indexOf("pwd.do") != -1) {
+			pwdForm(req, resp);
+		}else if (uri.indexOf("pwd_ok.do") != -1) {
+			pwdSubmit(req, resp);
+		}else if (uri.indexOf("update_ok.do") != -1) {
+			updateSubmit(req, resp);
 		}
 	}
 	
@@ -128,6 +134,123 @@ public class MemberServlet extends HttpServlet {
 	
 	private void memberSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		//회원가입처리
+		MemberDTO dto=new MemberDTO();
+		MemberDAO dao=new MemberDAO();
+		
+		dto.setUserId(req.getParameter("id"));
+		dto.setUserPwd(req.getParameter("pwd"));
+		dto.setUserName(req.getParameter("name"));
+		dto.setBirth(req.getParameter("birth"));
+		dto.setEmail(req.getParameter("email"));
+		dto.setTel(req.getParameter("tel"));
+		
+		try {
+			dao.insertMember(dto);
+		} catch (Exception e) {
+			String message="회원 가입이 실패했습니다.";
+			
+			req.setAttribute("title","회원가입");
+			req.setAttribute("mode", "created");
+			req.setAttribute("message", message);
+			
+			forward(req, resp, "/WEB-INF/views/member/member.jsp");
+			return;
+		}
+		
+		String cp = req.getContextPath();
+		resp.sendRedirect(cp);
+	}
+	
+	private void pwdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		String cp = req.getContextPath();
+		
+		SessionInfo info = (SessionInfo)session.getAttribute("member");
+		if(info==null) { // 로그인이 안된 경우
+			resp.sendRedirect(cp+"/member/login.do");
+			return;
+		}
+		
+
+		req.setAttribute("mode", "update");
+		
+		forward(req, resp, "/WEB-INF/views/member/pwd.jsp");
+	}
+	
+	private void pwdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+				// 패스워드 확인
+				HttpSession session = req.getSession();
+				String cp = req.getContextPath();
+				
+				SessionInfo info = (SessionInfo)session.getAttribute("member");
+				if(info==null) { // 로그인이 안된 경우
+					resp.sendRedirect(cp+"/member/login.do");
+					return;
+				}
+				
+				MemberDAO dao = new MemberDAO();
+				MemberDTO dto = dao.readMember(info.getUserId());
+				
+				if(dto==null) {
+					session.invalidate();
+					resp.sendRedirect(cp);
+					return;
+				}
+				
+				String userPwd = req.getParameter("pwd");
+
+				if(! dto.getUserPwd().equals(userPwd)) {
+				
+					req.setAttribute("message", "<span style='color:red;'>패스워드가 일치하지 않습니다.</span>");
+					forward(req, resp, "/WEB-INF/views/member/pwd.jsp");
+					return;
+				} else  {
+					// 회원 정보 수정 폼
+					req.setAttribute("title", "회원 정보 수정");
+					req.setAttribute("dto", dto);
+					req.setAttribute("mode", "update");
+					forward(req, resp, "/WEB-INF/views/member/created.jsp");
+				}
+	}
+	
+	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 회원정보 수정 완료
+				HttpSession session = req.getSession();
+				String cp = req.getContextPath();
+				
+				SessionInfo info = (SessionInfo)session.getAttribute("member");
+				if(info==null) { // 로그인이 안된 경우
+					resp.sendRedirect(cp+"/member/login.do");
+					return;
+				}
+				
+				// 수정
+				MemberDAO dao = new MemberDAO();
+				MemberDTO dto = new MemberDTO();
+				
+				dto.setUserId(req.getParameter("id"));
+				dto.setUserName(req.getParameter("name"));
+				dto.setUserPwd(req.getParameter("pwd"));				
+				dto.setBirth(req.getParameter("birth"));
+				dto.setEmail(req.getParameter("email"));
+				dto.setTel(req.getParameter("tel"));
+				
+							
+				try {
+					dao.updateMember(dto);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				StringBuffer sb=new StringBuffer();
+				sb.append("<b>"+dto.getUserName()+"</b>님의 정보가 수정 되었습니다. <br>");
+				sb.append("메인화면으로 이동하여 다시 로그인 하시기 바랍니다.<br>");
+				
+				req.setAttribute("title", "회원 정보수정");
+				req.setAttribute("message", sb.toString());
+				
+				resp.sendRedirect(cp);
+				
 	}
 	
 	

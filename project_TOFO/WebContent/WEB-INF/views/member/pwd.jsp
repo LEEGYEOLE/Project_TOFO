@@ -89,13 +89,7 @@ background: lightsteelblue;
 function sendLogin() {
     var f = document.loginForm;
 
-	var str = f.id.value;
-    if(!str) {
-        alert("아이디를 입력하세요. ");
-        f.userId.focus();
-        return;
-    }
-
+	
     str = f.pwd.value;
     if(!str) {
         alert("패스워드를 입력하세요. ");
@@ -103,7 +97,7 @@ function sendLogin() {
         return;
     }
 
-    f.action = "<%=cp%>/member/login_ok.do";
+    f.action = "<%=cp%>/member/pwd_ok.do";
     f.submit();
 }
 </script>
@@ -119,38 +113,32 @@ function sendLogin() {
 			<div class="wrapper">
 				<div class="ipb">
 					<div class=logInLayout">
-						<h1 class="title40">로그인</h1>
+						<h1 class="title40">패스워드 확인</h1>
 						
 						
 					<form name="loginForm" method="post" action="">
 						<table class="tb1">
 							<tr>
-							<td><img alt="" src="<%=cp%>/resource/img/icon/user.png"
-									style="width: 25px; height: auto"></td>
-								<td><input class="if1" type="text" name="id" value=""
-									placeholder="아이디"></td>
-							</tr>
+							<tr style="height:50px;"> 
+			      				<td style="padding-left: 30px; text-align: left;">
+			        				  정보보호를 위해 패스워드를 다시 한 번 입력해주세요.
+			     				 </td>
+			  				</tr>
 
 							<tr>
-								<td><img alt="" src="<%=cp%>/resource/img/icon/key.png"
-									style="width: 25px; height: auto"></td>
+
 								<td><input class="if1" type="password" name="pwd" value=""
 									placeholder="비밀번호"></td>
 							</tr>
 
 							<tr style="border-spacing: 3px">
-								<td colspan="2"><button class="bt1" onclick="sendLogin();">로그인</button>
+								<td colspan="2"><button class="bt1" onclick="sendLogin();">회원정보수정</button>
 							</tr>
+							
+										  <tr align="center" height="30" >
+			    	<td><span style="color: blue;">${message}</span></td>
+			  </tr>
 
-							<tr>
-								<td colspan="2" align="center" style="font-size: 12px"><a
-									href="<%=cp%>/member/created.do">회원가입하기</a>
-							</tr>
-
-							<tr>
-								<td colspan="2" align="center" style="font-size: 12px"><a
-									href="#">아이디/패스워드 찾기</a>
-							</tr>
 						</table>
 					</form>
 					</div>

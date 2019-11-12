@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
+<%@ page trimDirectiveWhitespaces="true" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
 	String cp = request.getContextPath();
 %>
@@ -10,7 +12,7 @@
 <html>
 <head>
 <meta charset="EUC-KR">
-<title>È¸¿ø°¡ÀÔ</title>
+<title>íšŒì›ê°€ì…</title>
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css"
 	type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css"
@@ -21,16 +23,137 @@
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script
 	src="https://han3283.cafe24.com/js/lightslider/js/lightslider.js"></script>
+<script type="text/javascript">
+
+function isValidDateFormat(data){
+    var regexp = /[12][0-9]{3}[\.|\-|\/]?[0-9]{2}[\.|\-|\/]?[0-9]{2}/;
+    if(! regexp.test(data))
+        return false;
+
+    regexp=/(\.)|(\-)|(\/)/g;
+    data=data.replace(regexp, "");
+    
+	var y=parseInt(data.substr(0, 4));
+    var m=parseInt(data.substr(4, 2));
+    if(m<1||m>12) 
+    	return false;
+    var d=parseInt(data.substr(6));
+    var lastDay = (new Date(y, m, 0)).getDate();
+    if(d<1||d>lastDay)
+    	return false;
+		
+	return true;
+}
+
+//ì´ë©”ì¼ í˜•ì‹ ê²€ì‚¬
+function isValidEmail(data){
+    var format = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+    return format.test(data); // true : ì˜¬ë°”ë¥¸ í¬ë§· í˜•ì‹
+}
+</script>
+	
+	
+<script type="text/javascript">
+function memberOk() {
+	
+	var f = document.memberForm;
+	var str;
+
+	str = f.id.value;
+	str = str.trim();
+	if(!str) {
+		alert("ì•„ì´ë””ë¥¼ ì…ë ¥í•˜ì„¸ìš”. ");
+		f.id.focus();
+		return;
+	}
+	if(!/^[a-z][a-z0-9_]{4,9}$/i.test(str)) { // i : ëŒ€ì†Œë¬¸ìë¥¼ êµ¬ë¶„í•˜ì§€ ì•Šê² ë‹¤.
+		alert("ì•„ì´ë””ëŠ” 5~10ìì´ë©° ì²«ê¸€ìëŠ” ì˜ë¬¸ìì´ì–´ì•¼ í•©ë‹ˆë‹¤.");
+		f.id.focus();
+		return;
+	}
+	f.id.value = str;
+
+	str = f.pwd.value;
+	str = str.trim();
+	if(!str) {
+		alert("íŒ¨ìŠ¤ì›Œë“œë¥¼ ì…ë ¥í•˜ì„¸ìš”. ");
+		f.pwd.focus();
+		return;
+	}
+	if(!/^(?=.*[a-z])(?=.*[!@#$%^*+=-]|.*[0-9]).{5,10}$/i.test(str)) { 
+		alert("íŒ¨ìŠ¤ì›Œë“œëŠ” 5~10ìì´ë©° í•˜ë‚˜ ì´ìƒì˜ ìˆ«ìë‚˜ íŠ¹ìˆ˜ë¬¸ìê°€ í¬í•¨ë˜ì–´ì•¼ í•©ë‹ˆë‹¤.");
+		f.pwd.focus();
+		return;
+	}
+	f.pwd.value = str;
+
+	if(str!= f.pwdcheck.value) {
+        alert("íŒ¨ìŠ¤ì›Œë“œê°€ ì¼ì¹˜í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤. ");
+        f.pwdcheck.focus();
+        return;
+	}
+	
+    str = f.name.value;
+	str = str.trim();
+    if(!str) {
+        alert("ì´ë¦„ì„ ì…ë ¥í•˜ì„¸ìš”. ");
+        f.name.focus();
+        return;
+    }   
+    f.name.value = str;
+
+    str = f.birth.value;
+	str = str.trim();
+    if(!str || !isValidDateFormat(str)) {
+        alert("ìƒë…„ì›”ì¼ë¥¼ ì…ë ¥í•˜ì„¸ìš”[YYYY-MM-DD]. ");
+        f.birth.focus();
+        return;
+    }
+    
+    str = f.email.value;
+	str = str.trim();
+    if(!str) {
+        alert("ì´ë©”ì¼ì„ ì…ë ¥í•˜ì„¸ìš”. ");
+        f.email.focus();
+        return;
+    }
+    
+    if(!str || !isValidEmail(str)) {
+        alert("ì´ë©”ì¼ í˜•ì‹ì„ ë§ì¶°ì£¼ì„¸ìš” ");
+        f.email.focus();
+        return;
+    }
+    
+    str = f.tel.value;
+	str = str.trim();
+    if(!str) {
+        alert("ì „í™”ë²ˆí˜¸ë¥¼ ì…ë ¥í•˜ì„¸ìš”. ");
+        f.tel.focus();
+        return;
+    }
+
+    
+   
+    var mode="${mode}";
+    if(mode=="created") {
+    	f.action = "<%=cp%>/member/created_ok.do";
+    } else if(mode=="update") {
+    	f.action = "<%=cp%>/member/update_ok.do";
+    }
+
+    f.submit();
+}
+</script>
 <style type="text/css">
 
-/*Å×ÀÌºí Áß¾ÓÁ¤·Ä*/
+/*í…Œì´ë¸” ì¤‘ì•™ì •ë ¬*/
 .tb1 {
 	width: 150px;
 	height: 100px;
 }
 
-/*inputÆû*/
-/*·Î±×ÀÎ È­ÀÎ inputÆû */
+/*inputí¼*/
+/*ë¡œê·¸ì¸ í™”ì¸ inputí¼ */
 .if1 {
 	padding-left: 10px;
 	background-color: #eeeeee;
@@ -48,7 +171,7 @@
 		padding-left: 10px;
 }
 
-/*ÀÎÆıÇ°ÀÌ µé¾îÀÕ´Â ³×¸ğ ¹Ùµğ2(È¸¿ø°¡ÀÔ)) */
+/*ì¸í¿í’ˆì´ ë“¤ì–´ì‡ëŠ” ë„¤ëª¨ ë°”ë””2(íšŒì›ê°€ì…)) */
 /* .ipb2 { */
 /* 	background-color: rgba(128, 128, 130, 0.5); */
 /* 	position: absolute; */
@@ -76,9 +199,9 @@ background: lightsteelblue;
 	background-size: cover;
 }
 
-/* Å×ÀÌºí1*/
+/* í…Œì´ë¸”1*/
 
-/* Å×ÀÌºí2*/
+/* í…Œì´ë¸”2*/
 .tb2 {
 	margin: 15px auto 0;
 	border-spacing: 10px;
@@ -95,7 +218,7 @@ background: lightsteelblue;
 	margin-bottom: 10px;
 }
 
-/* µî·ÏÇÏ±â ¹öÆ° Ç¥ÁØ*/
+/* ë“±ë¡í•˜ê¸° ë²„íŠ¼ í‘œì¤€*/
 .bt2 {
 	background-color: #444444;
 	border: 1px solid #444444;
@@ -146,54 +269,56 @@ background: lightsteelblue;
 			<div class="wrapper">
 				<div class="ipb2">
 					<div class="signUpLayout">
-						<h1 class="title40">È¸¿ø°¡ÀÔ / ¸¶ÀÌÆäÀÌÁö</h1>
+						<h1 class="title40">${title}</h1>
+						
+						<form name="memberForm" method="post">
 						<table class="tb2">
 							<tr>
-								<td><input class="if2" type="text" name="id"
-									placeholder="¾ÆÀÌµğ" value=""></td>
+								<td><input class="if2" type="text" name="id" 
+									placeholder="ì•„ì´ë””" value="${dto.userId}" ${mode=="update" ? "readonly='readonly' ":""}></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="password" name="pwd"
-									placeholder="ÆĞ½º¿öµå" value=""></td>
+									placeholder="íŒ¨ìŠ¤ì›Œë“œ" value=""></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="password" name="pwdcheck"
-									placeholder="ÆĞ½º¿öµåÈ®ÀÎ" value=""></td>
+									placeholder="íŒ¨ìŠ¤ì›Œë“œí™•ì¸" value=""></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="text" name="name"
-									placeholder="ÀÌ¸§" value=""></td>
+									placeholder="ì´ë¦„" value="${dto.userName}" ${mode=="update" ? "readonly='readonly' ":""}></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="text" name="birth"
-									placeholder="»ı³â¿ùÀÏ" value=""></td>
+									placeholder="ìƒë…„ì›”ì¼" value=""></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="text" name="email"
-									placeholder="ÀÌ¸ŞÀÏ" value=""></td>
+									placeholder="ì´ë©”ì¼" value=""></td>
 
 							</tr>
 
 							<tr>
 								<td><input class="if2" type="text" name="tel"
-									placeholder="ÀüÈ­¹øÈ£" value=""></td>
+									placeholder="ì „í™”ë²ˆí˜¸" value=""></td>
 
 							</tr>
 
 							<tr>
 								<td valign="top"
 									style="text-align: left; padding-top: 5px; width: 30px"><label
-									style="font-weight: 900; font-size: 13px">¾à°üµ¿ÀÇ</label></td>
+									style="font-weight: 900; font-size: 13px">ì•½ê´€ë™ì˜</label></td>
 
 							</tr>
 
@@ -204,7 +329,7 @@ background: lightsteelblue;
 										<label> <input id="agree" name="agree" type="checkbox"
 											checked="checked"
 											onchange="form.sendButton.disabled = !checked"> <a
-											href="#">ÀÌ¿ë ¾à°ü</a>¿¡ µ¿ÀÇÇÏ½Ã°Ú½À´Ï±î?
+											href="#">ì´ìš© ì•½ê´€</a>ì— ë™ì˜í•˜ì‹œê² ìŠµë‹ˆê¹Œ?
 										</label>
 									</p>
 								</td>
@@ -214,16 +339,17 @@ background: lightsteelblue;
 							<tr>
 								<td>
 									<button class="bt2 btn-3 jq1" type="button"
-										onclick="javascript.location.href="
-										#" style="align-content: left; right: 130px; top: -10px">Ãë¼ÒÇÏ±â</button>
+										onclick="javascript:location.href='<%=cp%>/';" style="align-content: left; right: 130px; top: -10px">${mode=="created"?"ê°€ì…ì·¨ì†Œ":"ìˆ˜ì •ì·¨ì†Œ"}</button>
 									<button class="bt2 btn-3 jq1" type="button"
-										onclick="javascript.location.href="
-										#" style="position: relative; right: -130px; top: -58px">µî·ÏÇÏ±â</button>
+										onclick="memberOk();"
+										style="position: relative; right: -130px; top: -58px">${mode=="created"?"íšŒì›ê°€ì…":"ì •ë³´ìˆ˜ì •"}</button>
 								</td>
 							</tr>
-
+					 <tr height="30">
+			        <td align="center" style="color: blue;">${message}</td>
+			    	</tr>
 						</table>
-
+					</form>
 					</div>
 				</div>
 
