@@ -37,7 +37,7 @@
 							style="width: 25px; height: auto; vertical-align: middle;">
 					</button></a>
 				<ul class="my">
-					<li><a href="<%=cp%>/member/created.do">마이페이지</a></li>
+					<li><a href="<%=cp%>/member/pwd.do">마이페이지</a></li>
 					<li><a href="<%=cp%>/member/logout.do">로그아웃</a></li>
 				</ul></li>
 		</ul>
