@@ -300,7 +300,7 @@ public class ScheduleServlet extends HttpServlet {
 
 		forward(req, resp, "/WEB-INF/views/schedule/scheduleList.jsp");
 	}
-
+	
 	private void insertSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");

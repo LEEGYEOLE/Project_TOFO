@@ -86,6 +86,88 @@ public class ScheduleDAO {
 		return list;
 	}
 	
+
+	/**
+	 * 해당 유저의 이번주 일정 다 가져오기
+	 * @param date
+	 * @param userId
+	 * @param num
+	 * @return
+	 */
+		public List<ScheduleDTO> listWeek(String startDay, String endDay, String userId) {
+			List<ScheduleDTO> list = new ArrayList<>();
+			PreparedStatement pstmt = null;
+			ResultSet rs = null;
+			StringBuffer sb = new StringBuffer();
+
+			try {
+				sb.append("SELECT sche_num, s.num, s.title, t.title teamtitle, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+				sb.append("               color, repeat, repeat_cycle ");
+				sb.append("  FROM schedule s ");
+				sb.append("  LEFT OUTER JOIN team t ");
+				sb.append("  ON s.num=t.num ");
+				sb.append("  WHERE userId='?' AND ");
+				sb.append("     ( ");
+				sb.append("        ( ");
+				sb.append("           sdate >= ? ");
+				sb.append("               AND sdate <= ?  ");
+				sb.append("               OR edate <= ?  ");
+				sb.append("         ) OR ("); // 반복일정
+				sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
+				sb.append("              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
+				sb.append("              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
+				sb.append("         )");
+				sb.append("    ) ");
+				sb.append("  ORDER BY sdate ASC, sche_num DESC ");
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, startDay);
+				pstmt.setString(2, startDay);
+				pstmt.setString(3, endDay);
+				pstmt.setString(4, endDay);
+
+				pstmt.setString(5, startDay);
+				pstmt.setString(6, startDay);
+				pstmt.setString(7, startDay);
+				pstmt.setString(8, endDay);
+
+				rs = pstmt.executeQuery();
+				
+				while (rs.next()) {
+					ScheduleDTO dto = new ScheduleDTO();
+					dto.setScheNum(rs.getInt("sche_num"));
+					dto.setNum(rs.getInt("num"));
+					dto.setTitle(rs.getString("title"));
+					dto.setsDate(rs.getString("sdate"));
+					dto.seteDate(rs.getString("edate"));
+					dto.setStime(rs.getString("stime"));
+					dto.setEtime(rs.getString("etime"));
+					dto.setColor(rs.getString("color"));
+					dto.setRepeat(rs.getInt("repeat"));
+					dto.setRepeat_cycle(rs.getInt("repeat_cycle"));
+
+					list.add(dto);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (rs != null) {
+					try {
+						rs.close();
+					} catch (SQLException e) {
+					}
+				}
+
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+
+			return list;
+		}
+		
 	// 일정 등록하기.
 	public int insertSchedule(ScheduleDTO dto) {
 		int result = 0;
@@ -307,7 +389,7 @@ public class ScheduleDAO {
 
 		return list;
 	}
-
+	
 	// 일정 장소 수정하기
 	public int updateAddress(int scheNum, String addr, String lat, String lon) {
 		int result = 0;
