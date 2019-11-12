@@ -140,7 +140,6 @@ public class TeamServlet extends HttpServlet {
 			dto.setImageFilename(saveFilename);
 		}
 
-		System.out.println(dto.toString());
 		// ÀúÀå
 		dao.insertTeam(dto);
 		resp.sendRedirect(cp + "/main/myMain.do");
