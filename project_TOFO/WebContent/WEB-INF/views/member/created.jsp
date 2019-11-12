@@ -249,11 +249,11 @@ background: lightsteelblue;
 	font-size: 40px;
 	color: white;
 }
-
+/*
 .signUpLayout {
 	padding: 50px 10px;
 }
-
+*/
 .body-container{    display: table;}
 </style>
 
@@ -269,9 +269,9 @@ background: lightsteelblue;
 			<div class="wrapper">
 				<div class="ipb2">
 					<div class="signUpLayout">
-						<h1 class="title40">${title}</h1>
+						<h1 class="title40" style="margin-top: 30px;">${title}</h1>
 						
-						<form name="memberForm" method="post">
+						<form name="memberForm" method="post" style="height: 400px; margin-top: 20px;">
 						<table class="tb2">
 							<tr>
 								<td><input class="if2" type="text" name="id" 
@@ -356,6 +356,10 @@ background: lightsteelblue;
 			</div>
 		</div>
 
+	</div>
+	
+	<div class="footer">
+		<jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
 
 
