@@ -297,7 +297,7 @@ border: 1px solid white;
 	</div>
 	<div class="container">
 		<hr>
-		<div></div>
+				<div class="body-container">
 		<div class="container-block">
 			<div style="width: 100%;">
 				<div class="vl" style="float: left;">
@@ -449,6 +449,7 @@ border: 1px solid white;
 			</table>
 		</form>
     </div>
+	</div>
 	</div>
 
 	<div class="footer">

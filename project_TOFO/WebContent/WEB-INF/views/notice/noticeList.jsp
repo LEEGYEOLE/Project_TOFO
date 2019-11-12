@@ -59,7 +59,7 @@ function selectList(){
 
 
 <div class="container">
-    <div class="body-container" style="width: 90%;">
+    <div class="body-container" style="width: 80%;">
         <div>
             <h3 class="noticetitle"><span style="font-family: Webdings"></span> 공지사항 </h3>
         </div>
