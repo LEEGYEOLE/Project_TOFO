@@ -1,6 +1,7 @@
 package com.teamList;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.member.SessionInfo;
+
+import net.sf.json.JSONObject;
 
 @WebServlet("/teamList/*")
 public class TeamListServlet extends HttpServlet {
@@ -142,25 +145,31 @@ public class TeamListServlet extends HttpServlet {
 	
 	public void insertTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		String cp = req.getContextPath();
+
+		
+		String state = "false";
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		if (info == null) { // 로그인이 안 된 경우
-			resp.sendRedirect(cp + "/member/login.do");
-			return;
-		}
-		
-		if (session.getAttribute("num") == null) {
+			state = "loginFail";
+		} else if(session.getAttribute("num") == null) {
 			// 메인 화면으로 리다이렉트
-			resp.sendRedirect(cp + "/main/myMain.do");
-			return;
+			//resp.sendRedirect(cp + "/main/myMain.do");
+			state = "groupNumFail";
+		} else {
+			int groupNum = (int) session.getAttribute("num");
+			String userId = req.getParameter("userId");
+			String rank = req.getParameter("rank");
+			TeamListDAO dao = new TeamListDAO();
+			dao.insertTeamList(userId, rank, groupNum);
+			state = "true";
 		}
-		int groupNum = (int) session.getAttribute("num");
-		String userId = req.getParameter("userId");
-		String rank = req.getParameter("rank");
-		TeamListDAO dao = new TeamListDAO();
-		dao.insertTeamList(userId, rank, groupNum);
 		
-		resp.sendRedirect(cp+"/teamList/memberList.do");
+		JSONObject job=new JSONObject();
+		job.put("state", state);
+		
+		resp.setContentType("text/html;charset=utf-8");
+		PrintWriter out=resp.getWriter();
+		out.print(job.toString());
 	}
 }

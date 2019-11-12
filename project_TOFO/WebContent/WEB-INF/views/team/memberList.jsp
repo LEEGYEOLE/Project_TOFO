@@ -82,19 +82,26 @@ $(function(){
 
 // 회원 추가하기
 $(function(){
-   $("body").on("click",".bntInsert",function(){
-	  var userId = $(this).closest("input").val();
-	  var rank = $(this).closest("select").val();
+   $("#insertResult").click(function(){
+	  var userId = $(this).closest("table").find("input").val();
+	  var rank = $(this).closest("table").find("select").val();
       var url = "<%=cp%>/teamList/insertTeamList.do";
       var query="userId="+userId+"&rank="+rank;
-      alert(query);
       
       $.ajax({// 함수에 객체를 넘긴다
          type:"POST",
          url:url,
          data:query,
+         dataType:"JSON",
          success:function(data){
-             $("#insertResult").html(data);
+             var state=data.state;
+             if(state=="loginFail") {
+            	 location.href="<%=cp%>/member/login.do";
+             } else if(state=="groupNumFail") {
+            	 location.href="<%=cp%>/main/myMain.do";
+             } else if(state=="true") {
+            	 location.href="<%=cp%>/teamList/memberList.do";
+             }
          },
          error:function(e){
             console.log(e.responseText);
@@ -103,14 +110,6 @@ $(function(){
    });
 });
 
-<%--
-function insertTeamList(userId, rank) {
-	if (confirm(userId+"님을 모임에 등록하시겠습니까?")) {
-		var url = "<%=cp%>/teamList/insertTeamList.do?userId="+userId+"&rank="+rank;
-		location.href=url;
-	}
-}
---%>
 function updateRank(userId) {
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
 		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
@@ -205,8 +204,8 @@ function deleteTeamList(userId) {
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<select name="color" id="form-rank" class="selectField">
-								<option value="green">모임장</option>
-								<option value="blue">모임원</option>
+								<option value="0">모임장</option>
+								<option value="1">모임원</option>
 							</select>
 						</p>
 					</td>
