@@ -106,24 +106,9 @@ function deleteFile() {
 			      </td>
 			  </tr>
 			  
-			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨&nbsp;&nbsp;&nbsp;&nbsp;부</td>
-			      <td style="padding-left:10px;"> 
-			          <input type="file" name="upload" class="boxTF" size="53" style="height: 25px;">
-         
-			       </td>
-			  </tr> 
 			  
-			  <c:if test="${mode=='update'}">
-			   <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;">
-			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">첨부된 파일</td>
-			      <td style="padding-left:10px;"> 
-			      	<c:if test="${ not empty dto.originalFilename}">			 
-			         ${dto.originalFilename} | <a href="javascript:deleteFile();">삭제</a>
-			      	</c:if>
-			       </td>
-			 	 </tr> 
-			  </c:if>
+			  
+			 
 			  
 			  
 			  

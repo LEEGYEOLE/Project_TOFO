@@ -64,15 +64,7 @@ function deleteNotice(num) {
 			   </td>
 			</tr>
 			
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td colspan="2" align="left" style="padding-left: 5px;">
-			       첨&nbsp;&nbsp;부 :
-		           <c:if test="${not empty dto.saveFilename}">
-		                   <a href="<%=cp%>/notice/download.do?num=${dto.num}">${dto.originalFilename}</a>
-		                    (<fmt:formatNumber value="${dto.filesize/1024}" pattern="0.00"/> Kbyte)
-		           </c:if>
-			    </td>
-			</tr>
+			
 
 			<tr height="35" style="border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="left" style="padding-left: 5px;">
