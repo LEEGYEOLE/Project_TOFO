@@ -436,7 +436,7 @@ ul, li {
 				<div style="overflow: scroll; overflow-x: hidden; overflow-y : auto;width: 100%; height: 300px;">
 					<ol class="list">
 					<c:forEach var="personlist" items="${personlist}">
-						<li style="font-size: 15px; padding:13px 15px 13px 15px; background-color: white;  margin: 10px; border-radius: 5px;">
+						<li style="font-size: 15px; padding:13px 15px 13px 15px; background-color: rgba(207, 232, 246, 0.58); margin: 10px; border-radius: 5px;">
 
 						아이디 :${personlist.userId} <br>
 						이름 : ${personlist.userName} <br>

@@ -1,13 +1,14 @@
 @charset "UTF-8";
 
  #moo {
-    border: 1px solid black;
+	
+    border-radius: 15px 15px 0px 0px;
     width: 400px;
     height: 50px;
     text-align: center;
     border: none;
     font-size: 20px;
-    background: gray;
+    background-color: rgba(89, 100, 106, 0.58);
     margin-right: 10px;
     
     }
@@ -24,8 +25,11 @@
     
     
 	#moo th {
+	border: 3px soild black;
+	margin: 0px auto;
+	 border-radius: 15px 15px 0px 0px;
 	color: rgb(0, 0, 0);
-    background-color: rgba(39, 50, 56, 0.58);
+    background-color: rgba(89, 100, 106, 0.58);
     
 	}
 
@@ -79,11 +83,12 @@
     }
     
     .modal-content {
+    	border-radius: 15px 15px 15px 15px;
         position: absolute;
         top: 50%;
         left:50%;               
         transform: translate(-50%, -50%);
-        background-color: rgb(236, 236, 236);
+        background-color: white;
         width: 400px;
         height: 500px;
         
