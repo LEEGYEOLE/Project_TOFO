@@ -220,6 +220,7 @@ public class NoticeServlet extends HttpServlet {
 	//글 등록 폼 
 	protected void createdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SessionInfo info = loginUser(req);
+		String leaderId = (String)req.getSession().getAttribute("leaderId");
 		String cp = req.getContextPath();
 
 		if (info == null) {
@@ -228,8 +229,8 @@ public class NoticeServlet extends HttpServlet {
 
 		}
 
-		if (!info.getUserId().equals("admin")) {
-			resp.sendRedirect(cp + "notice/list.do");
+		if (!info.getUserId().equals(leaderId)) {
+			resp.sendRedirect(cp + "/notice/list.do");
 			return;
 
 		}
@@ -251,6 +252,7 @@ public class NoticeServlet extends HttpServlet {
 	//글 등록
 	protected void createdSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		SessionInfo info = loginUser(req);
+		String leaderId = (String)req.getSession().getAttribute("leaderId");
 		String cp = req.getContextPath();
 
 		if (info == null) {
@@ -259,7 +261,7 @@ public class NoticeServlet extends HttpServlet {
 
 		}
 
-		if (!info.getUserId().equals("admin")) {
+		if (!info.getUserId().equals(leaderId)) {
 			resp.sendRedirect(cp + "notice/list.do");
 			return;
 
