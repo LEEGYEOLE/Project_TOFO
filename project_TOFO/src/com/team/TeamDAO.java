@@ -17,8 +17,8 @@ public class TeamDAO {
 		StringBuffer sb=new StringBuffer();
 
 		sb.append("INSERT ALL ");
-		sb.append("INTO TEAM (num, title, content, userCount,imageFilename) values( ");
-		sb.append("			team_seq.nextval, ?,?,?,? ) ");
+		sb.append("INTO TEAM (num, title, content, userCount,imageFilename,userId) values( ");
+		sb.append("			team_seq.nextval, ?,?,?,?,? ) ");
 		sb.append("INTO TEAMLIST (LISTNUM,USERID,RANK,NUM) values( ");
 		sb.append("			LIST_SEQ.nextval, ?, '0',team_seq.currval ) ");
 		sb.append("select * from DUAL ");
@@ -31,6 +31,7 @@ public class TeamDAO {
 			pstmt.setInt(3, dto.getUserCount());
 			pstmt.setString(4, dto.getImageFilename());
 			pstmt.setString(5, dto.getUserId());
+			pstmt.setString(6, dto.getUserId());
 			
 			pstmt.executeUpdate();
 
