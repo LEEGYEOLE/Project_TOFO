@@ -330,7 +330,16 @@ ul, li {
 									<div style=" float: left; width: 30% ;">
 										<p class="myfont">장소</p>
 										<p class="myfont2">
-											<span id="forkakaomap">${dto.location}</span><span>
+											<span id="forkakaomap">
+											<c:if test="${dto.location!='empty'}">
+											<td>${dto.location}</td>
+											</c:if>
+								
+											<c:if test="${dto.location=='empty'}">
+											<td style="color: blue; font-size: 15px">[장소 미지정]</td>
+											</c:if>
+											</span><span>
+											
 											<c:if test="${dto.location != 'empty'}">
 											<button id="click_button" style="margin-left: 5px;">지도</button>
 											</c:if>

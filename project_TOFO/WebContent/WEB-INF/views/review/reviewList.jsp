@@ -125,12 +125,12 @@ cursor: pointer;
 
 				<table class="tableList">
 					<colgroup>
-						<col width="5%" />
-						<col width="28%" />
+						<col width="3%" />
 						<col width="25%" />
-						<col width="5%" />
-						<col width="12%" />
-						<col width="5%" />
+						<col width="25%" />
+						<col width="7%" />
+						<col width="15%" />
+						<col width="4%" />
 					</colgroup>
 					<thead>
 						<tr>
@@ -148,7 +148,13 @@ cursor: pointer;
 							<tr class="colorhover" onclick="javacript:location.href='${articleUrl}&num=${dto.reviewNum}&groupnum=${dto.groupNum}'">
 								<td>${dto.listNum}</td>
 								<td>${dto.title}</td>
+								<c:if test="${dto.location!='empty'}">
 								<td>${dto.location}</td>
+								</c:if>
+								
+								<c:if test="${dto.location=='empty'}">
+								<td style="color: #333333; font-size: 15px">정해진 모임 장소가 없습니다</td>
+								</c:if>
 								<td>${dto.personnel}</td>
 								<td>${dto.startDate}~ ${dto.endDate}</td>
 								<td>${dto.attendCheck==1 ? "참석" : "불참"}</td>
@@ -164,7 +170,7 @@ cursor: pointer;
 			<table style="width: 100%; margin: 0px auto; border-spacing: 0px;">
 			   <tr height="35">
 				<td align="center">
-			        ${dataCount==0? "등록된 게시글이 없습니다." : paging}
+			        ${dataCount==0? "불참한 모임이 없습니다." : paging}
 				</td>
 			   </tr>
 			</table>
