@@ -124,7 +124,18 @@ public class TeamListDAO {
 			result = pstmt.executeUpdate();
 			pstmt.close();
 			pstmt=null;
+			
 			sql="update teamList set rank='0' where userId=? and num=?";
+			
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setInt(2, groupNum);
+			
+			result = pstmt.executeUpdate();
+			pstmt.close();
+			pstmt=null;
+			
+			sql="update team set userId=? where num=?";
 			
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
