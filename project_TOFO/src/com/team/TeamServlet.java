@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,6 +21,7 @@ import com.member.SessionInfo;
 import com.oreilly.servlet.MultipartRequest;
 import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
 import com.schedule.ScheduleDAO;
+import com.schedule.ScheduleDTO;
 import com.util.FileManager;
 
 @WebServlet("/team/*")
@@ -70,9 +74,9 @@ public class TeamServlet extends HttpServlet {
 		} else if (uri.indexOf("insert.do") != -1) {
 			insertSubmit(req, resp);
 		} else if (uri.indexOf("updateRank.do") != -1) {
-//			updateRank(req, resp);
+			// updateRank(req, resp);
 		} else if (uri.indexOf("deleteTeamList.do") != -1) {
-//			deleteTeamList(req, resp);
+			// deleteTeamList(req, resp);
 		}
 	}
 
@@ -91,27 +95,70 @@ public class TeamServlet extends HttpServlet {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-		
-		TeamDAO dao = new TeamDAO();
+
+		TeamDAO tdao = new TeamDAO();
 		ScheduleDAO scheDao = new ScheduleDAO();
-		//이번주 내 일정 가져오기
+
+		/* 오늘 날짜, 이번주 시작 날짜, 이번주 끝 날짜 구하기 */
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH) + 1; // 0 ~ 11
+		int date = cal.get(Calendar.DATE);
+		int week = cal.get(Calendar.DAY_OF_WEEK); // 1~7
+
+		Calendar scal = (Calendar) cal.clone();
+		scal.add(Calendar.DATE, -((week + 7) % 9));
+		int syear = scal.get(Calendar.YEAR);
+		int smonth = scal.get(Calendar.MONTH) + 1;
+		int sdate = scal.get(Calendar.DATE);
+		int sweek = scal.get(Calendar.DAY_OF_WEEK); // 1~7
+
+		Calendar ecal = (Calendar) cal.clone();
+		ecal.add(Calendar.DATE, 7 - ecal.get(Calendar.DAY_OF_WEEK) + 1);
+		int eyear = ecal.get(Calendar.YEAR);
+		int emonth = ecal.get(Calendar.MONTH) + 1;
+		int edate = ecal.get(Calendar.DATE);
+		int eweek = ecal.get(Calendar.DAY_OF_WEEK); // 1~7
+
+		String[] ww = {"일","월","화","수","목","금","토"};
+		String startDay = String.format("%04d%02d%02d", syear, smonth, sdate);
+		String endDay = String.format("%04d%02d%02d", eyear, emonth, edate);
+		String toDay = String.format("%04d%02d%02d", year, month, date);
+		// 이번주 내 일정 가져오기
+		List<Map<String, Object>> scheList = scheDao.listWeek(startDay, endDay, info.getUserId());
+
+		String[] weeks = new String[7];
+		Calendar scal1 = (Calendar) scal.clone();
+		String s,s1;
+		for (int i = 0; i < weeks.length; i++) {
+			weeks[i]="";
+			s = String.format("%04d%02d%02d", scal1.get(Calendar.YEAR), scal1.get(Calendar.MONTH)+1, scal1.get(Calendar.DATE));
+			s1 = String.format("%04d%02d%02d", scal1.get(Calendar.YEAR), scal1.get(Calendar.MONTH)+1, scal1.get(Calendar.DATE));
+			
+			for (Map<String, Object> map : scheList) {
+				String sd = (String) (map.get("sdate"));
+				String ed = (String) (map.get("sdate"));
+				if (map.get("edate") != null) {
+					ed=(String) map.get("edate");
+				}
+				if (sd.compareTo(s)<=0&&ed.compareTo(s)>=0) {
+					if(s1.equals(toDay))
+						weeks[i] += "<tr style='background: #fff3d0;'><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td>"+(String)(map.get("title"))+"</td></tr>";
+					else weeks[i] += "<tr><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td>"+(String)(map.get("title"))+"</td></tr>";
+						
+				}
+			}
+			scal1.add(Calendar.DATE, 1);
+		}
+
+		String priod = String.format("%04d/%02d / %02d ~ %04d/%02d/%02d", syear, smonth, sdate, eyear, emonth, edate);
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//모임목록 가져오기
-		List<TeamDTO> list = dao.listTeam(info.getUserId());
-		
+		// 모임목록 가져오기
+		List<TeamDTO> list = tdao.listTeam(info.getUserId());
+
+		req.setAttribute("priod", priod);
 		req.setAttribute("list", list);
+		req.setAttribute("weeks", weeks);
 
 		forward(req, resp, "/WEB-INF/views/main/myMain.jsp");
 	}
@@ -131,13 +178,13 @@ public class TeamServlet extends HttpServlet {
 			forward(req, resp, "/WEB-INF/views/member/login.jsp");
 			return;
 		}
-		
+
 		String cp = req.getContextPath();
 		String encType = "UTF-8";
 		int maxSize = 5 * 1024 * 1024;
 
 		MultipartRequest mreq = new MultipartRequest(req, pathname, maxSize, encType, new DefaultFileRenamePolicy());
-		
+
 		TeamDAO dao = new TeamDAO();
 		TeamDTO dto = new TeamDTO();
 		// 이미지 파일을 업로드 한경우
@@ -164,7 +211,6 @@ public class TeamServlet extends HttpServlet {
 
 	}
 
-
 	protected void weekList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -173,9 +219,8 @@ public class TeamServlet extends HttpServlet {
 			resp.sendRedirect(cp);
 			return;
 		}
-		
-	
-		//날짜 계산
+
+		// 날짜 계산
 	}
-	
+
 }

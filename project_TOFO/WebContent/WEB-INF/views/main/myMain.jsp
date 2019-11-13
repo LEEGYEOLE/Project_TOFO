@@ -301,54 +301,20 @@ border: 1px solid white;
 		<div class="container-block">
 			<div style="width: 100%;">
 				<div class="vl" style="float: left;">
-					<h2 style="padding: 10px 0px; font-size: 30px;">이번주 일정 목록</h2>
+					<h2 style="padding: 10px 0px; font-size: 30px; float: left;">이번주 일정 목록<span style="clear: both;
+    font-size: 15px;
+    color: #ffc107;
+    padding-left: 15px;">${priod}</span></h2>
+					
 					<table class="mainTb">
 						<tr>
 							<th class="mainTb1">날짜</th>
 							<th class="mainTb2">모임명</th>
 							<th class="mainTb3">일정</th>
 						</tr>
-
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
-						<tr>
-							<td>04(목)</td>
-							<td>My Group1</td>
-							<td>오후 18:00[홍대] 웹 페이지 만들기 스터디 / 참여 3명</td>
-						</tr>
+						<c:forEach items="${weeks}" var="s">
+							${s}
+						</c:forEach>
 					</table>
 				</div>
 				<div class="vl" style="float: right;">

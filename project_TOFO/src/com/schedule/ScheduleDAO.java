@@ -5,15 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.util.DBConn;
 
 public class ScheduleDAO {
 	private Connection conn = DBConn.getConnection();
-	
-	
-	//일정 전체 가져오기
+
+	// 일정 전체 가져오기
 	public List<ScheduleDTO> listMonth(String startDay, String endDay, String userId, int num) {
 		List<ScheduleDTO> list = new ArrayList<>();
 		PreparedStatement pstmt = null;
@@ -21,7 +22,8 @@ public class ScheduleDAO {
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			sb.append("SELECT sche_num, num, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+			sb.append(
+					"SELECT sche_num, num, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
 			sb.append("               color, repeat, repeat_cycle ");
 			sb.append("  FROM schedule");
 			sb.append("  WHERE num = ? AND ");
@@ -32,8 +34,10 @@ public class ScheduleDAO {
 			sb.append("               OR edate <= ?  ");
 			sb.append("         ) OR ("); // 반복일정
 			sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
-			sb.append("              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
-			sb.append("              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
+			sb.append(
+					"              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
+			sb.append(
+					"              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
 			sb.append("         )");
 			sb.append("    ) ");
 			sb.append("  ORDER BY sdate ASC, sche_num DESC ");
@@ -49,7 +53,7 @@ public class ScheduleDAO {
 			pstmt.setString(8, endDay);
 
 			rs = pstmt.executeQuery();
-			
+
 			while (rs.next()) {
 				ScheduleDTO dto = new ScheduleDTO();
 				dto.setScheNum(rs.getInt("sche_num"));
@@ -85,89 +89,73 @@ public class ScheduleDAO {
 
 		return list;
 	}
-	
 
 	/**
 	 * 해당 유저의 이번주 일정 다 가져오기
+	 * 
 	 * @param date
 	 * @param userId
 	 * @param num
 	 * @return
 	 */
-		public List<ScheduleDTO> listWeek(String startDay, String endDay, String userId) {
-			List<ScheduleDTO> list = new ArrayList<>();
-			PreparedStatement pstmt = null;
-			ResultSet rs = null;
-			StringBuffer sb = new StringBuffer();
+	public List<Map<String, Object>> listWeek(String startDay, String endDay, String userId) {
+		List<Map<String, Object>> list = new ArrayList<>();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		StringBuffer sb = new StringBuffer();
 
-			try {
-				sb.append("SELECT sche_num, s.num, s.title, t.title teamtitle, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
-				sb.append("               color, repeat, repeat_cycle ");
-				sb.append("  FROM schedule s ");
-				sb.append("  LEFT OUTER JOIN team t ");
-				sb.append("  ON s.num=t.num ");
-				sb.append("  WHERE userId='?' AND ");
-				sb.append("     ( ");
-				sb.append("        ( ");
-				sb.append("           sdate >= ? ");
-				sb.append("               AND sdate <= ?  ");
-				sb.append("               OR edate <= ?  ");
-				sb.append("         ) OR ("); // 반복일정
-				sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
-				sb.append("              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
-				sb.append("              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
-				sb.append("         )");
-				sb.append("    ) ");
-				sb.append("  ORDER BY sdate ASC, sche_num DESC ");
-				pstmt = conn.prepareStatement(sb.toString());
-				pstmt.setString(1, startDay);
-				pstmt.setString(2, startDay);
-				pstmt.setString(3, endDay);
-				pstmt.setString(4, endDay);
+		try {
+			sb.append(
+					" select s.sche_num, s.num, s.title, t.title teamtitle, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+			sb.append("        color, repeat, repeat_cycle,nvl(cnt,0) cnt ");
+			sb.append("  FROM schedule s ");
+			sb.append("  LEFT OUTER JOIN TEAM t ON s.NUM=t.num ");
+			sb.append("  left outer join ( ");
+			sb.append("  	select sche_num, count(sche_num) cnt from attendance where userid=? group by  sche_num ");
+			sb.append("  ) a on s.sche_num=a.sche_num ");
+			sb.append("  WHERE  (cnt is not null) and (sdate >= ? AND sdate <=? OR edate <=?) ");
+			sb.append("  ORDER BY sdate ASC, s.sche_num DESC ");
+			pstmt = conn.prepareStatement(sb.toString());
+			pstmt.setString(1, userId);
 
-				pstmt.setString(5, startDay);
-				pstmt.setString(6, startDay);
-				pstmt.setString(7, startDay);
-				pstmt.setString(8, endDay);
+			pstmt.setString(2, startDay);
+			pstmt.setString(3, endDay);
+			pstmt.setString(4, endDay);
+			rs = pstmt.executeQuery();
 
-				rs = pstmt.executeQuery();
-				
-				while (rs.next()) {
-					ScheduleDTO dto = new ScheduleDTO();
-					dto.setScheNum(rs.getInt("sche_num"));
-					dto.setNum(rs.getInt("num"));
-					dto.setTitle(rs.getString("title"));
-					dto.setsDate(rs.getString("sdate"));
-					dto.seteDate(rs.getString("edate"));
-					dto.setStime(rs.getString("stime"));
-					dto.setEtime(rs.getString("etime"));
-					dto.setColor(rs.getString("color"));
-					dto.setRepeat(rs.getInt("repeat"));
-					dto.setRepeat_cycle(rs.getInt("repeat_cycle"));
+			while (rs.next()) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("sche_num", rs.getInt("sche_num"));
+				map.put("num", rs.getInt("num"));
+				map.put("title", rs.getString("title"));
+				map.put("teamtitle", rs.getString("teamtitle"));
+				map.put("sdate", rs.getString("sdate"));
+				map.put("edate", rs.getString("edate"));
+				map.put("color", rs.getString("color"));
 
-					list.add(dto);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (rs != null) {
-					try {
-						rs.close();
-					} catch (SQLException e) {
-					}
-				}
-
-				if (pstmt != null) {
-					try {
-						pstmt.close();
-					} catch (SQLException e) {
-					}
+				list.add(map);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
 				}
 			}
 
-			return list;
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
 		}
-		
+
+		return list;
+	}
+
 	// 일정 등록하기.
 	public int insertSchedule(ScheduleDTO dto) {
 		int result = 0;
@@ -184,7 +172,7 @@ public class ScheduleDAO {
 			sb.append(" INTO ATTENDANCE (USERID,SCHE_NUM) ");
 			sb.append("	VALUES( ?, sche_seq.currval ) ");
 			sb.append("select * from DUAL ");
-			
+
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, dto.getNum());
 			pstmt.setString(2, dto.getUserId());
@@ -193,14 +181,14 @@ public class ScheduleDAO {
 			pstmt.setString(5, dto.getColor());
 			pstmt.setString(6, dto.getsDate());
 			pstmt.setString(7, dto.geteDate());
-			
+
 			pstmt.setString(8, dto.getStime());
 			pstmt.setString(9, dto.getEtime());
 			pstmt.setInt(10, dto.getRepeat());
 			pstmt.setInt(11, dto.getRepeat_cycle());
 			pstmt.setInt(12, dto.getMoney());
 			pstmt.setString(13, "empty");
-			
+
 			pstmt.setString(14, dto.getUserId());
 
 			result = pstmt.executeUpdate();
@@ -214,12 +202,15 @@ public class ScheduleDAO {
 				}
 			}
 		}
-		
+
 		return result;
 	}
+
 	/**
 	 * 일정 정보 가져오기
-	 * @param sche_num	일정번호
+	 * 
+	 * @param sche_num
+	 *            일정번호
 	 * @return
 	 */
 	public ScheduleDTO readSchedule(String userId, int sche_num) {
@@ -317,13 +308,17 @@ public class ScheduleDAO {
 
 		return dto;
 	}
-	
+
 	/**
 	 * 해당 그룹에서 해당 날짜의 일정 다 가져오기
-	 * @param date	날짜
-	 * @param userId	유저 아이디
-	 * @param num	그룹번호
-	 * @return	
+	 * 
+	 * @param date
+	 *            날짜
+	 * @param userId
+	 *            유저 아이디
+	 * @param num
+	 *            그룹번호
+	 * @return
 	 */
 	public List<ScheduleDTO> listDay(String date, String userId, int num) {
 		List<ScheduleDTO> list = new ArrayList<>();
@@ -332,26 +327,29 @@ public class ScheduleDAO {
 		StringBuffer sb = new StringBuffer();
 
 		try {
-			sb.append("SELECT sche_num, num, userId, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, ");
+			sb.append(
+					"SELECT sche_num, num, userId, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, ");
 			sb.append("  	TO_CHAR(created, 'YYYY-MM-DD') created, color ");
 			sb.append("  FROM schedule");
 			sb.append("  WHERE num = ? AND ");
 			sb.append("  ( ");
 			sb.append("      ( ");
 			sb.append("         TO_CHAR(sdate, 'YYYYMMDD') = TO_CHAR(TO_DATE(?, 'YYYYMMDD'), 'YYYYMMDD') ");
-			sb.append("         OR (edate IS NOT NULL AND sdate <= TO_DATE(?, 'YYYYMMDD') AND edate >= TO_DATE(?, 'YYYYMMDD')) ");
+			sb.append(
+					"         OR (edate IS NOT NULL AND sdate <= TO_DATE(?, 'YYYYMMDD') AND edate >= TO_DATE(?, 'YYYYMMDD')) ");
 			sb.append("      ) OR ( "); // 반복일정
-			sb.append("           repeat=1 AND MOD(MONTHS_BETWEEN(sdate, TO_DATE(?, 'YYYYMMDD'))/12, repeat_cycle) = 0  ");
+			sb.append(
+					"           repeat=1 AND MOD(MONTHS_BETWEEN(sdate, TO_DATE(?, 'YYYYMMDD'))/12, repeat_cycle) = 0  ");
 			sb.append("      ) ");
 			sb.append("  ) ");
 			sb.append("  ORDER BY sche_num DESC ");
-			
+
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, num);
 			pstmt.setString(2, date);
 			pstmt.setString(3, date);
 			pstmt.setString(4, date);
-			
+
 			pstmt.setString(5, date);
 
 			rs = pstmt.executeQuery();
@@ -389,7 +387,7 @@ public class ScheduleDAO {
 
 		return list;
 	}
-	
+
 	// 일정 장소 수정하기
 	public int updateAddress(int scheNum, String addr, String lat, String lon) {
 		int result = 0;
@@ -400,7 +398,7 @@ public class ScheduleDAO {
 			sb.append(" UPDATE Schedule ");
 			sb.append(" SET addr=?, lat=?, lon=? ");
 			sb.append(" WHERE sche_num=? ");
-			
+
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setString(1, addr);
 			pstmt.setString(2, lat);
@@ -418,10 +416,9 @@ public class ScheduleDAO {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
 
 	// 일정 참여 수정하기
 	public int updateAttend(int scheNum, String userId) {
@@ -432,11 +429,11 @@ public class ScheduleDAO {
 		try {
 			sb.append(" Insert INTO attendance(sche_num,userId) ");
 			sb.append(" Values(?,?) ");
-			
+
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, scheNum);
 			pstmt.setString(2, userId);
-			
+
 			result = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -448,8 +445,8 @@ public class ScheduleDAO {
 				}
 			}
 		}
-		
+
 		return result;
 	}
-	
+
 }
