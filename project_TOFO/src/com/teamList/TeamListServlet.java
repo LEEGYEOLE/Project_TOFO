@@ -127,7 +127,7 @@ public class TeamListServlet extends HttpServlet {
 
 		dao.updateRank(leader, userId, groupNum);
 
-		resp.sendRedirect(cp + "/schedule/list.do");
+		resp.sendRedirect(cp + "/main/myMain.do");
 	}
 
 	public void deleteTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
