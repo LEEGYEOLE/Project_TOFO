@@ -155,8 +155,7 @@ public class TeamListServlet extends HttpServlet {
 	
 	public void insertTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-
-		
+	
 		String state = "false";
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");

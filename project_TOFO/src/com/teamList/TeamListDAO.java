@@ -205,4 +205,70 @@ public class TeamListDAO {
 		}
 		return result;
 	}
+	
+	public int dataCount(int groupNum) {
+		int result=0;
+		PreparedStatement pstmt = null;
+		ResultSet rs=null;
+		String sql;
+		
+		try {
+			sql="select nvl(count(*), 0) from teamList where num=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, groupNum);
+			
+			rs=pstmt.executeQuery();
+			if(rs.next())
+				result=rs.getInt(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
+	
+	public int userCount(int groupNum) {
+		int result=0;
+		PreparedStatement pstmt = null;
+		ResultSet rs=null;
+		String sql;
+		
+		try {
+			sql="select userCount from team where num=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, groupNum);
+			
+			rs=pstmt.executeQuery();
+			if(rs.next())
+				result=rs.getInt(1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+				}
+			}
+		}
+		return result;
+	}
 }
