@@ -20,11 +20,13 @@ public class BoardDAO {
 		String sql;
 		
 		try {
-			sql = "INSERT INTO bbs(num, userId, subject, content) VALUES (bbs_seq.nextval, ?, ?, ?)";
+			sql = "INSERT INTO bbs(num, userId, subject, teamNum, content) VALUES (bbs_seq.nextval, ?, ?, ?, ?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getSubject());
-			pstmt.setString(3, dto.getContent());
+			pstmt.setInt(3, dto.getTeamNum());
+			pstmt.setString(4, dto.getContent());
+			
 			
 			result=pstmt.executeUpdate();
 			
@@ -128,11 +130,12 @@ public class BoardDAO {
 		StringBuilder sb=new StringBuilder();
 		
 		try {
-			sb.append("SELECT b.num, userName, subject, hitCount,  ");
+			sb.append("SELECT b.num, userName, title, subject, hitCount,  ");
 			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created, ");
 			sb.append("       NVL(replyCount, 0) replyCount ");
 			sb.append(" FROM bbs b  ");
 			sb.append(" JOIN member m ON b.userId = m.userId ");
+			sb.append(" JOIN team t ON t.num = b.teamNum ");
 			sb.append(" LEFT OUTER JOIN ( ");
 			sb.append("      SELECT num, COUNT(*) replyCount FROM bbsReply WHERE answer=0 ");
 			sb.append("      GROUP BY num");
@@ -149,6 +152,7 @@ public class BoardDAO {
 				BoardDTO dto=new BoardDTO();
 				
 				dto.setNum(rs.getInt("num"));
+				dto.setTitle(rs.getString("title"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
 				dto.setHitCount(rs.getInt("hitCount"));
@@ -277,7 +281,7 @@ public class BoardDAO {
 		StringBuffer sb=new StringBuffer();
 		
 		try {
-			sb.append("SELECT num, b.userId, userName, subject, content");
+			sb.append("SELECT num, b.userId, userName, subject, teamNum, content");
 			sb.append("   ,created, hitCount ");
 			sb.append(" FROM bbs b JOIN member m ON b.userId=m.userId  ");
 			sb.append(" WHERE num = ? ");
@@ -293,6 +297,7 @@ public class BoardDAO {
 				dto.setUserId(rs.getString("userId"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
+				dto.setTeamNum(rs.getInt("teamNum"));
 				dto.setContent(rs.getString("content"));
 				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
@@ -449,13 +454,14 @@ public class BoardDAO {
 		PreparedStatement pstmt = null;
 		String sql;
 		
-		sql="UPDATE bbs SET subject=?, content=? WHERE num=? AND userId=?";
+		sql="UPDATE bbs SET subject=?, content=?, teamNum=? WHERE num=? AND userId=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
-			pstmt.setInt(3, dto.getNum());
-			pstmt.setString(4, dto.getUserId());
+			pstmt.setInt(3, dto.getTeamNum());
+			pstmt.setInt(4, dto.getNum());
+			pstmt.setString(5, dto.getUserId());
 			result = pstmt.executeUpdate();
 			
 		} catch (Exception e) {
@@ -935,4 +941,6 @@ public class BoardDAO {
 		
 		return map;
 	}	
+	
+
 }

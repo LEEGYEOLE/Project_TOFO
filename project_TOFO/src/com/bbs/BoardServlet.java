@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 
 import com.main.MainServlet;
 import com.member.SessionInfo;
+import com.team.TeamDAO;
+import com.team.TeamDTO;
 import com.util.MyUtil;
 
 import net.sf.json.JSONObject;
@@ -166,7 +168,13 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	protected void createdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session=req	.getSession();
+		SessionInfo info=(SessionInfo)session.getAttribute("member");
+		TeamDAO dao =new TeamDAO(); 
+		List<TeamDTO> list=dao.listTeam(info.getUserId());
+		
 		req.setAttribute("mode", "created");
+		req.setAttribute("teamlist", list);
 		forward(req, resp, "/WEB-INF/views/bbs/created.jsp");
 	}
 	
@@ -180,6 +188,7 @@ public class BoardServlet extends MainServlet {
 		dto.setUserId(info.getUserId());
 		dto.setSubject(req.getParameter("subject"));
 		dto.setContent(req.getParameter("content"));
+		dto.setTeamNum(Integer.parseInt(req.getParameter("teamNum")));
 		
 		dao.insertBoard(dto);
 		
@@ -233,6 +242,9 @@ public class BoardServlet extends MainServlet {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		String cp=req.getContextPath();
 		
+		TeamDAO dao2 =new TeamDAO(); 
+		List<TeamDTO> list=dao2.listTeam(info.getUserId());
+
 		int num=Integer.parseInt(req.getParameter("num"));
 		String page=req.getParameter("page");
 		String rows=req.getParameter("rows");
@@ -254,6 +266,7 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("page", page);
 		req.setAttribute("rows", rows);
 		req.setAttribute("mode", "update");
+		req.setAttribute("teamlist", list);		
 		
 		forward(req, resp, "/WEB-INF/views/bbs/created.jsp");
 	}
@@ -270,6 +283,7 @@ public class BoardServlet extends MainServlet {
 		dto.setUserId(info.getUserId());
 		dto.setSubject(req.getParameter("subject"));
 		dto.setContent(req.getParameter("content"));
+		dto.setTeamNum(Integer.parseInt(req.getParameter("teamNum")));
 		
 		dao.updateBoard(dto);
 		

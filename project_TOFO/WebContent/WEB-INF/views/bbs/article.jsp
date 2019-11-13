@@ -462,13 +462,13 @@ $(function(){
 <div class="container2">
     <div class="body-container" style="width: 700px;">
         <div class="body-title">
-            <h3><span style="font-family: Webdings">2</span> 게시판 </h3>
+            <h3><span style="font-family: Webdings">2</span> 건의게시판 </h3>
         </div>
         
         <div>
 			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 			
-			<tr height="35" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;">
+			<tr height="35" style="border-top: 1px solid #cccccc; background-color: #E5E4E2; border-bottom: 1px solid #cccccc;">
 			    <td colspan="2" align="center">
 				   ${dto.subject}
 			    </td>
@@ -478,11 +478,17 @@ $(function(){
 			    <td width="50%" align="left" style="padding-left: 5px;">
 			       이름 : ${dto.userName}
 			    </td>
+			    <td width="50%" align="right" style="padding-right: 5px;">		        
+			    </td>
+			</tr>
+			<tr height="35" style="border-bottom: 1px solid #cccccc;">
+			    <td width="50%" align="left" style="padding-left: 5px;">
+			      모임명 
+			    </td>
 			    <td width="50%" align="right" style="padding-right: 5px;">
 			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>
 			</tr>
-			
 			<tr>
 			  <td colspan="2" align="left" style="padding: 10px 5px;" valign="top" height="200">
 			      ${dto.content}

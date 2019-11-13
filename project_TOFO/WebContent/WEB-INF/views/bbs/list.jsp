@@ -77,6 +77,7 @@ font-size: 30px;
 			  <tr class="tableList" align="center" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px;"> 
 			      <th width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">번호</th>
 			      <th style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">제목</th>
+			      <th width="100" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">모임명</th>
 			      <th width="100" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">작성자</th>
 			      <th width="80" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">작성일</th>
 			      <th width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">조회수</th>
@@ -94,6 +95,7 @@ font-size: 30px;
 				           
 				           </c:if>
 			      </td>
+			      <td>${dto.title}</td>
 			      <td>${dto.userName}</td>
 			      <td>${dto.created}</td>
 			      <td>${dto.hitCount}</td>
