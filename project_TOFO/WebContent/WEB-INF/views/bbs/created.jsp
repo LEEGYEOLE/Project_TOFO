@@ -73,18 +73,6 @@
 			      <td style="padding-left:10px;"> 
 			          ${sessionScope.member.userName}
 			      </td>
-			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
-			      <td width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; 
-			      `border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">
-			      	모임명</td>
-			      <td style="padding-left:10px;"> 
-			         <select id="teamNum" name="teamNum" class="selectField">
-			               <c:forEach var="t" items="${teamlist}">
-			      			<option value="${t.num}" ${dto.teamNum==t.num?"selected='selected'":"" }>${t.title}</option>
-			      		   </c:forEach>
-			      	 </select>
-			       </td>    
-			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
 			      <td width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; 

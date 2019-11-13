@@ -456,9 +456,9 @@ public class ScheduleDAO {
 			StringBuffer sb = new StringBuffer();
 
 			try {
-				sb.append(" UPDATE schedule( ");
+				sb.append(" UPDATE schedule set  ");
 				sb.append(" 	title=?, content=?, color=?, sdate=?, edate=?, ");
-				sb.append(" 	stime=?, etime=?, repeat=?, repeat_cycle=?, money=?) ");
+				sb.append(" 	stime=?, etime=?, repeat=?, repeat_cycle=?, money=? ");
 				sb.append(" WHERE sche_num=? ");
 
 				pstmt = conn.prepareStatement(sb.toString());

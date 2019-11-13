@@ -69,61 +69,60 @@ public class ScheduleServlet extends HttpServlet {
 			updateAddr(req, resp);
 		} else if (uri.indexOf("updateAddr_ok.do") != -1) {
 			updateAddrSubmit(req, resp);
+		}else if (uri.indexOf("update.do") != -1) {
+			updateSubmit(req, resp);
 		} else if (uri.indexOf("attend.do") != -1) {
 			attend(req, resp);
 		} else if (uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
 		}
 	}
-
-//	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//		HttpSession session=req.getSession();
-//		SessionInfo info=(SessionInfo)session.getAttribute("member");
-//		
-//		String state="true";
-//		ScheduleDAO dao=new ScheduleDAO();
-//		ScheduleDTO dto=new ScheduleDTO();
-//			
-//		dto.setUserId(info.getUserId());
-//		dto.setUserId(info.getUserId());
-//		dto.setNum(Integer.parseInt(req.getParameter("num")));
-//		dto.setTitle(req.getParameter("title"));
-//		dto.setSubject(req.getParameter("title"));
-//		dto.setColor(req.getParameter("color"));
-//		dto.setSday(req.getParameter("sday").replaceAll("-", ""));
-//		dto.setEday(req.getParameter("eday").replaceAll("-", ""));
-//		dto.setStime(req.getParameter("stime").replaceAll(":", ""));
-//		dto.setEtime(req.getParameter("etime").replaceAll(":", ""));
-//		if(req.getParameter("allDay")!=null) {
-//			dto.setStime("");
-//			dto.setEtime("");
-//		}
-//			
-//		if(dto.getStime().length()==0&&dto.getEtime().length()==0&&dto.getSday().equals(dto.getEday()))
-//			dto.setEday("");
-//			
-//		dto.setRepeat(Integer.parseInt(req.getParameter("repeat")));
-//		if(req.getParameter("repeat_cycle").length()!=0) {
-//			dto.setRepeat_cycle(Integer.parseInt(req.getParameter("repeat_cycle")));
-//				
-//			dto.setEday("");
-//			dto.setStime("");
-//			dto.setEtime("");
-//		}
-//		dto.setMemo(req.getParameter("memo"));
-//			
-//		int result=dao.updateSchedule(dto);
-//		if(result<1)
-//			state="false";
-//		
-//		JSONObject job=new JSONObject();
-//		job.put("state", state);
-//		 
-//		resp.setContentType("text/html;charset=utf-8");
-//		PrintWriter out=resp.getWriter();
-//		out.print(job.toString());		
-//	}
 	
+	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		String cp = req.getContextPath();
+		if (info == null) {
+			resp.sendRedirect(cp);
+			return;
+		}
+		String state = "true";
+
+		ScheduleDAO dao = new ScheduleDAO();
+		ScheduleDTO dto = new ScheduleDTO();
+
+		dto.setNum(Integer.parseInt(req.getParameter("num")));
+		dto.setScheNum(Integer.parseInt(req.getParameter("scheNum")));
+		dto.setUserId(info.getUserId());
+		dto.setTitle(req.getParameter("title"));
+		dto.setContent(req.getParameter("content"));
+		dto.setColor(req.getParameter("color"));
+		dto.setsDate(req.getParameter("sDate").replaceAll("-", ""));
+		dto.seteDate(req.getParameter("eDate").replaceAll("-", ""));
+		dto.setStime(req.getParameter("stime").replaceAll(":", ""));
+		dto.setEtime(req.getParameter("etime").replaceAll(":", ""));
+		if (req.getParameter("allDay") != null) {
+			dto.setStime("");
+			dto.setEtime("");
+		}
+
+		if (dto.getStime().length() == 0 && dto.getEtime().length() == 0 && dto.getsDate().equals(dto.geteDate()))
+			dto.seteDate("");
+
+		dto.setRepeat(Integer.parseInt(req.getParameter("repeat")));
+		if (req.getParameter("repeat_cycle").length() != 0) {
+			dto.setRepeat_cycle(Integer.parseInt(req.getParameter("repeat_cycle")));
+
+			dto.seteDate("");
+			dto.setStime("");
+			dto.setEtime("");
+		}
+		dto.setMoney(Integer.parseInt(req.getParameter("money")));
+
+		int result = dao.updateSchedule(dto);
+		resp.sendRedirect(cp + "/schedule/day.do?date=" + req.getParameter("date") + "&scheNum=" + dto.getScheNum() + "&num=" + dto.getNum());
+		
+	}
 	private void monthSchedule(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");

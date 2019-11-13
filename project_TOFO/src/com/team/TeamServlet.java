@@ -125,6 +125,7 @@ public class TeamServlet extends HttpServlet {
 		String endDay = String.format("%04d%02d%02d", eyear, emonth, edate);
 		String toDay = String.format("%04d%02d%02d", year, month, date);
 		// 이번주 내 일정 가져오기
+		System.out.println(info.getUserId());
 		List<Map<String, Object>> scheList = scheDao.listWeek(startDay, endDay, info.getUserId());
 
 		String[] weeks = new String[7];
@@ -143,8 +144,8 @@ public class TeamServlet extends HttpServlet {
 				}
 				if (sd.compareTo(s)<=0&&ed.compareTo(s)>=0) {
 					if(s1.equals(toDay))
-						weeks[i] += "<tr style='background: #fff3d0;'><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td>"+(String)(map.get("title"))+"</td></tr>";
-					else weeks[i] += "<tr><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td>"+(String)(map.get("title"))+"</td></tr>";
+						weeks[i] += "<tr style='background: #fff3d0;'><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td style='color:"+(String)(map.get("color"))+";'>"+(String)(map.get("title"))+"</td></tr>";
+					else weeks[i] += "<tr><td>"+scal1.get(Calendar.DATE)+"("+ww[(i+1)%7]+")"+"</td><td>"+(String)(map.get("teamtitle"))+"</td><td style='color:"+(String)(map.get("color"))+";'>"+(String)(map.get("title"))+"</td></tr>";
 						
 				}
 			}

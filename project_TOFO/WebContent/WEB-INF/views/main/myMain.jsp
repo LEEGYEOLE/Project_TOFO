@@ -74,8 +74,8 @@ border: 1px solid white;
     border-radius: 40px;
     background: whitesmoke;
 	text-align: center;
-	padding: 20px;
-	width: 80px;
+padding: 15px;
+    width: 140px;
 	height: auto;
 	display: inline-block;
 }
@@ -83,6 +83,11 @@ border: 1px solid white;
 .teamImg:hover {
 	background: #c0c0c0;
 }
+
+img{
+border-radius: 40px;
+    width: 100px;
+    height: 100px;}
 
 .container-block {
 	width: 90%;
@@ -329,15 +334,11 @@ border: 1px solid white;
 							onclick="goToGroup('${dto.num}','${dto.title}','${dto.userId}');">
 							<c:if test="${empty dto.imageFilename}">
 							<img src="<%=cp%>/resource/img/teamwork.png"
-								style="    border-radius: 40px;
-    width: 80px;
-    height: 80px;">
+								>
 								</c:if>
 								<c:if test="${not empty dto.imageFilename}">
 							<img src="<%=cp%>/uploads/photo/team/${dto.imageFilename}"
-								style="    border-radius: 40px;
-    width: 80px;
-    height: 80px;">
+								>
 								</c:if>
 							<p>${dto.title}</p>
 						</div>

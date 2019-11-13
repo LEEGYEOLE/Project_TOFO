@@ -105,39 +105,13 @@ $(function(){
 // 수정완료
 $(function(){
 	$("#btnScheduleSendOk").click(function(){
+		var scheduleForm = document.scheduleForm;
 		
-		if(! check()) {
-			return;
-		}
-		
-		var query=$("form[name=scheduleForm]").serialize();
-		var url="<%=cp%>/schedule/update.do";
-		
-		$.ajax({
-			type:"post"
-			,url:url
-			,data:query
-			,dataType:"json"
-			,success:function(data) {
-				var state=data.state;
-				if(state=="true") {
-					var date="${date}";
-					var scheNum="${dto.scheNum}";
-					var num="${dto.num}";
-					location.href="<%=cp%>/schedule/article.do?date="+date+"&num="+num+"&scheNum="+scheNum;
-				}
-			}
-		    ,beforeSend :function(jqXHR) {
-		    	jqXHR.setRequestHeader("AJAX", true);
-		    }
-		    ,error:function(jqXHR) {
-		    	if(jqXHR.status==403) {
-		    		location.href="<%=cp%>/member/login.do";
-		    		return;
-		    	}
-		    	console.log(jqXHR.responseText);
-		    }
-		});
+		var date="${date}";
+		var scheNum="${dto.scheNum}";
+		var num="${dto.num}";
+		scheduleForm.action="<%=cp%>/schedule/update.do?date="+date+"&num="+num+"&scheNum="+scheNum;
+		scheduleForm.submit();
 	});
 });
 
@@ -305,7 +279,12 @@ function attendOk() {
 
 
 					<div id="scheduleRight"
-						style="margin: 30px auto; width: 600px; box-sizing: border-box;">
+						style="background: ${dto.color}14;
+    border: 1px solid;
+    border-radius:25px;
+    padding: 25px 40px;
+    margin: 30px auto;
+    width: 800px; box-sizing: border-box;">
 
 						<table style="width: 100%; border-spacing: 0px;">
 							<tr height="35">
@@ -410,7 +389,7 @@ function attendOk() {
 									</td>
 								</tr>
 								<c:if
-												test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
+									test="${not (dto.addr=='empty' or empty dto.lat or empty dto.lon)}">
 									<tr height="35" style="border-bottom: 1px solid #cccccc;">
 										<td width="100" style="border-right: 2px solid #ccc;"></td>
 										<td><div id="staticMap"
@@ -435,6 +414,7 @@ function attendOk() {
 						</c:if>
 
 						<c:if test="${list.size()>1}">
+							<hr style="margin-top: 20px;">
 							<table
 								style="width: 100%; margin-top: 15px; border-spacing: 0px;">
 								<tr height="35">
@@ -479,7 +459,7 @@ function attendOk() {
 								style="font-weight: 900;">제목</label></td>
 							<td style="padding: 0 0 15px 15px;">
 								<p style="margin-top: 1px; margin-bottom: 5px;">
-									<input type="text" name="subject" id="form-subject"
+									<input type="text" name="title" id="form-subject"
 										maxlength="100" class="boxTF" value="${dto.title}"
 										style="width: 95%;">
 								</p>
@@ -614,7 +594,8 @@ function attendOk() {
 						<tr height="45">
 							<td align="center" colspan="2"><input type="hidden"
 								name="num" value="${dto.num}"><input type="hidden"
-								name="num" value="${dto.scheNum}">
+								name="scheNum" value="${dto.scheNum}"><input
+								type="hidden" name="date" value="${date}">
 								<button type="button" class="btn" id="btnScheduleSendOk">수정완료</button>
 								<button type="button" class="btn" id="btnScheduleSendCancel">수정취소</button>
 							</td>
