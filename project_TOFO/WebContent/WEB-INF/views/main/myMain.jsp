@@ -306,7 +306,7 @@ border: 1px solid white;
     color: #ffc107;
     padding-left: 15px;">${priod}</span></h2>
 					
-					<table class="mainTb">
+					<table class="mainTb" style="    clear: both;">
 						<tr>
 							<th class="mainTb1">날짜</th>
 							<th class="mainTb2">모임명</th>

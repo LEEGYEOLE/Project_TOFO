@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%
@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>½Ö¿ë1Á¶ - È¸¿ø°ü¸®</title>
+<title>ìŒìš©1ì¡° - íšŒì›ê´€ë¦¬</title>
 <link rel="stylesheet" href="<%=cp%>/resource/css/style.css"
 	type="text/css">
 <link rel="stylesheet" href="<%=cp%>/resource/css/layout.css"
@@ -32,8 +32,8 @@
 <script type="text/javascript">
 
 
-//½ºÄÉÁì µî·Ï -----------------------
-//µî·Ï ´ëÈ­»óÀÚ Ãâ·Â
+//ìŠ¤ì¼€ì¥´ ë“±ë¡ -----------------------
+//ë“±ë¡ ëŒ€í™”ìƒì ì¶œë ¥
 $(function(){
 	$(".addMember").click(function(){
 		
@@ -41,32 +41,45 @@ $(function(){
 			  modal: true,
 			  height: 650,
 			  width: 600,
-			  title: 'È¸¿ø Ãß°¡',
+			  title: 'íšŒì› ì¶”ê°€',
 			  close: function(event, ui) {
 			  }
 		});
 
 	});
 });
+$(function(){
+	$(".modifyTeam").click(function(){
+		
+		$('#team-dialog').dialog({
+			  modal: true,
+			  height: 650,
+			  width: 600,
+			  title: 'ëª¨ì„ ì •ë³´ ìˆ˜ì •',
+			  close: function(event, ui) {
+			  }
+		});
 
-//µî·Ï ´ëÈ­»óÀÚ ´İ±â
+	});
+});
+//ë“±ë¡ ëŒ€í™”ìƒì ë‹«ê¸°
 $(function(){
 	$("#btnTeamListSendCancel").click(function(){
 		$('#schedule-dialog').dialog("close");
 	});
 });
 
-// µî·Ï ¿Ï·áÇÏ±â
+// ë“±ë¡ ì™„ë£Œí•˜ê¸°
 
 
-// ¹öÆ°À» ´©¸£¸é Ã£¾Æ°¡±â
+// ë²„íŠ¼ì„ ëˆ„ë¥´ë©´ ì°¾ì•„ê°€ê¸°
 $(function(){
    $("body").on("click",".bntSearch",function(){
 	  var userId = $(this).parent().children("input").val();
       var url = "<%=cp%>/teamList/userSearch.do";
       var query="userId="+userId;
       
-      $.ajax({// ÇÔ¼ö¿¡ °´Ã¼¸¦ ³Ñ±ä´Ù
+      $.ajax({// í•¨ìˆ˜ì— ê°ì²´ë¥¼ ë„˜ê¸´ë‹¤
          type:"GET",
          url:url,
          data:query,
@@ -80,7 +93,7 @@ $(function(){
    });
 });
 
-// È¸¿ø Ãß°¡ÇÏ±â
+// íšŒì› ì¶”ê°€í•˜ê¸°
 $(function(){
    $("#insertResult").click(function(){
 	  var userId = $(this).closest("table").find("input").val();
@@ -88,7 +101,7 @@ $(function(){
       var url = "<%=cp%>/teamList/insertTeamList.do";
       var query="userId="+userId+"&rank="+rank;
       
-      $.ajax({// ÇÔ¼ö¿¡ °´Ã¼¸¦ ³Ñ±ä´Ù
+      $.ajax({// í•¨ìˆ˜ì— ê°ì²´ë¥¼ ë„˜ê¸´ë‹¤
          type:"POST",
          url:url,
          data:query,
@@ -111,15 +124,19 @@ $(function(){
 });
 
 function updateRank(userId) {
-	if(confirm(userId+"´Ô²² ¸ğÀÓÀå ±ÇÇÑÀ» À§ÀÓÇÏ½Ã°Ú½À´Ï±î?")) {
+	if(confirm(userId+"ë‹˜ê»˜ ëª¨ì„ì¥ ê¶Œí•œì„ ìœ„ì„í•˜ì‹œê² ìŠµë‹ˆê¹Œ?")) {
 		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
 		location.href=url;
 	}
 }
-
+function teamUpdate() {
+	var teamForm = document.teamForm;
+	teamForm.action="<%=cp%>/team/update_ok.do";
+		teamForm.submit();
+}
 
 function deleteTeamList(userId) {
-	if(confirm(userId+"´ÔÀ» °­Åğ ÇÏ½Ã°Ú½À´Ï±î ?")) {
+	if(confirm(userId+"ë‹˜ì„ ê°•í‡´ í•˜ì‹œê² ìŠµë‹ˆê¹Œ ?")) {
 		var url = "<%=cp%>/teamList/deleteTeamList.do?userId="+userId;
 		location.href=url;
 	}
@@ -137,38 +154,38 @@ function deleteTeamList(userId) {
 		<div class="body-container">
 			<div class="container-block">
 				<div style="clear: both; margin-top: 30px;">
-					<div id="reviewTitle" style="margin-bottom: 15px;">È¸¿ø °ü¸®</div>
+					<div id="reviewTitle" style="margin-bottom: 15px;">íšŒì› ê´€ë¦¬</div>
 					<table class="tableList">
 						<tr>
 							<th width="50">NO.</th>
-							<th width="60">Á÷Ã¥</th>
-							<th width="80">¾ÆÀÌµğ</th>
-							<th width="80">ÀÌ¸§</th>
-							<th width="80">»ıÀÏ</th>
-							<th width="80">ÀüÈ­¹øÈ£</th>
+							<th width="60">ì§ì±…</th>
+							<th width="80">ì•„ì´ë””</th>
+							<th width="80">ì´ë¦„</th>
+							<th width="80">ìƒì¼</th>
+							<th width="80">ì „í™”ë²ˆí˜¸</th>
 							<th width="50">-</th>
 							<th width="50">-</th>
 						</tr>
 			<c:forEach var="map" items="${list}" varStatus="i">
 			  <tr> 
 			      <td>${i.index+1}</td>
-			      <td>${map.rank=='0'?'¸ğÀÓÀå':'¸ğÀÓ¿ø'}</td>
+			      <td>${map.rank=='0'?'ëª¨ì„ì¥':'ëª¨ì„ì›'}</td>
 			      <td>${map.userId}</td>
 			      <td>${map.userName}</td> 
 			      <td>${map.birth}</td>
 			      <td>${map.tel}</td>
-			      <td><input type="button" value="À§ÀÓÇÏ±â" onclick="updateRank('${map.userId}');" class="btn"></td>			 
- 			      <td><input type="button" value="°­ÅğÇÏ±â" onclick="deleteTeamList('${map.userId}');" class="btn"></td>
+			      <td><input type="button" value="ìœ„ì„í•˜ê¸°" onclick="updateRank('${map.userId}');" class="btn"></td>			 
+ 			      <td><input type="button" value="ê°•í‡´í•˜ê¸°" onclick="deleteTeamList('${map.userId}');" class="btn"></td>
 			  </tr>
 			  </c:forEach>
 			 
 					</table>
 					<div style="width: 100%; clear: both; height: 50px;">
 						<div style="width: 120px; height: 100%; float: left;">
-							<button class="btnConfirm ">¸ğÀÓÁ¤º¸¼öÁ¤</button>
+							<button class="btnConfirm modifyTeam">ëª¨ì„ì •ë³´ìˆ˜ì •</button>
 						</div>
 						<div style="float: right; width: 120px; height: 100%;">
-							<button class="btnConfirm addMember">È¸¿øÃß°¡</button>
+							<button class="btnConfirm addMember">íšŒì›ì¶”ê°€</button>
 						</div>
 					</div>
 
@@ -180,7 +197,54 @@ function deleteTeamList(userId) {
 	<div class="footer">
     <jsp:include page="/WEB-INF/views/layout/footer.jsp"></jsp:include>
 	</div>
+ <div id="team-dialog" style="display: none;">
+		<form name="teamForm" method="post">
+			<table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ëª¨ì„ëª…</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="title" id="form-title" value="${team.title}" maxlength="20" class="boxTF" style="width: 95%;">
+			        </p>
+			        <p class="help-block">* ëª¨ì„ëª…ì€ í•„ìˆ˜ ì…ë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
+			  <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ìƒì„¸ì •ë³´</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="text" name="content" id="form-content"  value="${team.content}" maxlength="100" class="boxTF" style="width: 95%;">
+			        </p>
+			        <p class="help-block">* ìƒì„¸ì •ë³´ëŠ” í•„ìˆ˜ ì…ë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
+			
+			 <tr>
+			      <td width="100" valign="top" style="text-align: right; padding-top: 5px;">
+			            <label style="font-weight: 900;">ì •ì›</label>
+			      </td>
+			      <td style="padding: 0 0 15px 15px;">
+			        <p style="margin-top: 1px; margin-bottom: 5px;">
+			            <input type="number" name="userCount" id="form-userCount"  value="${team.userCount}"  min="1" max="100" class="boxTF" style="width: 95%;">
+			        </p>
+			        <p class="help-block">* ì •ì›ìˆ˜ëŠ” í•„ìˆ˜ ì…ë‹ˆë‹¤.</p>
+			      </td>
+			  </tr>
 
+			  <tr height="45">
+			      <td align="center" colspan="2">
+			        <button type="button" class="btn" onclick="teamUpdate();">ëª¨ì„ì •ë³´ìˆ˜ì •</button>
+			        <button type="reset" class="btn">ë‹¤ì‹œì…ë ¥</button>
+			        <button type="button" class="btn" id="btnScheduleSendCancel">ë“±ë¡ì·¨ì†Œ</button>
+			      </td>
+			  </tr>
+			</table>
+		</form>
+    </div>
 	<div id="schedule-dialog" style="display: none;">
 		<form name="teamMemberForm">
 			<table
@@ -188,15 +252,15 @@ function deleteTeamList(userId) {
 				<tr>
 					<td width="100" valign="top"
 						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">¾ÆÀÌµğ</label></td>
+						style="font-weight: 900;">ì•„ì´ë””</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<input type="text" maxlength="100" class="boxTF" style="width: 70%;">
-							<button type="button" class="btn bntSearch">°Ë»ö</button>
+							<button type="button" class="btn bntSearch">ê²€ìƒ‰</button>
 							
 						</p>
 						<div id="searchResult"></div>
-						<p class="help-block">* Ãß°¡ÇÏ½Ç ¾ÆÀÌµğ¸¦ °Ë»ö ÈÄ È®ÀÎÇØÁÖ¼¼¿ä.</p>
+						<p class="help-block">* ì¶”ê°€í•˜ì‹¤ ì•„ì´ë””ë¥¼ ê²€ìƒ‰ í›„ í™•ì¸í•´ì£¼ì„¸ìš”.</p>
 
 					</td>	
 				</tr>
@@ -204,12 +268,12 @@ function deleteTeamList(userId) {
 				<tr>
 					<td width="100" valign="top"
 						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">µî±Ş</label></td>
+						style="font-weight: 900;">ë“±ê¸‰</label></td>
 					<td style="padding: 0 0 15px 15px;">
 						<p style="margin-top: 1px; margin-bottom: 5px;">
 							<select name="color" id="form-rank" class="selectField">
-								<option value="0">¸ğÀÓÀå</option>
-								<option value="1">¸ğÀÓ¿ø</option>
+								<option value="0">ëª¨ì„ì¥</option>
+								<option value="1">ëª¨ì„ì›</option>
 							</select>
 						</p>
 					</td>
@@ -217,9 +281,9 @@ function deleteTeamList(userId) {
 
 				<tr height="45">
 					<td align="center" colspan="2">
-						<button type="button" class="btn btnInsert" id="insertResult">È¸¿øµî·Ï</button>	
-						<button type="reset" class="btn">´Ù½ÃÀÔ·Â</button>
-						<button type="button" class="btn" id="btnTeamListSendCancel">µî·ÏÃë¼Ò</button>
+						<button type="button" class="btn btnInsert" id="insertResult">íšŒì›ë“±ë¡</button>	
+						<button type="reset" class="btn">ë‹¤ì‹œì…ë ¥</button>
+						<button type="button" class="btn" id="btnTeamListSendCancel">ë“±ë¡ì·¨ì†Œ</button>
 					</td>
 				</tr>
 			</table>

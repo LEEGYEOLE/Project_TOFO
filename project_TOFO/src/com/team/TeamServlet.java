@@ -73,8 +73,8 @@ public class TeamServlet extends HttpServlet {
 			teamList(req, resp);
 		} else if (uri.indexOf("insert.do") != -1) {
 			insertSubmit(req, resp);
-		} else if (uri.indexOf("updateRank.do") != -1) {
-			// updateRank(req, resp);
+		} else if (uri.indexOf("update_ok.do") != -1) {
+			 updateSubmit(req, resp);
 		} else if (uri.indexOf("deleteTeamList.do") != -1) {
 			// deleteTeamList(req, resp);
 		}
@@ -163,6 +163,19 @@ public class TeamServlet extends HttpServlet {
 		forward(req, resp, "/WEB-INF/views/main/myMain.jsp");
 	}
 
+	protected void readTeam(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+		String cp = req.getContextPath();
+		TeamDAO dao = new TeamDAO();
+		TeamDTO dto = dao.readTeam(Integer.parseInt((String)session.getAttribute("num")));
+	}
+	
+	
 	/**
 	 * 모임 추가하기
 	 * 
@@ -211,6 +224,31 @@ public class TeamServlet extends HttpServlet {
 
 	}
 
+	protected void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		SessionInfo info = (SessionInfo) session.getAttribute("member");
+		if (info == null) {
+			forward(req, resp, "/WEB-INF/views/member/login.jsp");
+			return;
+		}
+
+		String cp = req.getContextPath();
+
+		TeamDAO dao = new TeamDAO();
+		TeamDTO dto = new TeamDTO();
+		int groupNum = (int) session.getAttribute("num");
+
+		dto.setTitle(req.getParameter("title"));
+		dto.setContent(req.getParameter("content"));
+		dto.setUserCount(Integer.parseInt(req.getParameter("userCount")));
+		dto.setNum(groupNum);
+
+		// 수정
+		dao.updateTeam(dto);
+		resp.sendRedirect(cp + "/main/myMain.do");
+
+	}
+	
 	protected void weekList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");

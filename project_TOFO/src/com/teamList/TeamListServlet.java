@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.member.SessionInfo;
+import com.team.TeamDAO;
+import com.team.TeamDTO;
 
 import net.sf.json.JSONObject;
 
@@ -89,6 +91,14 @@ public class TeamListServlet extends HttpServlet {
 		TeamListDAO dao = new TeamListDAO();
 		List<HashMap<String, Object>> list = dao.listTeamMember(groupNum);
 
+		
+		
+		//모임정보 가져오기
+		TeamDAO tdao = new TeamDAO();
+		TeamDTO team = tdao.readTeam(groupNum);
+	
+		
+		req.setAttribute("team", team);
 		req.setAttribute("list", list);
 
 		forward(req, resp, "/WEB-INF/views/team/memberList.jsp");

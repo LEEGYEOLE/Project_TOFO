@@ -613,7 +613,8 @@ function attendOk() {
 
 						<tr height="45">
 							<td align="center" colspan="2"><input type="hidden"
-								name="num" value="${dto.num}">
+								name="num" value="${dto.num}"><input type="hidden"
+								name="num" value="${dto.scheNum}">
 								<button type="button" class="btn" id="btnScheduleSendOk">수정완료</button>
 								<button type="button" class="btn" id="btnScheduleSendCancel">수정취소</button>
 							</td>

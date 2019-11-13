@@ -449,4 +449,45 @@ public class ScheduleDAO {
 		return result;
 	}
 
+	// 일정 등록하기.
+		public int updateSchedule(ScheduleDTO dto) {
+			int result = 0;
+			PreparedStatement pstmt = null;
+			StringBuffer sb = new StringBuffer();
+
+			try {
+				sb.append(" UPDATE schedule( ");
+				sb.append(" 	title=?, content=?, color=?, sdate=?, edate=?, ");
+				sb.append(" 	stime=?, etime=?, repeat=?, repeat_cycle=?, money=?) ");
+				sb.append(" WHERE sche_num=? ");
+
+				pstmt = conn.prepareStatement(sb.toString());
+				pstmt.setString(1, dto.getTitle());
+				pstmt.setString(2, dto.getContent());
+				pstmt.setString(3, dto.getColor());
+				pstmt.setString(4, dto.getsDate());
+				pstmt.setString(5, dto.geteDate());
+
+				pstmt.setString(6, dto.getStime());
+				pstmt.setString(7, dto.getEtime());
+				pstmt.setInt(8, dto.getRepeat());
+				pstmt.setInt(9, dto.getRepeat_cycle());
+				pstmt.setInt(10, dto.getMoney());
+				pstmt.setInt(11, dto.getScheNum());
+
+				result = pstmt.executeUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (pstmt != null) {
+					try {
+						pstmt.close();
+					} catch (SQLException e) {
+					}
+				}
+			}
+
+			return result;
+		}
+	
 }
