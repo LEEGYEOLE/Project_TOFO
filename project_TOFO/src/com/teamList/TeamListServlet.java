@@ -166,12 +166,17 @@ public class TeamListServlet extends HttpServlet {
 			//resp.sendRedirect(cp + "/main/myMain.do");
 			state = "groupNumFail";
 		} else {
+			
 			int groupNum = (int) session.getAttribute("num");
-			String userId = req.getParameter("userId");
-			String rank = req.getParameter("rank");
 			TeamListDAO dao = new TeamListDAO();
-			dao.insertTeamList(userId, rank, groupNum);
-			state = "true";
+			if(dao.userCount(groupNum) > dao.dataCount(groupNum)) {
+				String userId = req.getParameter("userId");
+				String rank = req.getParameter("rank");
+				dao.insertTeamList(userId, rank, groupNum);
+				state = "true";
+			} else {
+				state = "over";
+			}
 		}
 		
 		JSONObject job=new JSONObject();

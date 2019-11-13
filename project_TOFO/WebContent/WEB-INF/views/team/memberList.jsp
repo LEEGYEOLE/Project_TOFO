@@ -114,6 +114,9 @@ $(function(){
             	 location.href="<%=cp%>/main/myMain.do";
              } else if(state=="true") {
             	 location.href="<%=cp%>/teamList/memberList.do";
+             } else if(state=="over") {
+            	 alert("정원이 초과되어 회원추가가 불가합니다.");
+            	 location.href="<%=cp%>/teamList/memberList.do";
              }
          },
          error:function(e){
