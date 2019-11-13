@@ -115,7 +115,7 @@ function sendLogin() {
 	</div>
 
 	<div class="container">
-		<div class="body-container" style="min-height: 600px;">
+		<div class="body-container" style="min-height: 766px;">
 			<div class="wrapper">
 				<div class="ipb">
 					<div class=logInLayout">
