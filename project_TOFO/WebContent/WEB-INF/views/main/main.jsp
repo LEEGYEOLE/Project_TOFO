@@ -40,7 +40,7 @@ ul {
 .slider h3 {
 	margin: 0;
 	padding: 100px 0;
-	height: 250px;
+	height: 425px;
 }
 
 .slide-content {
@@ -98,7 +98,7 @@ ul {
 		<div class="body-container">
 			<div class="slide-wrap" style="padding-bottom: 150px;">
 				<div class="slide-content">
-					<ul id="slider" class="slider">
+					<ul id="slider" class="slider" style="height: 800px;">
 						<li class="item1">
 							<h3></h3>
 						</li>
