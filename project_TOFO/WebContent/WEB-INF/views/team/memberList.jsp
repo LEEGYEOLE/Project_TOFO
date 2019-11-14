@@ -26,6 +26,12 @@
 .tableList {
 	margin-bottom: 10px;
 }
+.body-container{
+width: 80%;
+    margin: 0 auto;}
+    .container-block{
+    width: 100%;
+    }
 </style>
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 

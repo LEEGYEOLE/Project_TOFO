@@ -19,7 +19,7 @@
 <style type="text/css">
 .noticetitle{
 margin-top: 30px;
-font-size: 30px;
+font-size: 40px;
 }
 </style>
 
@@ -44,12 +44,10 @@ font-size: 30px;
     <jsp:include page="/WEB-INF/views/layout/header.jsp"></jsp:include>
     <jsp:include page="/WEB-INF/views/layout/nav.jsp"></jsp:include>
 </div>
-<br>
-	
 <div class="container">
     <div class="body-container" style="width: 80%;">
         <div>
-            <h3 class="noticetitle"><span style="font-family: Webdings;"></span> 건의게시판 </h3>
+            <h3 class="noticetitle"> 건의게시판 </h3>
         </div>
         
         <div>

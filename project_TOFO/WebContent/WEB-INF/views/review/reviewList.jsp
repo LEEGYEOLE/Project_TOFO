@@ -37,10 +37,12 @@
 	float: right;
 	width: 50%;
 }
-
+.body-container{width: 80%;
+	margin: 0% auto;
+}
 .container-block {
-	width: 90%;
-	margin: 2% auto;
+	width: 100%;
+    margin: 0;
 }
 
 p {
@@ -75,8 +77,10 @@ p {
 background-color: gray;
 cursor: pointer;
 }
+
 </style>
 <script type="text/javascript">
+	
 	function change() {
 		var f = document.yearMonthForm;
 		var lenY = f.selectYear.length;
@@ -107,8 +111,8 @@ cursor: pointer;
 	<div class="container">
 		<div class="body-container">
 			<div class="container-block">
-				<div style="clear: both; padding-bottom: 10px;">
-					<p id="reviewTitle">일정 후기 게시판</p>
+				<div style="clear: both; padding-bottom: 10px;margin-top: 30px;">
+					<div id="reviewTitle" style="margin-bottom: 15px;">일정 후기 게시판</div>
 
 					<div id="selectbox">
 						<form name="selectForm" action="<%=cp%>/review/list.do"
@@ -124,22 +128,14 @@ cursor: pointer;
 				</div>
 
 				<table class="tableList">
-					<colgroup>
-						<col width="3%" />
-						<col width="25%" />
-						<col width="25%" />
-						<col width="7%" />
-						<col width="15%" />
-						<col width="4%" />
-					</colgroup>
 					<thead>
 						<tr>
-							<th>No.</th>
-							<th>일정명</th>
-							<th>장소</th>
-							<th>참여인원</th>
-							<th>날짜</th>
-							<th>참석여부</th>
+							<th width="5">No.</th>
+							<th width="220">일정명</th>
+							<th width="170">장소</th>
+							<th width="40">참여인원</th>
+							<th width="55">날짜</th>
+							<th width="38">참석여부</th>
 
 						</tr>
 					</thead>
@@ -166,8 +162,6 @@ cursor: pointer;
 								
 							</tr>
 						</c:forEach>
-
-
 					</tbody>
 				</table>
 				

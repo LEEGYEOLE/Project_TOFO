@@ -117,7 +117,7 @@
 #style1::-webkit-scrollbar-thumb {
 	background-color: rgba(128, 128, 128, 0.7);
 	border-radius: 5px;
-}
+}li.on{color:tomato;}
 </style>
 
 <script type="text/javascript" src="<%=cp%>/resource/js/util.js"></script>
@@ -129,6 +129,12 @@ function changeDate(year, month) {
 	var url="<%=cp%>/schedule/list.do?year="+year+"&month="+month+"&num="+${num};
 	location.href=url;
 }
+$(function () {
+	$('li a').click(function () {
+		$('li').removeClass();
+			$('li').addClass('on');
+	});
+});
 //장소검색 --------------------------
 //검색 대화상자 출력
 $(function(){
@@ -365,7 +371,11 @@ $(function(){
 		<div class="body-container">
 			<div class="container-block">
 				<div style="clear: both; width: 100%;">
-					<div id="tab-content">
+				<div style="    width: 90%;
+    margin: 0 auto;">
+				<div style="margin-top: 20px;    font-size: 30px;
+    font-weight: bold;">일정 관리</div></div>
+					<div id="tab-content" style="clear: both;">
 						<div id="scheduleLeft"
 							style="width: 53%; float: left; padding-top: 10px; padding-bottom: 30px;">
 							<table style="width: 600px; margin: 0px auto; border-spacing: 0;">
