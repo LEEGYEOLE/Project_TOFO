@@ -401,7 +401,7 @@ function attendOk() {
 										style="padding-right: 5px; clear: both;">
 										<button type="button" class="btn" style="float: left;"
 											onclick="javascript:location.href='<%=cp%>/schedule/list.do?year=${year}&month=${month}&num=${num}'">목록</button>
-										<c:if test="${sessionScope.leaderId eq SessionScope.member.userId }">
+										<c:if test="${sessionScope.leaderId eq sessionScope.member.userId }">
 										<button type="button" id="btnDelete" class="btn"
 											style="float: right;" onclick="deleteOk('${dto.scheNum}');">삭제</button>
 										<button type="button" id="btnUpdate" class="btn"
