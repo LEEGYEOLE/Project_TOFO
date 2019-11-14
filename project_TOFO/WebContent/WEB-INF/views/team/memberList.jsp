@@ -71,6 +71,7 @@ $(function(){
 });
 // 등록 완료하기
 // 버튼을 누르면 찾아가기
+
 $(function(){
    $("body").on("click",".bntSearch",function(){
 	  var userId = $(this).parent().children("input").val();
@@ -90,8 +91,15 @@ $(function(){
       });
    });
 });
+
+function addMember(userId) {
+	if(confirm(userId+"님을 모임원으로 추가하시겠습니까?")){
+		console.log(userId);
+		
+	}
+}
 // 회원 추가하기
-$(function(){
+$(function (){
    $("#insertResult").click(function(){
 	  var userId = $(this).closest("table").find("input").val();
 	  var rank = $(this).closest("table").find("select").val();
