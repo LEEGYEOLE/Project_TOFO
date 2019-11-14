@@ -22,35 +22,40 @@ public class ScheduleDAO {
 		StringBuffer sb = new StringBuffer();
 
 		try {
+//			sb.append(
+//					"SELECT sche_num, num, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
+//			sb.append("               color, repeat, repeat_cycle ");
+//			sb.append("  FROM schedule");
+//			sb.append("  WHERE num = ? AND ");
+//			sb.append("     ( ");
+//			sb.append("        ( ");
+//			sb.append("           sdate >= ? ");
+//			sb.append("               AND sdate <= ?  ");
+//			sb.append("               OR edate <= ?  ");
+//			sb.append("         ) OR ("); // 반복일정
+//			sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
+//			sb.append(
+//					"              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
+//			sb.append(
+//					"              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
+//			sb.append("         )");
+//			sb.append("    ) ");
+//			sb.append("  ORDER BY sdate ASC, sche_num DESC ");
 			sb.append(
 					"SELECT sche_num, num, title, TO_CHAR(sdate, 'YYYYMMDD') sdate, TO_CHAR(edate, 'YYYYMMDD') edate, stime, etime, ");
 			sb.append("               color, repeat, repeat_cycle ");
 			sb.append("  FROM schedule");
 			sb.append("  WHERE num = ? AND ");
-			sb.append("     ( ");
 			sb.append("        ( ");
 			sb.append("           sdate >= ? ");
 			sb.append("               AND sdate <= ?  ");
 			sb.append("               OR edate <= ?  ");
-			sb.append("         ) OR ("); // 반복일정
-			sb.append("           repeat = 1 AND repeat_cycle != 0 AND ");
-			sb.append(
-					"              TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') >= ? ");
-			sb.append(
-					"              AND TO_CHAR(ADD_MONTHS(sdate, 12 * repeat_cycle * TRUNC(((SUBSTR(?,1,4) - SUBSTR(sdate,1,4)) / repeat_cycle))), 'YYYYMMDD') <= ? ");
-			sb.append("         )");
-			sb.append("    ) ");
-			sb.append("  ORDER BY sdate ASC, sche_num DESC ");
+			sb.append("         ) ORDER BY sdate desc, sche_num DESC ");
 			pstmt = conn.prepareStatement(sb.toString());
 			pstmt.setInt(1, num);
 			pstmt.setString(2, startDay);
 			pstmt.setString(3, endDay);
 			pstmt.setString(4, endDay);
-
-			pstmt.setString(5, startDay);
-			pstmt.setString(6, startDay);
-			pstmt.setString(7, startDay);
-			pstmt.setString(8, endDay);
 
 			rs = pstmt.executeQuery();
 

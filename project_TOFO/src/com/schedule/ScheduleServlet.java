@@ -69,7 +69,7 @@ public class ScheduleServlet extends HttpServlet {
 			updateAddr(req, resp);
 		} else if (uri.indexOf("updateAddr_ok.do") != -1) {
 			updateAddrSubmit(req, resp);
-		}else if (uri.indexOf("update.do") != -1) {
+		} else if (uri.indexOf("update.do") != -1) {
 			updateSubmit(req, resp);
 		} else if (uri.indexOf("attend.do") != -1) {
 			attend(req, resp);
@@ -77,7 +77,7 @@ public class ScheduleServlet extends HttpServlet {
 			delete(req, resp);
 		}
 	}
-	
+
 	private void updateSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -120,9 +120,11 @@ public class ScheduleServlet extends HttpServlet {
 		dto.setMoney(Integer.parseInt(req.getParameter("money")));
 
 		int result = dao.updateSchedule(dto);
-		resp.sendRedirect(cp + "/schedule/day.do?date=" + req.getParameter("date") + "&scheNum=" + dto.getScheNum() + "&num=" + dto.getNum());
-		
+		resp.sendRedirect(cp + "/schedule/day.do?date=" + req.getParameter("date") + "&scheNum=" + dto.getScheNum()
+				+ "&num=" + dto.getNum());
+
 	}
+
 	private void monthSchedule(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
@@ -242,6 +244,7 @@ public class ScheduleServlet extends HttpServlet {
 			sdate++;
 		}
 
+		String tb = "";
 		// year년도 month월 날짜 및 일정 출력
 		int row, n = 0;
 
@@ -260,6 +263,31 @@ public class ScheduleServlet extends HttpServlet {
 
 				cnt = 0;
 				for (ScheduleDTO dto : list) {
+					String ss = dto.getsDate();
+					String ee = dto.getsDate();
+					String sm = dto.getsDate().substring(4, 6);
+					String em = dto.getsDate().substring(4, 6);
+					String sd = dto.getsDate().substring(6);
+					String ed = dto.getsDate().substring(6);
+					if (dto.geteDate() != null) {
+						em = dto.geteDate().substring(4, 6);
+					ed = dto.geteDate().substring(6);
+					ee = dto.geteDate();}
+					String tm = s.substring(4, 6);
+					String td = s.substring(6);
+
+					if (sm.equals(tm) && em.equals(tm)) {
+						if (sd.compareTo(td) <= 0 && ed.compareTo(td) >= 0) {
+							tb += "<tr align='center' bgcolor='#ffffff' height='35' style='border-bottom: 1px solid #cccccc;'> ";
+							tb += "<td style='padding-left: 5px; width: 55px;'>" + td + "</td>";
+							tb += "<td style='width: 60px;'><div style='color:" + dto.getColor() + ";'>●</div></td>";
+							tb += "<td align='left'><a href='" + cp + "/schedule/day.do?date=" + s + "&num="
+									+ dto.getNum() + "&scheNum=" + dto.getScheNum() + "'>";
+							tb += "<span style='overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 430px; display: block;'>"
+									+ dto.getTitle();
+							tb += "</span></a></td></tr>";
+						}
+					}
 					int sd8 = Integer.parseInt(dto.getsDate());
 					int sd4 = Integer.parseInt(dto.getsDate().substring(4));
 					int ed8 = -1;
@@ -335,6 +363,7 @@ public class ScheduleServlet extends HttpServlet {
 
 		String today = String.format("%04d%02d%02d", todayYear, todayMonth, todayDate);
 
+		req.setAttribute("tb", tb);
 		req.setAttribute("list", list);
 		req.setAttribute("num", num);
 		req.setAttribute("year", year);
@@ -347,7 +376,7 @@ public class ScheduleServlet extends HttpServlet {
 
 		forward(req, resp, "/WEB-INF/views/schedule/scheduleList.jsp");
 	}
-	
+
 	private void insertSubmit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		SessionInfo info = (SessionInfo) session.getAttribute("member");

@@ -438,19 +438,7 @@ $(function(){
 							<div id="style1" style="overflow-y: scroll; height: 453px;">
 								<table
 									style="width: 100%; border-spacing: 0px; border-collapse: collapse;">
-									<c:forEach var="vo" items="${list}">
-										<tr align="center" bgcolor="#ffffff" height="35"
-											style="border-bottom: 1px solid #cccccc;">
-
-											<td style="padding-left: 5px; width: 55px;">${fn:substring(vo.sDate,4,6)}/${fn:substring(vo.sDate,6,8)}</td>
-											<td style="width: 60px;"><div
-													style="color: ${vo.color};">●</div></td>
-											<td align="left"><a
-												href="<%=cp%>/schedule/day.do?date=${vo.sDate}&num=${vo.num}&scheNum=${vo.scheNum}"><span
-													style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 430px; display: block;">
-														${vo.title}</span></a></td>
-										</tr>
-									</c:forEach>
+									${tb}
 								</table>
 							</div>
 						</div>
