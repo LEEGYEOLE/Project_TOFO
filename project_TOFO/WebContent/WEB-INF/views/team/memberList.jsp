@@ -94,42 +94,48 @@ $(function(){
 
 function addMember(userId) {
 	if(confirm(userId+"님을 모임원으로 추가하시겠습니까?")){
-		console.log(userId);
+		
+		$(function (){
+			   $("#searchResult").click(function(){
+				  // var userId = $(this).closest("table").find("input").val();
+				  var rank = $(this).closest("table").find("select").val();
+			      var url = "<%=cp%>/teamList/insertTeamList.do";
+			      var query="userId="+userId+"&rank="+rank;
+		
+			      
+			      $.ajax({// 함수에 객체를 넘긴다
+			         type:"POST",
+			         url:url,
+			         data:query,
+			         dataType:"JSON",
+			         success:function(data){
+			             var state=data.state;
+			             if(state=="loginFail") {
+			            	 location.href="<%=cp%>/member/login.do";
+			             } else if(state=="groupNumFail") {
+			            	 location.href="<%=cp%>/main/myMain.do";
+			             } else if(state=="true") {
+			            	 location.href="<%=cp%>/teamList/memberList.do";
+			             } else if(state=="over") {
+			            	 alert("정원이 초과되어 회원추가가 불가합니다.");
+			            	 location.href="<%=cp%>/teamList/memberList.do";
+			             }
+			         },
+			         error:function(e){
+			            console.log(e.responseText);
+			         }
+			      });
+			   
+			   });
+		
+		});
 		
 	}
 }
+
 // 회원 추가하기
-$(function (){
-   $("#insertResult").click(function(){
-	  var userId = $(this).closest("table").find("input").val();
-	  var rank = $(this).closest("table").find("select").val();
-      var url = "<%=cp%>/teamList/insertTeamList.do";
-      var query="userId="+userId+"&rank="+rank;
-      
-      $.ajax({// 함수에 객체를 넘긴다
-         type:"POST",
-         url:url,
-         data:query,
-         dataType:"JSON",
-         success:function(data){
-             var state=data.state;
-             if(state=="loginFail") {
-            	 location.href="<%=cp%>/member/login.do";
-             } else if(state=="groupNumFail") {
-            	 location.href="<%=cp%>/main/myMain.do";
-             } else if(state=="true") {
-            	 location.href="<%=cp%>/teamList/memberList.do";
-             } else if(state=="over") {
-            	 alert("정원이 초과되어 회원추가가 불가합니다.");
-            	 location.href="<%=cp%>/teamList/memberList.do";
-             }
-         },
-         error:function(e){
-            console.log(e.responseText);
-         }
-      });
-   });
-});
+
+
 function updateRank(userId) {
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
 		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
@@ -266,16 +272,19 @@ function deleteTeamList(userId) {
 							
 						</p>
 						<p class="help-block">* 추가하실 아이디를 검색 후 확인해주세요.</p>
+						
 					</td>	
 				</tr>
-
+				
 				<tr>
 					<td colspan="2"><div id="searchResult"></div></td>
 				</tr>
-
+				<tr align="center">
+					<td colspan="2">추가하실 아이디를 선택해주세요.</td>
+				</tr>
+				
 				<tr height="45">
-					<td align="center" colspan="2">
-						<button type="button" class="btn btnInsert" id="insertResult">회원등록</button>	
+					<td align="center" colspan="2">	
 						<button type="reset" class="btn">다시입력</button>
 						<button type="button" class="btn" id="btnTeamListSendCancel">등록취소</button>
 					</td>

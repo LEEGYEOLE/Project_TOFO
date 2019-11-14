@@ -186,11 +186,10 @@ public class TeamListDAO {
 		String sql;
 		
 		try {
-			sql = "insert into teamList(listNum, userId, rank, num) values(list_seq.nextval, ?, ?, ?)";
+			sql = "insert into teamList(listNum, userId, rank, num) values(list_seq.nextval, ?, '1', ?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, userId);
-			pstmt.setString(2, rank);
-			pstmt.setInt(3, groupNum);
+			pstmt.setInt(2, groupNum);
 			
 			result = pstmt.executeUpdate();
 		} catch(Exception e) {
