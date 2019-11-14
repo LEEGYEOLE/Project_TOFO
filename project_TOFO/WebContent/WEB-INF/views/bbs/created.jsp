@@ -58,28 +58,23 @@
 			<form name="boardForm" method="post">
 			  <table style="width: 100%; margin: 20px auto 0px; border-spacing: 0px; border-collapse: collapse;">
 			  <tr align="left" height="40" style="border-top: 1px solid #cccccc; border-bottom: 1px solid #cccccc;"> 
-			      <td width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; border-bottom: 1px solid #444444; 
-			      	padding: 10px; background-color: #dcdcdc;">
-			      	제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">제&nbsp;&nbsp;&nbsp;&nbsp;목</td>
 			      <td style="padding-left:10px;"> 
-			        <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.subject}">
+			          <input type="text" name="subject" maxlength="100" class="boxTF" style="width: 95%;" value="${dto.subject}">
 			      </td>
 			  </tr>
 			
 			  <tr align="left" height="40" style="border-bottom: 1px solid #cccccc;"> 
-			      <td width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; 
-			      `border-bottom: 1px solid #444444; padding: 10px; background-color: #dcdcdc;">
-			      	작성자</td>
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center;">작성자</td>
 			      <td style="padding-left:10px;"> 
 			          ${sessionScope.member.userName}
 			      </td>
+			  </tr>
 			
 			  <tr align="left" style="border-bottom: 1px solid #cccccc;"> 
-			      <td width="60" style="font-size: 20px; text-align: center; border: 1px solid #ccc; 
-			      border-bottom: 1px solid grey; padding: 10px; background-color: #dcdcdc;" valign="top">
-			      	내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
+			      <td width="100" bgcolor="#eeeeee" style="text-align: center; padding-top:5px;" valign="top">내&nbsp;&nbsp;&nbsp;&nbsp;용</td>
 			      <td valign="top" style="padding:5px 0px 5px 10px;"> 
-			        <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
+			          <textarea name="content" rows="12" class="boxTA" style="width: 95%;">${dto.content}</textarea>
 			      </td>
 			  </tr>
 			  </table>
