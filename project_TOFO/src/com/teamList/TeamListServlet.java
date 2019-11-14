@@ -2,6 +2,7 @@ package com.teamList;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class TeamListServlet extends HttpServlet {
 		List<Map<String, Object>> memberList = dao.readMemberList(userId);
 
 		req.setAttribute("memberList", memberList);
-		
+
 		// forward
 		forward(req, resp, "/WEB-INF/views/team/searchId.jsp");
 	}
@@ -87,17 +88,13 @@ public class TeamListServlet extends HttpServlet {
 		}
 		int groupNum = (int) session.getAttribute("num");
 
-
 		TeamListDAO dao = new TeamListDAO();
 		List<HashMap<String, Object>> list = dao.listTeamMember(groupNum);
 
-		
-		
-		//모임정보 가져오기
+		// 모임정보 가져오기
 		TeamDAO tdao = new TeamDAO();
 		TeamDTO team = tdao.readTeam(groupNum);
-	
-		
+
 		req.setAttribute("team", team);
 		req.setAttribute("list", list);
 
@@ -139,7 +136,7 @@ public class TeamListServlet extends HttpServlet {
 			resp.sendRedirect(cp + "/member/login.do");
 			return;
 		}
-		
+
 		if (session.getAttribute("num") == null) {
 			// 메인 화면으로 리다이렉트
 			resp.sendRedirect(cp + "/main/myMain.do");
@@ -152,24 +149,24 @@ public class TeamListServlet extends HttpServlet {
 
 		resp.sendRedirect(cp + "/teamList/memberList.do");
 	}
-	
+
 	public void insertTeamList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-	
+
 		String state = "false";
 
 		SessionInfo info = (SessionInfo) session.getAttribute("member");
 		if (info == null) { // 로그인이 안 된 경우
 			state = "loginFail";
-		} else if(session.getAttribute("num") == null) {
+		} else if (session.getAttribute("num") == null) {
 			// 메인 화면으로 리다이렉트
-			//resp.sendRedirect(cp + "/main/myMain.do");
+			// resp.sendRedirect(cp + "/main/myMain.do");
 			state = "groupNumFail";
 		} else {
-			
+
 			int groupNum = (int) session.getAttribute("num");
 			TeamListDAO dao = new TeamListDAO();
-			if(dao.userCount(groupNum) > dao.dataCount(groupNum)) {
+			if (dao.userCount(groupNum) > dao.dataCount(groupNum)) {
 				String userId = req.getParameter("userId");
 				String rank = req.getParameter("rank");
 				dao.insertTeamList(userId, rank, groupNum);
@@ -178,12 +175,12 @@ public class TeamListServlet extends HttpServlet {
 				state = "over";
 			}
 		}
-		
-		JSONObject job=new JSONObject();
+
+		JSONObject job = new JSONObject();
 		job.put("state", state);
-		
+
 		resp.setContentType("text/html;charset=utf-8");
-		PrintWriter out=resp.getWriter();
+		PrintWriter out = resp.getWriter();
 		out.print(job.toString());
 	}
 }

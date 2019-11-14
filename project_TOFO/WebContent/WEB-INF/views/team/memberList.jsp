@@ -22,7 +22,6 @@
 .tableList td {
 	font-size: 15px;
 }
-
 .tableList {
 	margin-bottom: 10px;
 }
@@ -36,8 +35,6 @@ width: 80%;
 <script type="text/javascript" src="<%=cp%>/resource/jquery/js/jquery-1.12.4.min.js"></script>
 
 <script type="text/javascript">
-
-
 //스케쥴 등록 -----------------------
 //등록 대화상자 출력
 $(function(){
@@ -51,7 +48,6 @@ $(function(){
 			  close: function(event, ui) {
 			  }
 		});
-
 	});
 });
 $(function(){
@@ -65,7 +61,6 @@ $(function(){
 			  close: function(event, ui) {
 			  }
 		});
-
 	});
 });
 //등록 대화상자 닫기
@@ -74,10 +69,7 @@ $(function(){
 		$('#schedule-dialog').dialog("close");
 	});
 });
-
 // 등록 완료하기
-
-
 // 버튼을 누르면 찾아가기
 $(function(){
    $("body").on("click",".bntSearch",function(){
@@ -98,7 +90,6 @@ $(function(){
       });
    });
 });
-
 // 회원 추가하기
 $(function(){
    $("#insertResult").click(function(){
@@ -131,7 +122,6 @@ $(function(){
       });
    });
 });
-
 function updateRank(userId) {
 	if(confirm(userId+"님께 모임장 권한을 위임하시겠습니까?")) {
 		var url ="<%=cp%>/teamList/updateRank.do?leader=${sessionScope.member.userId}&userId="+userId;
@@ -143,7 +133,6 @@ function teamUpdate() {
 	teamForm.action="<%=cp%>/team/update_ok.do";
 		teamForm.submit();
 }
-
 function deleteTeamList(userId) {
 	if(confirm(userId+"님을 강퇴 하시겠습니까 ?")) {
 		var url = "<%=cp%>/teamList/deleteTeamList.do?userId="+userId;
@@ -268,24 +257,12 @@ function deleteTeamList(userId) {
 							<button type="button" class="btn bntSearch">검색</button>
 							
 						</p>
-						<div id="searchResult"></div>
 						<p class="help-block">* 추가하실 아이디를 검색 후 확인해주세요.</p>
-
 					</td>	
 				</tr>
 
 				<tr>
-					<td width="100" valign="top"
-						style="text-align: right; padding-top: 5px;"><label
-						style="font-weight: 900;">등급</label></td>
-					<td style="padding: 0 0 15px 15px;">
-						<p style="margin-top: 1px; margin-bottom: 5px;">
-							<select name="color" id="form-rank" class="selectField">
-								<option value="0">모임장</option>
-								<option value="1">모임원</option>
-							</select>
-						</p>
-					</td>
+					<td colspan="2"><div id="searchResult"></div></td>
 				</tr>
 
 				<tr height="45">
