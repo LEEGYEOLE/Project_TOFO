@@ -401,12 +401,13 @@ function attendOk() {
 										style="padding-right: 5px; clear: both;">
 										<button type="button" class="btn" style="float: left;"
 											onclick="javascript:location.href='<%=cp%>/schedule/list.do?year=${year}&month=${month}&num=${num}'">목록</button>
+										<c:if test="${sessionScope.leaderId eq SessionScope.member.userId }">
 										<button type="button" id="btnDelete" class="btn"
 											style="float: right;" onclick="deleteOk('${dto.scheNum}');">삭제</button>
 										<button type="button" id="btnUpdate" class="btn"
 											style="float: right;">수정</button>
 										<button type="button" id="btnLocation" class="btn"
-											style="float: right;" onclick="hi();">장소등록/수정</button>
+											style="float: right;" onclick="hi();">장소등록/수정</button></c:if>
 									</td>
 								</tr>
 
