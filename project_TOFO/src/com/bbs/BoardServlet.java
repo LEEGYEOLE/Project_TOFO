@@ -15,8 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import com.main.MainServlet;
 import com.member.SessionInfo;
-import com.team.TeamDAO;
-import com.team.TeamDTO;
+
 import com.util.MyUtil;
 
 import net.sf.json.JSONObject;
@@ -24,6 +23,7 @@ import net.sf.json.JSONObject;
 @WebServlet("/bbs/*")
 public class BoardServlet extends MainServlet {
 	private static final long serialVersionUID = 1L;
+	private int teamNum;
 
 	@Override
 	protected void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -36,6 +36,13 @@ public class BoardServlet extends MainServlet {
 			resp.sendRedirect(cp+"/member/login.do");
 			return;
 		}
+		
+		if(session.getAttribute("num")==null) {
+			// ¸ŞÀÎ È­¸éÀ¸·Î ¸®´ÙÀÌ·ºÆ®
+			resp.sendRedirect(cp+"/main/myMain.do");
+			return;
+		}
+		teamNum = (int) session.getAttribute("num");		
 		
 		String uri=req.getRequestURI();
 		if(uri.indexOf("list.do") != -1) {
@@ -53,37 +60,37 @@ public class BoardServlet extends MainServlet {
 		} else if(uri.indexOf("delete.do") != -1) {
 			delete(req, resp);
 		} else if(uri.indexOf("countBoardLike.do")!=-1) {
-			// ï¿½ëœï¿½ë™ƒï¿½ë–†è«­ê¾©ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// °Ô½Ã¹° °ø°¨ °³¼ö
 			countBoardLike(req, resp);
 		} else if(uri.indexOf("insertBoardLike.do")!=-1) {
-			// ï¿½ëœï¿½ë™ƒï¿½ë–†è«­ê¾©ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// °Ô½Ã¹° °ø°¨ ÀúÀå
 			insertBoardLike(req, resp);
 		} else if(uri.indexOf("insertReply.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë™¥æ€¨ã…¼ì‚•
+			// ´ñ±Û Ãß°¡
 			insertReply(req, resp);
 		} else if(uri.indexOf("listReply.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒ
+			// ´ñ±Û ¸®½ºÆ®
 			listReply(req, resp);
 		} else if(uri.indexOf("deleteReply.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// ´ñ±Û »èÁ¦
 			deleteReply(req, resp);
 		} else if(uri.indexOf("insertReplyLike.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–ï¿½ìŠ±ï¿½ì‚•/ï¿½ëœï¿½ë–•ï¿½ë¼²ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë™¥æ€¨ã…¼ì‚•
+			// ´ñ±Û ÁÁ¾Æ¿ä/½È¾î¿ä Ãß°¡
 			insertReplyLike(req, resp);
 		} else if(uri.indexOf("countReplyLike.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–ï¿½ìŠ±ï¿½ì‚•/ï¿½ëœï¿½ë–•ï¿½ë¼²ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// ´ñ±Û ÁÁ¾Æ¿ä/½È¾î¿ä °³¼ö
 			countReplyLike(req, resp);
 		} else if(uri.indexOf("insertReplyAnswer.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë™¥æ€¨ã…¼ì‚•
+			// ´ñ±ÛÀÇ ´ä±Û Ãß°¡
 			insertReplyAnswer(req, resp);
 		} else if(uri.indexOf("listReplyAnswer.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒ
+			// ´ñ±ÛÀÇ ´ä±Û ¸®½ºÆ®
 			listReplyAnswer(req, resp);
 		} else if(uri.indexOf("deleteReplyAnswer.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// ´ñ±ÛÀÇ ´ä±Û »èÁ¦
 			deleteReplyAnswer(req, resp);
 		} else if(uri.indexOf("countReplyAnswer.do")!=-1) {
-			// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+			// ´ñ±ÛÀÇ ´ä±Û °³¼ö
 			countReplyAnswer(req, resp);
 		}
 
@@ -118,9 +125,9 @@ public class BoardServlet extends MainServlet {
 		
 		int dataCount;
 		if(keyword.length()==0)
-			dataCount = dao.dataCount();
+			dataCount = dao.dataCount(teamNum);
 		else
-			dataCount = dao.dataCount(condition, keyword);
+			dataCount = dao.dataCount(condition, keyword, teamNum);
 		
 		int total_page = util.pageCount(rows, dataCount);
 		if(current_page > total_page)
@@ -131,9 +138,9 @@ public class BoardServlet extends MainServlet {
 		
 		List<BoardDTO> list;
 		if(keyword.length()==0)
-			list = dao.listBoard(offset, rows);
+			list = dao.listBoard(offset, rows, teamNum);
 		else
-			list = dao.listBoard(offset, rows, condition, keyword);
+			list = dao.listBoard(offset, rows, condition, keyword, teamNum);
 		
 		int listNum, n=0;
 		for(BoardDTO dto : list) {
@@ -163,18 +170,12 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("keyword", keyword);
 		req.setAttribute("articleUrl", articleUrl);
 		
-		// list.jspï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+		// list.jsp·Î Æ÷¿öµù
 		forward(req, resp, "/WEB-INF/views/bbs/list.jsp");
 	}
 	
 	protected void createdForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session=req	.getSession();
-		SessionInfo info=(SessionInfo)session.getAttribute("member");
-		TeamDAO dao =new TeamDAO(); 
-		List<TeamDTO> list=dao.listTeam(info.getUserId());
-		
 		req.setAttribute("mode", "created");
-		req.setAttribute("teamlist", list);
 		forward(req, resp, "/WEB-INF/views/bbs/created.jsp");
 	}
 	
@@ -188,7 +189,6 @@ public class BoardServlet extends MainServlet {
 		dto.setUserId(info.getUserId());
 		dto.setSubject(req.getParameter("subject"));
 		dto.setContent(req.getParameter("content"));
-		int teamNum = (int)session.getAttribute("num");
 		dto.setTeamNum(teamNum);
 		
 		dao.insertBoard(dto);
@@ -225,8 +225,8 @@ public class BoardServlet extends MainServlet {
 			return;
 		}
 		
-		BoardDTO preReadDto = dao.preReadBoard(dto.getNum(), condition, keyword);
-		BoardDTO nextReadDto = dao.nextReadBoard(dto.getNum(), condition, keyword);
+		BoardDTO preReadDto = dao.preReadBoard(dto.getNum(), condition, keyword, teamNum);
+		BoardDTO nextReadDto = dao.nextReadBoard(dto.getNum(), condition, keyword, teamNum);
 		
 		req.setAttribute("dto", dto);
 		req.setAttribute("preReadDto", preReadDto);
@@ -236,6 +236,7 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("rows", rows);
 		
 		forward(req, resp, "/WEB-INF/views/bbs/article.jsp");
+
 	}
 	
 	protected void updateForm(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -243,9 +244,6 @@ public class BoardServlet extends MainServlet {
 		SessionInfo info=(SessionInfo)session.getAttribute("member");
 		String cp=req.getContextPath();
 		
-		TeamDAO dao2 =new TeamDAO(); 
-		List<TeamDTO> list=dao2.listTeam(info.getUserId());
-
 		int num=Integer.parseInt(req.getParameter("num"));
 		String page=req.getParameter("page");
 		String rows=req.getParameter("rows");
@@ -267,7 +265,6 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("page", page);
 		req.setAttribute("rows", rows);
 		req.setAttribute("mode", "update");
-		req.setAttribute("teamlist", list);		
 		
 		forward(req, resp, "/WEB-INF/views/bbs/created.jsp");
 	}
@@ -284,7 +281,6 @@ public class BoardServlet extends MainServlet {
 		dto.setUserId(info.getUserId());
 		dto.setSubject(req.getParameter("subject"));
 		dto.setContent(req.getParameter("content"));
-		dto.setTeamNum(Integer.parseInt(req.getParameter("teamNum")));
 		
 		dao.updateBoard(dto);
 		
@@ -325,7 +321,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void countBoardLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë™ƒï¿½ë–†è«­ê¾©ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// °Ô½Ã¹° °ø°¨ °³¼ö - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int num = Integer.parseInt(req.getParameter("num"));
@@ -340,7 +336,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void insertBoardLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë™ƒï¿½ë–†è«­ê¾©ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// °Ô½Ã¹° °ø°¨ ÀúÀå - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -362,7 +358,7 @@ public class BoardServlet extends MainServlet {
 	}
 	
 	private void listReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒ - AJAX:TEXT
+		// ¸®ÇÃ ¸®½ºÆ® - AJAX:TEXT
 		BoardDAO dao = new BoardDAO();
 		MyUtil util = new MyUtil();
 		
@@ -383,15 +379,15 @@ public class BoardServlet extends MainServlet {
 
 		int offset = (current_page - 1) * rows;
 
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+		// ¸®½ºÆ®¿¡ Ãâ·ÂÇÒ µ¥ÀÌÅÍ
 		List<ReplyDTO> listReply = dao.listReply(num, offset, rows);
 
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–¢ï§ëš¯ì‚• <br>
+		// ¿£ÅÍ¸¦ <br>
 		for(ReplyDTO dto:listReply) {
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 		}
 
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï§ï¿½ ï§£ì„‡ëœï¿½ë£ï¿½ì‚•(ï¿½ëœï¿½ë–¥ï¿½ëˆ¦ï¿½ì‚•2ï¿½ëœï¿½ë£ï¿½ì‚• ï§ì’ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë™“è«›ë¶¿ë£ï¿½ì‚•ï¿½ê²•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒ listPage(page) ï¿½ëœï¿½ë™ƒï¿½ëˆ¦ï¿½ì‚• ï¿½ìƒ‡ï¿½ëœï¿½ë£ï¿½ì‚•)
+		// ÆäÀÌÂ¡ Ã³¸®(ÀÎ¼ö2°³ Â¥¸®·Î ÀÚ¹Ù½ºÅ©¸³Æ® listPage(page) ÇÔ¼ö È£Ãâ)
 		String paging = util.paging(current_page, total_page);
 
 		req.setAttribute("listReply", listReply);
@@ -400,12 +396,12 @@ public class BoardServlet extends MainServlet {
 		req.setAttribute("total_page", total_page);
 		req.setAttribute("paging", paging);
 
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•
+		// Æ÷¿öµù
 		forward(req, resp, "/WEB-INF/views/bbs/listReply.jsp");
 	}
 
 	private void insertReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë–ï¿½ë™‹ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½  ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ¸®ÇÃ ¶Ç´Â ´ä±Û  ÀúÀå - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -435,7 +431,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void deleteReply(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë–ï¿½ë™‹ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ¸®ÇÃ ¶Ç´Â ´ä±Û »èÁ¦ - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -457,7 +453,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void insertReplyLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–ï¿½ìŠ±ï¿½ì‚• / ï¿½ëœï¿½ë–•ï¿½ë¼²ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ´ñ±Û ÁÁ¾Æ¿ä / ½È¾î¿ä ÀúÀå - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		HttpSession session=req.getSession();
@@ -486,7 +482,7 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void countReplyLike(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–ï¿½ìŠ±ï¿½ì‚• / ï¿½ëœï¿½ë–•ï¿½ë¼²ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ´ñ±Û ÁÁ¾Æ¿ä / ½È¾î¿ä °³¼ö - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int replyNum = Integer.parseInt(req.getParameter("replyNum"));
@@ -511,19 +507,19 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void insertReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ´ä±Û ÀúÀå - AJAX:JSON
 		insertReply(req, resp);
 	}
 
 	private void listReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ë“ƒ - AJAX:TEXT
+		// ¸®ÇÃÀÇ ´ä±Û ¸®½ºÆ® - AJAX:TEXT
 		BoardDAO dao = new BoardDAO();
 		
 		int answer = Integer.parseInt(req.getParameter("answer"));
 		
 		List<ReplyDTO> listReplyAnswer = dao.listReplyAnswer(answer);
 
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë–¢ï§ëš¯ì‚• <br>(ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ï¿½ï¿½ëœï¿½ë£ï¿½ì‚• => style="white-space:pre;")
+		// ¿£ÅÍ¸¦ <br>(½ºÅ¸ÀÏ => style="white-space:pre;")
 		for(ReplyDTO dto:listReplyAnswer) {
 			dto.setContent(dto.getContent().replaceAll("\n", "<br>"));
 		}
@@ -534,12 +530,12 @@ public class BoardServlet extends MainServlet {
 	}
 
 	private void deleteReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ¸®ÇÃ ´ä±Û »èÁ¦ - AJAX:JSON
 		deleteReply(req, resp);
 	}
 	
 	private void countReplyAnswer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœå ï¿½ ï¿½ëœï¿½ë£ï¿½ì‚•ï¿½ëœï¿½ë£ï¿½ì‚• - AJAX:JSON
+		// ¸®ÇÃÀÇ ´ä±Û °³¼ö - AJAX:JSON
 		BoardDAO dao = new BoardDAO();
 		
 		int answer = Integer.parseInt(req.getParameter("answer"));

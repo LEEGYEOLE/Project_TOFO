@@ -5,9 +5,8 @@ public class BoardDTO {
 	private String userId, userName;
 	private String subject, content;
 	private String created;
-	private int hitCount;
 	private int teamNum;
-	private String title;
+	private int hitCount;
 	private long gap;
 	
 	private int replyCount;
@@ -78,10 +77,5 @@ public class BoardDTO {
 	public void setTeamNum(int teamNum) {
 		this.teamNum = teamNum;
 	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
+	
 }

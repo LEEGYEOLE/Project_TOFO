@@ -20,8 +20,8 @@
 .btnLike {
     color:#333333;
     font-weight:500;
-    border:1px solid #cccccc;
     background-color:#ffffff;
+    border:1px solid #cccccc;
     text-align:center;
     cursor:pointer;
     padding:6px 10px 5px;
@@ -478,13 +478,8 @@ $(function(){
 			    <td width="50%" align="left" style="padding-left: 5px;">
 			       이름 : ${dto.userName}
 			    </td>
-			    <td width="50%" align="right" style="padding-right: 5px;">		        
-			    </td>
-			</tr>
-			<tr height="35" style="border-bottom: 1px solid #cccccc;">
-			    <td width="50%" align="left" style="padding-left: 5px;">
-			   
-			    </td>
+			    
+			    
 			    <td width="50%" align="right" style="padding-right: 5px;">
 			        ${dto.created} | 조회 ${dto.hitCount}
 			    </td>

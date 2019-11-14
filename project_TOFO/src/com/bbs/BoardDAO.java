@@ -14,19 +14,19 @@ import com.util.DBConn;
 public class BoardDAO {
 	private Connection conn=DBConn.getConnection();
 	
+	// 데이터 추가
 	public int insertBoard(BoardDTO dto) {
 		int result=0;
 		PreparedStatement pstmt=null;
 		String sql;
 		
 		try {
-			sql = "INSERT INTO bbs(num, userId, subject, teamNum, content) VALUES (bbs_seq.nextval, ?, ?, ?, ?)";
+			sql = "INSERT INTO bbs (num, userId, subject, content, teamNum) VALUES (bbs_seq.nextval, ?, ?, ?, ?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getUserId());
 			pstmt.setString(2, dto.getSubject());
-			pstmt.setInt(3, dto.getTeamNum());
-			pstmt.setString(4, dto.getContent());
-			
+			pstmt.setString(3, dto.getContent());
+			pstmt.setInt(4, dto.getTeamNum());
 			
 			result=pstmt.executeUpdate();
 			
@@ -42,16 +42,18 @@ public class BoardDAO {
 		
 		return result;
 	}
-		
-	public int dataCount() {
+	
+	// 데이터 개수
+	public int dataCount(int teamNum) {
 		int result=0;
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String sql;
 		
 		try {
-			sql="SELECT NVL(COUNT(*), 0) FROM bbs";
+			sql="SELECT NVL(COUNT(*), 0) FROM bbs WHERE teamNum = ?";
 			pstmt=conn.prepareStatement(sql);
+			pstmt.setInt(1, teamNum);
 			
 			rs=pstmt.executeQuery();
 			if(rs.next())
@@ -78,25 +80,27 @@ public class BoardDAO {
 		return result;
 	}
 
-	public int dataCount(String condition, String keyword) {
+	// 검색에서의 데이터 개수
+	public int dataCount(String condition, String keyword, int teamNum) {
 		int result=0;
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
 		String sql;
 		
 		try {
-			sql="SELECT NVL(COUNT(*), 0)  FROM bbs b JOIN member m ON b.userId=m.userId ";
+			sql="SELECT NVL(COUNT(*), 0)  FROM bbs b JOIN member m ON b.userId=m.userId WHERE teamNum = ?";
 			if(condition.equals("userName")) {
-				sql += "  WHERE INSTR(userName, ?) = 1 ";
+				sql += "  AND INSTR(userName, ?) = 1 ";
 			} else if(condition.equals("created")) {
 				keyword=keyword.replaceAll("-", "");
-				sql += "  WHERE TO_CHAR(created, 'YYYYMMDD') = ? ";
+				sql += "  AND TO_CHAR(created, 'YYYYMMDD') = ? ";
 			} else {
-				sql += "  WHERE INSTR(" + condition+ ", ?) >= 1 ";
+				sql += "  AND INSTR(" + condition+ ", ?) >= 1 ";
 			}
 			
 			pstmt=conn.prepareStatement(sql);
-			pstmt.setString(1, keyword);
+			pstmt.setInt(1, teamNum);
+			pstmt.setString(2, keyword);
 			
 			rs=pstmt.executeQuery();
 			if(rs.next())
@@ -122,67 +126,9 @@ public class BoardDAO {
 		
 		return result;
 	}
-		
-	public List<BoardDTO> listBoard(int offset, int rows) {
-		List<BoardDTO> list=new ArrayList<BoardDTO>();
-		PreparedStatement pstmt=null;
-		ResultSet rs=null;
-		StringBuilder sb=new StringBuilder();
-		
-		try {
-			sb.append("SELECT b.num, userName, title, subject, hitCount,  ");
-			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created, ");
-			sb.append("       NVL(replyCount, 0) replyCount ");
-			sb.append(" FROM bbs b  ");
-			sb.append(" JOIN member m ON b.userId = m.userId ");
-			sb.append(" JOIN team t ON t.num = b.teamNum ");
-			sb.append(" LEFT OUTER JOIN ( ");
-			sb.append("      SELECT num, COUNT(*) replyCount FROM bbsReply WHERE answer=0 ");
-			sb.append("      GROUP BY num");
-			sb.append(" ) c ON b.num = c.num");
-			sb.append(" ORDER BY num DESC  ");
-			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
-			
-			pstmt=conn.prepareStatement(sb.toString());
-			pstmt.setInt(1, offset);
-			pstmt.setInt(2, rows);
-			
-			rs = pstmt.executeQuery();
-			while(rs.next()) {
-				BoardDTO dto=new BoardDTO();
-				
-				dto.setNum(rs.getInt("num"));
-				dto.setTitle(rs.getString("title"));
-				dto.setUserName(rs.getString("userName"));
-				dto.setSubject(rs.getString("subject"));
-				dto.setHitCount(rs.getInt("hitCount"));
-				dto.setCreated(rs.getString("created"));
-				dto.setReplyCount(rs.getInt("replyCount"));
-				
-				list.add(dto);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if(rs!=null) {
-				try {
-					rs.close();
-				} catch (Exception e2) {
-				}
-			}
-			if(pstmt!=null) {
-				try {
-					pstmt.close();
-				} catch (Exception e2) {
-				}
-			}
-		}
-		
-		return list;
-	}
-
-	public List<BoardDTO> listBoard(int offset, int rows, String condition, String keyword) {
+	
+	// 게시물 리스트
+	public List<BoardDTO> listBoard(int offset, int rows, int teamNum) {
 		List<BoardDTO> list=new ArrayList<BoardDTO>();
 		PreparedStatement pstmt=null;
 		ResultSet rs=null;
@@ -193,26 +139,17 @@ public class BoardDAO {
 			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created, ");
 			sb.append("       NVL(replyCount, 0) replyCount ");
 			sb.append(" FROM bbs b  ");
-			sb.append(" JOIN member m ON b.userId = m.userId  ");
+			sb.append(" JOIN member m ON b.userId = m.userId ");
 			sb.append(" LEFT OUTER JOIN ( ");
 			sb.append("      SELECT num, COUNT(*) replyCount FROM bbsReply WHERE answer=0 ");
 			sb.append("      GROUP BY num");
 			sb.append(" ) c ON b.num = c.num");
-			
-			if(condition.equalsIgnoreCase("created")) {
-				keyword = keyword.replaceAll("-", "");
-				sb.append(" WHERE TO_CHAR(created, 'YYYYMMDD') = ?");
-			} else if(condition.equalsIgnoreCase("userName")) {
-				sb.append(" WHERE INSTR(userName, ?) = 1 ");
-			} else {
-				sb.append(" WHERE INSTR("+condition+", ?) >= 1 ");
-			}
-			
+			sb.append(" WHERE teamNum = ? ");
 			sb.append(" ORDER BY num DESC  ");
 			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
 			
 			pstmt=conn.prepareStatement(sb.toString());
-			pstmt.setString(1, keyword);
+			pstmt.setInt(1, teamNum);
 			pstmt.setInt(2, offset);
 			pstmt.setInt(3, rows);
 			
@@ -229,6 +166,7 @@ public class BoardDAO {
 				
 				list.add(dto);
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -248,7 +186,78 @@ public class BoardDAO {
 		
 		return list;
 	}
+	
+	// 키워드 검색을 통해 보여지는 리스트 
+	public List<BoardDTO> listBoard(int offset, int rows, String condition, String keyword, int teamNum) {
+		List<BoardDTO> list=new ArrayList<BoardDTO>();
+		PreparedStatement pstmt=null;
+		ResultSet rs=null;
+		StringBuilder sb=new StringBuilder();
 		
+		try {
+			sb.append("SELECT b.num, userName, subject, hitCount,  ");
+			sb.append("       TO_CHAR(created, 'YYYY-MM-DD') created, ");
+			sb.append("       NVL(replyCount, 0) replyCount ");
+			sb.append(" FROM bbs b  ");
+			sb.append(" JOIN member m ON b.userId = m.userId  ");
+			sb.append(" LEFT OUTER JOIN ( ");
+			sb.append("      SELECT num, COUNT(*) replyCount FROM bbsReply WHERE answer=0 ");
+			sb.append("      GROUP BY num");
+			sb.append(" ) c ON b.num = c.num");
+			sb.append(" WHERE teamNum = ? ");
+			
+			if(condition.equalsIgnoreCase("created")) {
+				keyword = keyword.replaceAll("-", "");
+				sb.append(" AND TO_CHAR(created, 'YYYYMMDD') = ?");
+			} else if(condition.equalsIgnoreCase("userName")) {
+				sb.append(" AND INSTR(userName, ?) = 1 ");
+			} else {
+				sb.append(" AND INSTR("+condition+", ?) >= 1 ");
+			}
+			
+			sb.append(" ORDER BY num DESC  ");
+			sb.append(" OFFSET ? ROWS FETCH FIRST ? ROWS ONLY ");
+			
+			pstmt=conn.prepareStatement(sb.toString());
+			pstmt.setInt(1, teamNum);
+			pstmt.setString(2, keyword);
+			pstmt.setInt(3, offset);
+			pstmt.setInt(4, rows);
+			
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				BoardDTO dto=new BoardDTO();
+				
+				dto.setNum(rs.getInt("num"));
+				dto.setUserName(rs.getString("userName"));
+				dto.setSubject(rs.getString("subject"));
+				dto.setHitCount(rs.getInt("hitCount"));
+				dto.setCreated(rs.getString("created"));
+				dto.setReplyCount(rs.getInt("replyCount"));
+				
+				list.add(dto);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(rs!=null) {
+				try {
+					rs.close();
+				} catch (Exception e2) {
+				}
+			}
+			if(pstmt!=null) {
+				try {
+					pstmt.close();
+				} catch (Exception e2) {
+				}
+			}
+		}
+		
+		return list;
+	}
+	
+	// 조회수 증가하기
 	public int updateHitCount(int num)  {
 		int result=0;
 		PreparedStatement pstmt=null;
@@ -273,7 +282,7 @@ public class BoardDAO {
 		return result;
 	}
 	
-	// 占쌔댐옙 占쌉시뱄옙 占쏙옙占쏙옙
+	// 해당 게시물 보기
 	public BoardDTO readBoard(int num) {
 		BoardDTO dto=null;
 		PreparedStatement pstmt=null;
@@ -281,7 +290,7 @@ public class BoardDAO {
 		StringBuffer sb=new StringBuffer();
 		
 		try {
-			sb.append("SELECT num, b.userId, userName, subject, teamNum, content");
+			sb.append("SELECT num, b.userId, userName, subject, content");
 			sb.append("   ,created, hitCount ");
 			sb.append(" FROM bbs b JOIN member m ON b.userId=m.userId  ");
 			sb.append(" WHERE num = ? ");
@@ -297,7 +306,6 @@ public class BoardDAO {
 				dto.setUserId(rs.getString("userId"));
 				dto.setUserName(rs.getString("userName"));
 				dto.setSubject(rs.getString("subject"));
-				dto.setTeamNum(rs.getInt("teamNum"));
 				dto.setContent(rs.getString("content"));
 				dto.setHitCount(rs.getInt("hitCount"));
 				dto.setCreated(rs.getString("created"));
@@ -322,8 +330,9 @@ public class BoardDAO {
 		
 		return dto;
 	}
-	   
-	public BoardDTO preReadBoard(int num, String condition, String keyword) {
+	
+    // 이전글
+    public BoardDTO preReadBoard(int num, String condition, String keyword, int teamNum) {
         BoardDTO dto=null;
 
         PreparedStatement pstmt=null;
@@ -333,29 +342,32 @@ public class BoardDAO {
         try {
             if(keyword!=null && keyword.length() != 0) {
                 sb.append("SELECT num, subject FROM bbs b JOIN member m ON b.userId = m.userId ");
+                sb.append(" WHERE teamNum = ? ");
                 if(condition.equals("userName")) {
-                    sb.append(" WHERE ( INSTR(userName, ?) = 1)  ");
+                    sb.append(" AND ( INSTR(userName, ?) = 1)  ");
                 } else if(condition.equals("created")) {
                 	keyword=keyword.replaceAll("-", "");
-                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                    sb.append(" AND (TO_CHAR(created, 'YYYYMMDD') = ?) ");
                 } else {
-                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+                    sb.append(" AND ( INSTR("+condition+", ?) > 0) ");
                 }
                 sb.append("            AND (num > ? ) ");
                 sb.append(" ORDER BY num ASC ");
                 sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
                 pstmt=conn.prepareStatement(sb.toString());
-                pstmt.setString(1, keyword);
-               	pstmt.setInt(2, num);
+                pstmt.setInt(1, teamNum);
+                pstmt.setString(2, keyword);
+               	pstmt.setInt(3, num);
             } else {
                 sb.append("SELECT num, subject FROM bbs ");
-                sb.append(" WHERE num > ? ");
+                sb.append(" WHERE num > ? AND teamNum = ? ");
                 sb.append(" ORDER BY num ASC ");
                 sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
                 pstmt=conn.prepareStatement(sb.toString());
                 pstmt.setInt(1, num);
+                pstmt.setInt(2, teamNum);
             }
 
             rs=pstmt.executeQuery();
@@ -385,8 +397,9 @@ public class BoardDAO {
     
         return dto;
     }
-    
-	public BoardDTO nextReadBoard(int num, String condition, String keyword) {
+
+    // 다음글
+    public BoardDTO nextReadBoard(int num, String condition, String keyword, int teamNum) {
         BoardDTO dto=null;
 
         PreparedStatement pstmt=null;
@@ -396,29 +409,32 @@ public class BoardDAO {
         try {
             if(keyword!=null && keyword.length() != 0) {
                 sb.append("SELECT num, subject FROM bbs b JOIN member m ON b.userId=m.userId ");
+                sb.append(" WHERE teamNum = ? ");
                 if(condition.equals("userName")) {
-                    sb.append(" WHERE ( INSTR(userName, ?) = 1) ");
+                    sb.append(" AND ( INSTR(userName, ?) = 1) ");
                 } else if(condition.equals("created")) {
                 	keyword=keyword.replaceAll("-", "");
-                    sb.append(" WHERE (TO_CHAR(created, 'YYYYMMDD') = ?) ");
+                    sb.append(" AND (TO_CHAR(created, 'YYYYMMDD') = ?) ");
                 } else {
-                    sb.append(" WHERE ( INSTR("+condition+", ?) > 0) ");
+                    sb.append(" AND ( INSTR("+condition+", ?) > 0) ");
                 }
                 sb.append("          AND (num < ? ) ");
                 sb.append(" ORDER BY num DESC ");
                 sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
                 pstmt=conn.prepareStatement(sb.toString());
-                pstmt.setString(1, keyword);
-               	pstmt.setInt(2, num);
+                pstmt.setInt(1, teamNum);
+                pstmt.setString(2, keyword);
+               	pstmt.setInt(3, num);
             } else {
                 sb.append("SELECT num, subject FROM bbs ");
-                sb.append(" WHERE num < ? ");
+                sb.append(" WHERE num < ? AND teamNum = ? ");
                 sb.append(" ORDER BY num DESC ");
                 sb.append(" FETCH  FIRST  1  ROWS  ONLY ");
 
                 pstmt=conn.prepareStatement(sb.toString());
                 pstmt.setInt(1, num);
+                pstmt.setInt(2, teamNum);
             }
 
             rs=pstmt.executeQuery();
@@ -448,21 +464,20 @@ public class BoardDAO {
 
         return dto;
     }
-		
-	public int updateBoard(BoardDTO dto) {
-		int result = 0;
+	
+	// 게시물 수정
+	public void updateBoard(BoardDTO dto) {
 		PreparedStatement pstmt = null;
 		String sql;
 		
-		sql="UPDATE bbs SET subject=?, content=?, teamNum=? WHERE num=? AND userId=?";
+		sql="UPDATE bbs SET subject=?, content=? WHERE num=? AND userId=?";
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getSubject());
 			pstmt.setString(2, dto.getContent());
-			pstmt.setInt(3, dto.getTeamNum());
-			pstmt.setInt(4, dto.getNum());
-			pstmt.setString(5, dto.getUserId());
-			result = pstmt.executeUpdate();
+			pstmt.setInt(3, dto.getNum());
+			pstmt.setString(4, dto.getUserId());
+			pstmt.executeUpdate();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -473,11 +488,11 @@ public class BoardDAO {
 				} catch (SQLException e) {
 				}
 			}
-		}		
-		return result;
+		}
+				
 	}
 	
-	// 占쌉시뱄옙 占쏙옙占쏙옙
+	// 게시물 삭제
 	public int deleteBoard(int num, String userId) {
 		int result = 0;
 		PreparedStatement pstmt = null;
@@ -509,7 +524,8 @@ public class BoardDAO {
 		}		
 		return result;
 	}
-		
+	
+	// 게시물의 공감 추가
 	public int insertBoardLike(int num, String userId) {
 		int result=0;
 		PreparedStatement pstmt = null;
@@ -535,6 +551,7 @@ public class BoardDAO {
 		return result;
 	}
 	
+	// 게시물의 공감 개수
 	public int countBoardLike(int num) {
 		int result=0;
 		PreparedStatement pstmt=null;
@@ -571,6 +588,7 @@ public class BoardDAO {
 		return result;
 	}
 
+	// 게시물의 댓글 및 답글 추가
 	public int insertReply(ReplyDTO dto) {
 		int result=0;
 		PreparedStatement pstmt=null;
@@ -600,6 +618,7 @@ public class BoardDAO {
 		return result;
 	}
 
+	// 게시물의 댓글 개수
 	public int dataCountReply(int num) {
 		int result=0;
 		PreparedStatement pstmt=null;
@@ -636,6 +655,7 @@ public class BoardDAO {
 		return result;
 	}
 
+	// 게시물 댓글 리스트
 	public List<ReplyDTO> listReply(int num, int offset, int rows) {
 		List<ReplyDTO> list=new ArrayList<>();
 		PreparedStatement pstmt=null;
@@ -753,6 +773,7 @@ public class BoardDAO {
 		return dto;
 	}
 	
+	// 게시물의 댓글 삭제
 	public int deleteReply(int replyNum, String userId) {
 		int result = 0;
 		PreparedStatement pstmt = null;
@@ -787,6 +808,7 @@ public class BoardDAO {
 		return result;
 	}
 
+	// 댓글의 답글 리스트
 	public List<ReplyDTO> listReplyAnswer(int answer) {
 		List<ReplyDTO> list=new ArrayList<>();
 		PreparedStatement pstmt=null;
@@ -839,6 +861,7 @@ public class BoardDAO {
 		return list;
 	}
 	
+	// 댓글의 답글 개수
 	public int dataCountReplyAnswer(int answer) {
 		int result=0;
 		PreparedStatement pstmt=null;
@@ -875,6 +898,7 @@ public class BoardDAO {
 		return result;
 	}
 	
+	// 댓글의 좋아요 / 싫어요 추가
 	public int insertReplyLike(ReplyDTO dto) {
 		int result=0;
 		PreparedStatement pstmt = null;
@@ -901,6 +925,7 @@ public class BoardDAO {
 		return result;
 	}
 	
+	// 댓글의 좋아요 / 싫어요 개수
 	public Map<String, Integer> countReplyLike(int replyNum) {
 		Map<String, Integer> map=new HashMap<>();
 		PreparedStatement pstmt=null;
@@ -941,6 +966,4 @@ public class BoardDAO {
 		
 		return map;
 	}	
-	
-
 }
